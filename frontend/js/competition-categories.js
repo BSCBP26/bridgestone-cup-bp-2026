@@ -1,0 +1,6 @@
+import{API_BASE}from'./api-config.js';
+const defaults={badminton:['doubles'],'table-tennis':['singles']};
+export const tournamentByCategory={badminton:{singles:'badminton-singles-bp-2026',doubles:'badminton-bp-2026'},'table-tennis':{singles:'table-tennis-bp-2026',doubles:'table-tennis-doubles-bp-2026'}};
+export async function loadCategories(sport){const fallback=defaults[sport]||[];if(!API_BASE)return fallback;try{const response=await fetch(`${API_BASE}/sports/${sport}/competition-categories`);if(!response.ok)return fallback;return(await response.json()).data?.activeCategories||fallback}catch{return fallback}}
+export function selectedCategory(categories){const requested=new URLSearchParams(location.search).get('category');return categories.includes(requested)?requested:categories[0]}
+export function renderCategorySelector(categories,active){const tabs=document.querySelector('.view-tabs');if(!tabs||!categories.length)return;const nav=document.createElement('nav');nav.className='competition-category-tabs';nav.setAttribute('aria-label','Kategori pertandingan');nav.innerHTML=categories.map(category=>`<a class="${category===active?'active':''}" href="?category=${category}">${category==='singles'?'SINGLES':'DOUBLES / GANDA'}</a>`).join('');tabs.before(nav)}

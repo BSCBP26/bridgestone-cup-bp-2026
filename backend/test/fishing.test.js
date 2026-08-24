@@ -1,0 +1,3 @@
+import assert from "node:assert/strict";import test from "node:test";import{validateFishingPairs}from"../src/modules/fishing/fishing.controller.js";
+test("fishing pairs require one team and two anglers",()=>{const result=validateFishingPairs({pairs:[{teamName:" CURING ",anglerOne:" Lucky ",anglerTwo:" Apep "}]});assert.deepEqual(result,[{id:null,teamName:"CURING",anglerOne:"Lucky",anglerTwo:"Apep"}])});
+test("fishing pair team names must be unique",()=>{assert.throws(()=>validateFishingPairs({pairs:[{teamName:"CURING",anglerOne:"Lucky",anglerTwo:"Apep"},{teamName:"curing",anglerOne:"Budi",anglerTwo:"Doni"}]}),/unique/)});

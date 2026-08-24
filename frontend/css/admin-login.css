@@ -1,0 +1,24 @@
+:root{--gold:#d6a42c;--cream:#f4ecd7;--muted:#8b8579;--red:#d16f63}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#030303;color:var(--cream);font-family:'DM Sans',sans-serif}
+body{background:radial-gradient(circle at 50% 15%,rgba(120,78,8,.25),transparent 35%),#030303}
+.login-shell{min-height:100vh;display:grid;place-items:center;padding:20px}
+.login-card{width:min(430px,100%);padding:38px;border:1px solid #59451a;background:#0d0d0b;box-shadow:0 24px 70px #000}
+.login-card>small{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:2px}
+.login-card h1{margin:8px 0;font:700 38px 'Barlow Condensed'}
+.login-card p{margin:0 0 26px;color:var(--muted);font-size:12px}
+.login-card form{display:grid;gap:10px}
+.login-card form[hidden]{display:none}
+.login-card label{margin-top:7px;font-size:11px;font-weight:700}
+.login-card input{width:100%;padding:13px;border:1px solid #3d3423;border-radius:5px;background:#070706;color:var(--cream);font:inherit}
+.login-card input:focus{outline:2px solid var(--gold);outline-offset:2px}
+.login-card button{margin-top:12px;padding:14px;border:1px solid #9b741c;border-radius:5px;background:#76540d;color:#fff;font-weight:700;cursor:pointer}
+.login-card button:hover{background:#936b14}
+.login-card button:disabled{opacity:.55}
+.login-card output{min-height:20px;color:#8fba83;font-size:11px}
+.login-card output.error{color:var(--red)}
+.login-card #reset-status{display:block;margin-top:12px}
+.login-card>a{display:block;margin-top:20px;color:#d3b76c;font-size:11px;text-align:center}
+.login-card .forgot-link{justify-self:end;margin:2px 0 0;color:#d3b76c;font-size:11px}
+.login-card .forgot-link:focus-visible,.login-card>a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media(max-width:520px){.login-card{padding:28px 22px}.login-card h1{font-size:34px}}

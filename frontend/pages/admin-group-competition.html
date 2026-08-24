@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pengelolaan Cabor — Bridgestone Cup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/admin-group-competition.css?v=20260809-1">
+</head>
+<body>
+  <main class="group-admin">
+    <header>
+      <div><small>BRIDGESTONE CUP BP 2026</small><h1>PILIH CABANG OLAHRAGA</h1></div>
+      <nav><a href="admin.html">Dashboard</a></nav>
+    </header>
+    <section class="intro">
+      <small>SATU MENU UNTUK SELURUH PERTANDINGAN</small>
+      <h2>Pilih cabang olahraga yang ingin dikelola.</h2>
+      <p>Setiap kartu hanya menampilkan pengaturan yang dibutuhkan oleh cabang tersebut.</p>
+    </section>
+    <section class="sport-control-grid" aria-label="Pilihan pengelolaan cabang olahraga">
+      <article data-tournament="badminton-bp-2026" data-category-sport="badminton"><span>01 · FORMAT FLEKSIBEL</span><h2>BADMINTON</h2><p>Pilih kategori Singles, Doubles, atau keduanya. Setiap kategori memiliki data pertandingan tersendiri.</p><div class="category-control"><label>Kategori aktif<select><option value="singles">Singles saja</option><option value="doubles">Doubles / Ganda saja</option><option value="both">Singles + Doubles</option></select></label><button type="button">Simpan kategori</button><output></output></div><div class="format-control"><label>Format kompetisi<select><option value="single_elimination">Langsung playoff / bracket</option><option value="group_and_single_elimination">Group standing lalu playoff</option></select></label><button type="button">Simpan format</button><output></output></div><a class="group-management" href="admin-standings.html?tournament=badminton-bp-2026">Kelola Grup &amp; Kelolosan</a><a href="admin-bracket.html?sport=badminton">Kelola Bracket, Jadwal &amp; Hasil</a></article>
+      <article data-tournament="futsal-bp-2026"><span>02 · FORMAT FLEKSIBEL</span><h2>FUTSAL</h2><p>Pilih langsung playoff atau fase grup terlebih dahulu, lalu atur bracket, jadwal, hasil, dan top scorer.</p><div class="format-control"><label>Format kompetisi<select><option value="single_elimination">Langsung playoff / bracket</option><option value="group_and_single_elimination">Group standing lalu playoff</option></select></label><button type="button">Simpan format</button><output></output></div><a class="group-management" href="admin-standings.html?tournament=futsal-bp-2026">Kelola Grup &amp; Kelolosan</a><a href="admin-bracket.html?sport=futsal">Kelola Bracket, Jadwal &amp; Hasil</a><a href="admin-top-scorers.html">Kelola Top Scorer</a></article>
+      <article data-tournament="chess-bp-2026"><span>03 · FORMAT FLEKSIBEL</span><h2>CHESS</h2><p>Pilih langsung playoff atau fase grup terlebih dahulu, lalu atur bracket, hasil, dan pemenang.</p><div class="format-control"><label>Format kompetisi<select><option value="single_elimination">Langsung playoff / bracket</option><option value="group_and_single_elimination">Group standing lalu playoff</option></select></label><button type="button">Simpan format</button><output></output></div><a class="group-management" href="admin-standings.html?tournament=chess-bp-2026">Kelola Grup &amp; Kelolosan</a><a href="admin-bracket.html?sport=chess">Kelola Bracket, Jadwal &amp; Hasil</a></article>
+      <article data-tournament="table-tennis-bp-2026" data-category-sport="table-tennis"><span>04 · FORMAT FLEKSIBEL</span><h2>TABLE TENNIS</h2><p>Pilih kategori Singles, Doubles, atau keduanya. Setiap kategori memiliki data pertandingan tersendiri.</p><div class="category-control"><label>Kategori aktif<select><option value="singles">Singles saja</option><option value="doubles">Doubles / Ganda saja</option><option value="both">Singles + Doubles</option></select></label><button type="button">Simpan kategori</button><output></output></div><div class="format-control"><label>Format kompetisi<select><option value="single_elimination">Langsung playoff / bracket</option><option value="group_and_single_elimination">Group standing lalu playoff</option></select></label><button type="button">Simpan format</button><output></output></div><a class="group-management" href="admin-standings.html?tournament=table-tennis-bp-2026">Kelola Grup &amp; Kelolosan</a><a href="admin-bracket.html?sport=table-tennis">Kelola Bracket, Jadwal &amp; Hasil</a></article>
+      <article data-tournament="football-bp-2026"><span>05 · FORMAT FLEKSIBEL</span><h2>FOOTBALL</h2><p>Pilih langsung playoff atau fase grup terlebih dahulu, lalu atur bracket, jadwal, skor, dan podium.</p><div class="format-control"><label>Format kompetisi<select><option value="single_elimination">Langsung playoff / bracket</option><option value="group_and_single_elimination">Group standing lalu playoff</option></select></label><button type="button">Simpan format</button><output></output></div><a class="group-management" href="admin-standings.html?tournament=football-bp-2026">Kelola Grup &amp; Kelolosan</a><a href="admin-bracket.html?sport=football">Kelola Bracket, Jadwal &amp; Hasil</a></article>
+      <article><span>06 · RANKING MANUAL</span><h2>FISHING</h2><p>Atur nama tim, dua pemancing setiap tim, skor hasil tangkapan, urutan ranking, dan winner.</p><a href="admin-fishing.html">Kelola Fishing</a></article>
+    </section>
+  </main>
+  <script type="module" src="../js/admin-group-competition.js?v=20260811-flexible-format"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+import { Router } from "express";
+import { authenticateAdmin } from "../../middleware/admin-auth.js";
+import { getAdminGreetings,getPublicGreetings,postGreeting,putGreeting,removeGreeting } from "./greetings.controller.js";
+export const publicGreetingsRouter=Router();
+publicGreetingsRouter.get("/",getPublicGreetings);
+export const adminGreetingsRouter=Router();
+adminGreetingsRouter.use(authenticateAdmin);
+adminGreetingsRouter.get("/",getAdminGreetings);
+adminGreetingsRouter.post("/",postGreeting);
+adminGreetingsRouter.put("/:id",putGreeting);
+adminGreetingsRouter.delete("/:id",removeGreeting);

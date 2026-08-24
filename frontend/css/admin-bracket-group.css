@@ -1,0 +1,15 @@
+.group-bracket-mode .admin-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.group-bracket-mode .setup-panel {
+  display: none;
+}
+
+.group-bracket-mode .bracket-workspace {
+  min-height: 630px;
+}
+
+.group-bracket-mode .empty-state {
+  min-height: 500px;
+}

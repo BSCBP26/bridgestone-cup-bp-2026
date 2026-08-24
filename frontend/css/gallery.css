@@ -1,0 +1,61 @@
+:root{--gold:#d4a32e;--bright:#f5b821;--cream:#f5f0e2;--muted:#89857b;--line:#6e5015}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#030303;color:var(--cream);font-family:Inter,Arial,sans-serif}a,button{font:inherit}.gallery-page{position:relative;width:min(1440px,100%);min-height:900px;margin:auto;padding:24px 48px 48px;overflow:hidden;background:radial-gradient(circle at 50% 43%,rgba(92,59,5,.33),transparent 42%),linear-gradient(145deg,#070707,#020202 68%,#0b0803)}.gallery-page::before{content:"";position:absolute;z-index:0;inset:8px 20px;border:2px solid #9a7428;border-radius:26px;background:url('../assets/images/gallery-frame.svg') center/cover;opacity:.78;pointer-events:none}.gallery-page::after{content:"";position:absolute;z-index:0;inset:17px 29px;border:1px solid #3e3525;border-radius:22px;pointer-events:none}.gallery-topbar,.gallery-content,.gallery-footer{position:relative;z-index:1}.gallery-topbar{height:76px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 20px;border:1px solid #292929;border-radius:5px;background:#111;box-shadow:0 14px 35px rgba(0,0,0,.35)}.gallery-topbar>a{color:#ddd;text-decoration:none}.gallery-topbar .back-link{justify-self:start;padding:12px 14px;border:1px solid #5a4316;border-radius:7px;color:#d7aa40;font-size:11px;font-weight:700}.gallery-brand{font-size:15px;font-weight:700;letter-spacing:-.2px}.gallery-topbar>span{justify-self:end;color:#a88a45;font-size:10px;font-weight:700;letter-spacing:1px}.gallery-content{padding:55px 24px 30px}.gallery-heading{text-align:center}.gallery-heading p{margin:0;color:#d3a432;font-size:10px;font-weight:700;letter-spacing:2.5px}.gallery-heading h1{margin:9px 0 5px;font:700 34px 'Barlow Condensed';letter-spacing:.8px}.gallery-heading span{color:var(--muted);font-size:12px}.gallery-filters{display:flex;justify-content:center;gap:10px;margin:34px 0 40px;overflow-x:auto}.gallery-filters a{flex:0 0 auto;padding:11px 17px;border:1px solid #41351e;border-radius:8px;color:#a9a69f;text-decoration:none;font-size:11px;font-weight:700}.gallery-filters a:hover,.gallery-filters a.active{border-color:#9b7017;background:linear-gradient(135deg,#322407,#110f0a);color:#f5be38}.collection-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.collection-card{position:relative;min-height:204px;padding:24px;overflow:hidden;border:1px solid #574116;border-radius:15px;background:radial-gradient(circle at 75% 25%,color-mix(in srgb,var(--accent) 36%,transparent),transparent 38%),linear-gradient(140deg,#19150d,#080808);color:#fff;text-decoration:none;box-shadow:0 16px 35px rgba(0,0,0,.24);transition:.25s}.collection-card::before{content:"";position:absolute;inset:10px;border:1px solid rgba(255,210,104,.1);border-radius:10px}.collection-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 22px 45px rgba(0,0,0,.35),0 0 20px color-mix(in srgb,var(--accent) 14%,transparent)}.collection-card>small{color:#8c6e2a;font-weight:700}.collection-card .sport-code{position:absolute;right:24px;top:15px;color:color-mix(in srgb,var(--accent) 65%,#fff);font:700 76px 'Barlow Condensed';opacity:.2}.collection-card div{position:absolute;left:24px;right:24px;bottom:22px}.collection-card h2{margin:0 0 7px;font:700 24px 'Barlow Condensed'}.collection-card p{margin:0;color:#a6a195;font-size:9px;font-weight:700;letter-spacing:1px}.collection-card b{position:absolute;right:0;bottom:0;color:var(--accent);font-size:18px}.gallery-footer{height:66px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:5px 24px 0;padding:0 22px;border:1px solid #352b18;border-radius:10px;background:#0b0b0a}.gallery-footer b{color:#d6a52f;font-size:10px;letter-spacing:1px}.gallery-footer span{color:#77736a;font-size:10px;letter-spacing:1.3px}.gallery-footer small{justify-self:end;color:#a5843d;font-size:10px}.moments-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.moment-card{position:relative;aspect-ratio:1.42;overflow:hidden;padding:0;border:1px solid #473715;border-radius:10px;background:radial-gradient(circle at 75% 20%,color-mix(in srgb,var(--accent) 35%,transparent),transparent 40%),linear-gradient(145deg,#18140c,#080808);color:#fff;cursor:pointer;box-shadow:0 10px 24px rgba(0,0,0,.24);transition:.2s}.moment-card:hover{border-color:var(--accent);transform:translateY(-2px)}.moment-card>span{position:absolute;top:10px;left:12px;color:#d5ad4d;font:700 11px 'DM Sans'}.moment-card>i{position:absolute;right:10px;top:8px;color:#9c792a;font-style:normal}.moment-card div{position:absolute;left:11px;right:11px;bottom:10px;text-align:left}.moment-card small{display:block;color:#968056;font-size:7px;letter-spacing:1px}.moment-card strong{font:700 13px 'Barlow Condensed'}.lightbox{width:min(920px,calc(100% - 32px));padding:18px;border:1px solid #8a6418;border-radius:18px;background:#080808;color:#fff;box-shadow:0 35px 100px #000}.lightbox::backdrop{background:rgba(0,0,0,.88);backdrop-filter:blur(6px)}.lightbox-image{display:grid;width:100%;aspect-ratio:16/9;place-items:center;border:1px solid #493716;border-radius:12px;background:radial-gradient(circle at 65% 25%,rgba(212,163,46,.34),transparent 37%),linear-gradient(145deg,#1a160e,#060606)}.lightbox-image>span{color:rgba(245,184,33,.22);font:700 clamp(100px,20vw,220px) 'Barlow Condensed'}.lightbox-caption{padding:16px 5px 3px;text-align:center}.lightbox-caption small{color:#d3a432;font-size:9px;letter-spacing:2px}.lightbox-caption h2{margin:5px 0;font:700 25px 'Barlow Condensed'}.lightbox-caption p{margin:0;color:#68655f;font-size:8px;letter-spacing:1px}.lightbox-close,.lightbox-arrow{position:absolute;z-index:2;display:grid;place-items:center;border:1px solid #76571a;background:#0d0c09;color:#e7b73f;cursor:pointer}.lightbox-close{top:28px;right:28px;width:38px;height:38px;border-radius:50%;font-size:22px}.lightbox-arrow{top:45%;width:44px;height:60px;border-radius:9px;font-size:30px}.lightbox-arrow.previous{left:28px}.lightbox-arrow.next{right:28px}
+@media(max-width:900px){.gallery-page{padding:12px 14px 30px}.gallery-page::before{inset:5px}.gallery-page::after{display:none}.gallery-topbar{height:62px;grid-template-columns:auto 1fr auto;padding:0 10px;gap:8px}.gallery-brand{font-size:11px;text-align:center}.gallery-topbar .back-link{padding:9px;font-size:9px}.gallery-content{padding:38px 10px 24px}.gallery-heading h1{font-size:29px}.gallery-filters{justify-content:flex-start;margin:26px 0}.collection-grid{grid-template-columns:repeat(2,1fr)}.moments-grid{grid-template-columns:repeat(3,1fr)}.gallery-footer{grid-template-columns:1fr auto;margin:0 10px;padding:0 14px}.gallery-footer span{display:none}.lightbox-arrow{top:auto;bottom:22px}.lightbox-arrow.previous{left:18px}.lightbox-arrow.next{right:18px}}
+@media(max-width:520px){
+  .gallery-page{padding:10px 12px 28px;overflow-x:hidden}
+  .gallery-page::before{inset:5px;border-radius:20px}
+  .gallery-topbar{height:auto;min-height:76px;grid-template-columns:auto minmax(0,1fr);align-items:center;padding:10px 12px;gap:10px}
+  .gallery-topbar>span{display:none}
+  .gallery-topbar .back-link{padding:10px 11px;font-size:8px;white-space:nowrap}
+  .gallery-brand{min-width:0;font-size:10px;line-height:14px;text-align:right;overflow-wrap:anywhere}
+  .gallery-topbar>.public-language-switcher{grid-column:1/-1;justify-self:start;width:auto;margin:0!important}
+  .gallery-content{padding:36px 12px 24px}
+  .gallery-heading p{font-size:8px;line-height:14px}
+  .gallery-heading h1{font-size:30px;line-height:36px}
+  .gallery-heading span{display:block;font-size:10px;line-height:17px}
+  .gallery-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:24px 0 30px;overflow:visible}
+  .gallery-filters a{display:grid;min-width:0;min-height:46px;place-items:center;padding:9px 8px;text-align:center;font-size:9px;line-height:13px;overflow-wrap:anywhere}
+  .collection-grid{grid-template-columns:1fr;gap:14px}
+  .collection-card{min-height:180px;padding:18px}
+  .collection-card .sport-code{right:18px;font-size:62px}
+  .collection-card div{left:18px;right:18px;bottom:18px}
+  .collection-card h2{font-size:21px;line-height:25px}
+  .collection-card b{font-family:Inter,Arial,sans-serif;font-size:16px}
+  .moments-grid{grid-template-columns:repeat(2,1fr);gap:9px}
+  .moment-card strong{font-size:11px}
+  .gallery-footer{height:auto;min-height:56px;margin-inline:12px;padding:12px}
+  .gallery-footer small{display:none}
+  .lightbox{padding:10px}
+  .lightbox-close{top:17px;right:17px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Gallery navigation: language belongs in the top bar, video beside Fishing. */
+.gallery-topbar>.gallery-language-toggle{justify-self:end;margin:0}
+.gallery-language-toggle{display:inline-flex;align-items:center;gap:2px;padding:3px;border:1px solid #66501d;border-radius:999px;background:#080704;color:#aaa;cursor:pointer}
+.gallery-language-toggle span{min-width:30px;padding:7px 9px;border-radius:999px;font:700 10px Inter,sans-serif;text-align:center}
+.gallery-language-toggle span.active{background:#d6a42c;color:#090704}
+.gallery-filters .gallery-video-link{border-color:#7a5918;color:#e5b13b;background:linear-gradient(135deg,rgba(76,52,7,.45),rgba(10,9,6,.9))}
+.gallery-filters .gallery-video-link:hover,.gallery-filters .gallery-video-link:focus-visible{border-color:#f0be44;color:#ffe29a;box-shadow:0 0 18px rgba(214,164,44,.16);outline:none}
+.gallery-video-link span{margin-left:4px;font-size:13px}
+
+@media(max-width:520px){
+  .gallery-topbar{grid-template-columns:auto minmax(0,1fr) auto}
+  .gallery-topbar>.gallery-language-toggle{grid-column:auto;justify-self:end;margin:0}
+  .gallery-language-toggle span{min-width:27px;padding:6px 7px;font-size:9px}
+}
+
+/* Backward-compatible layout for browsers still holding the old sport-page HTML. */
+.sport-collection .gallery-topbar{position:relative}
+.sport-collection .gallery-topbar>#photo-count{display:none!important}
+.sport-collection .gallery-topbar>.public-language-switcher{
+  position:absolute;
+  top:50%;
+  right:20px;
+  grid-column:auto!important;
+  width:auto!important;
+  margin:0!important;
+  transform:translateY(-50%);
+}
+@media(max-width:520px){
+  .sport-collection .gallery-topbar>.public-language-switcher{right:10px;margin:0!important}
+}

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Bracket — Bridgestone Cup BP 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin-bracket.css?v=20260808-group-flow">
+  <link rel="stylesheet" href="../css/admin-bracket-group.css?v=20260808-group-flow">
+</head>
+<body>
+  <main class="admin-shell">
+    <header class="admin-header">
+      <div>
+        <span>BRIDGESTONE CUP BP 2026</span>
+        <h1>PENGATURAN BRACKET</h1>
+      </div>
+      <nav class="admin-links" style="display:flex;gap:8px"><a href="admin-group-competition.html">Pilih Cabor</a></nav>
+    </header>
+
+    <section class="admin-grid">
+      <aside class="setup-panel">
+        <header class="panel-heading">
+          <span>01</span>
+          <div><small>TURNAMEN</small><h2>Peserta &amp; Bracket</h2></div>
+        </header>
+
+        <label for="sport-select">Cabang olahraga</label>
+        <select id="sport-select"></select>
+
+        <label for="tournament-select">Turnamen</label>
+        <select id="tournament-select"></select>
+
+        <label for="participants-input">Peserta <small>satu nama per baris</small></label>
+        <textarea id="participants-input" rows="12" placeholder="Team Production&#10;Team QA&#10;Team Maintenance"></textarea>
+        <p id="participant-summary" class="field-note">0 peserta</p>
+
+        <div class="setup-actions">
+          <button id="preview-button" type="button">Preview</button>
+          <button id="save-button" type="button" class="primary">Simpan</button>
+          <button id="regenerate-button" type="button" class="danger">Regenerate</button>
+          <button id="load-button" type="button">Muat tersimpan</button>
+        </div>
+        <p class="memory-note">Bracket, jadwal, dan hasil yang disimpan akan tetap tersedia.</p>
+      </aside>
+
+      <section class="workspace-panel">
+        <header class="workspace-heading">
+          <div><small>HASIL BRACKET</small><h2 id="workspace-title">Bracket belum dimuat</h2></div>
+          <output id="status-message" role="status" aria-live="polite">Pilih turnamen dan masukkan peserta.</output>
+        </header>
+        <div id="bracket-workspace" class="bracket-workspace">
+          <div class="empty-state"><strong>Belum ada bracket</strong><span>Gunakan Preview atau Muat tersimpan.</span></div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <script type="module" src="../js/admin-bracket.js?v=20260821-active-category-fix"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Badminton Bracket — Bridgestone Cup BP 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=DM+Sans:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/badminton.css?v=20260807-clean-bracket-2">
+</head>
+<body>
+  <main class="sport-page bracket-page">
+    <header class="sports-header">
+      <a class="sports-brand" href="../index.html">BRIDGESTONE CUP BP 2026</a>
+      <button class="sports-menu-toggle" type="button" aria-expanded="false" aria-controls="sports-menu">Menu</button>
+      <nav id="sports-menu" aria-label="Pilih cabang olahraga">
+        <a class="active" href="badminton-bracket.html">Badminton</a><a href="futsal-group-standing.html">Futsal</a><a href="#">Chess</a><a href="#">Table Tennis</a><a href="#">Football</a><a href="#">Fishing</a>
+      </nav>
+    </header>
+    <nav class="view-tabs" aria-label="Tampilan Badminton"><a class="active" aria-current="page" href="badminton-bracket.html">Bracket</a><a href="badminton-schedule.html">Schedule</a></nav>
+    <div class="bracket-scroll" tabindex="0" aria-label="Bagan kejuaraan Badminton dapat digeser horizontal pada layar kecil">
+      <section class="bracket-canvas" aria-labelledby="bracket-title">
+        <img class="bracket-grid" src="../assets/images/badminton-dot-grid.svg" alt="">
+        <img class="bracket-lines" src="../assets/images/badminton-bracket-connectors.svg" alt="">
+        <header class="bracket-heading"><h1 id="bracket-title">CHAMPIONSHIP BRACKET</h1><p>CLASSIC SERIES &nbsp;&bull;&nbsp; SINGLE ELIMINATION</p></header>
+        <div class="round-labels" aria-hidden="true"><span>ROUND OF 16</span><span>QUARTER FINAL</span><span>SEMI FINAL</span><span>GRAND FINAL</span><span>CHAMPION</span><span>GRAND FINAL</span><span>SEMI FINAL</span><span>QUARTER FINAL</span><span>ROUND OF 16</span></div>
+        <div id="bracket-matches"></div>
+        <img class="bracket-shuttle center" src="../assets/images/badminton-shuttlecock.png" alt="Trofi shuttlecock Badminton">
+      </section>
+    </div>
+    <img class="corner-shuttle left" src="../assets/images/badminton-shuttlecock.png" alt=""><img class="corner-shuttle right" src="../assets/images/badminton-shuttlecock.png" alt="">
+  </main>
+<script type="module" src="../js/badminton.js?v=20260809-public-i18n"></script>
+</body>
+</html>

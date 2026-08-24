@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard — Bridgestone Cup BP 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css?v=20260812-2">
+</head>
+<body>
+  <main class="dashboard-shell">
+    <header class="dashboard-header">
+      <div class="brand-block"><span>BRIDGESTONE CUP BP 2026</span><h1>DASHBOARD ADMIN</h1></div>
+      <div class="header-actions"><span id="admin-identity"></span><button id="logout-button" type="button">Keluar</button><a href="../index.html">Situs publik</a></div>
+    </header>
+
+    <section class="storage-panel" aria-labelledby="storage-heading">
+      <header class="section-heading">
+        <div><small>KAPASITAS MEDIA</small><h2 id="storage-heading">Kapasitas Penyimpanan</h2></div>
+        <span id="storage-checked">Memuat pemakaianâ€¦</span>
+      </header>
+      <div id="storage-usage" class="storage-grid" aria-live="polite">
+        <article class="storage-card loading"><strong>Supabase</strong><span>Memuatâ€¦</span></article>
+        <article class="storage-card loading"><strong>Cloudflare R2</strong><span>Memuatâ€¦</span></article>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      <section class="modules-panel">
+        <header class="section-heading"><div><small>MENU ADMIN</small><h2>Bagian yang Dapat Diatur</h2></div><span>5 pilihan</span></header>
+        <div class="module-list">
+          <a class="module-card active competition-module" href="admin-group-competition.html"><b>01</b><div><strong>Kelola Pertandingan per Cabor</strong><span>Pilih Badminton, Futsal, Chess, Table Tennis, Football, atau Fishing untuk mengatur grup, bracket, jadwal, skor, ranking, dan pemenang.</span></div></a>
+          <a class="module-card active" href="admin-gallery.html"><b>02</b><div><strong>Galeri Pertandingan</strong><span>Unggah, atur, dan publikasikan dokumentasi foto setiap cabang olahraga.</span></div></a>
+          <a class="module-card active" href="admin-greetings.html"><b>03</b><div><strong>Sambutan Acara</strong><span>Kelola nama, jabatan, pesan sambutan, serta foto perwakilan acara.</span></div></a>
+          <a class="module-card active" href="admin-support.html"><b>04</b><div><strong>Pesan Dukungan</strong><span>Kelola support card, tim pendukung, foto, dan leaderboard Top Supporter Teams.</span></div></a>
+          <a class="module-card active" href="admin-announcements.html"><b>05</b><div><strong>Pengumuman Publik</strong><span>Tulis, simpan sebagai draft, atau publikasikan informasi untuk pengunjung.</span></div></a>
+        </div>
+      </section>
+
+      <aside class="sports-panel">
+        <header class="section-heading"><div><small>DAFTAR CABOR</small><h2>Cabang Olahraga</h2></div></header>
+        <div id="sports-list" class="sports-list"><p>Memuat data olahraga…</p></div>
+      </aside>
+    </section>
+  </main>
+  <script type="module" src="../js/admin.js?v=20260812-3"></script>
+</body>
+</html>

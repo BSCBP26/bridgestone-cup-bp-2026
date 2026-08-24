@@ -1,0 +1,3 @@
+import { Router } from "express";import { authenticateAdmin } from "../../middleware/admin-auth.js";import { getAdminAnnouncements,getPublicAnnouncements,postAnnouncement,putAnnouncement,removeAnnouncement } from "./announcements.controller.js";
+export const publicAnnouncementsRouter=Router();publicAnnouncementsRouter.get("/",getPublicAnnouncements);
+export const adminAnnouncementsRouter=Router();adminAnnouncementsRouter.use(authenticateAdmin);adminAnnouncementsRouter.get("/",getAdminAnnouncements);adminAnnouncementsRouter.post("/",postAnnouncement);adminAnnouncementsRouter.put("/:id",putAnnouncement);adminAnnouncementsRouter.delete("/:id",removeAnnouncement);
