@@ -21,7 +21,7 @@ const workspaceCopy = {
   'admin-top-scorers.html': ['PENGATURAN TOP SCORER FUTSAL', 'Pengaturan Top Scorer Futsal — Bridgestone Cup'],
   'admin-fishing.html': ['PENGATURAN FISHING', 'Pengaturan Fishing — Bridgestone Cup'],
   'admin-gallery.html': ['PENGATURAN GALERI', 'Pengaturan Galeri — Bridgestone Cup'],
-  'admin-greetings.html': ['PENGATURAN SAMBUTAN', 'Pengaturan Sambutan — Bridgestone Cup'],
+  'admin-greetings.html': ['EXHIBITION MATCH', 'Pengaturan Exhibition Match — Bridgestone Cup'],
   'admin-support.html': ['PENGATURAN PESAN DUKUNGAN', 'Pengaturan Pesan Dukungan — Bridgestone Cup'],
   'admin-announcements.html': ['PENGATURAN PENGUMUMAN', 'Pengaturan Pengumuman — Bridgestone Cup'],
 };
@@ -39,7 +39,7 @@ const adminTermReplacements = new Map([
   ['TEAM PAIRS / BRACKET', 'TIM & PEMANCING'],
   ['RANKING & WINNER', 'PERINGKAT & PEMENANG'],
   ['MEDIA LIBRARY', 'FOTO TERSIMPAN'],
-  ['GREETING LIBRARY', 'SAMBUTAN TERSIMPAN'],
+  ['EXHIBITION MATCH LIBRARY', 'EXHIBITION MATCH TERSIMPAN'],
   ['SUPPORT LIBRARY', 'PESAN DUKUNGAN TERSIMPAN'],
   ['ANNOUNCEMENT LIBRARY', 'PENGUMUMAN TERSIMPAN'],
   ['GROUP TO BRACKET', 'PESERTA LOLOS KE BRACKET'],
