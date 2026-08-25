@@ -459,6 +459,31 @@ main{
 @media(max-width:700px){.ambient-dust i:nth-child(n+9){display:none}.panel.section::after{opacity:.65}.motion-ready main>.section.is-revealed :is(.greeting-card,.schedule-card,.sport-card,.gallery-grid>a,.support-grid article){transition-delay:0s}}
 @media(prefers-reduced-motion:reduce){.panel.section::after,.ambient-dust i,.section-heading h2::after,.arena-heading h2::after{animation:none}.ambient-dust{display:none}.motion-ready main>.section :is(.greeting-card,.schedule-card,.sport-card,.gallery-grid>a,.support-grid article){opacity:1;transform:none}}
 
+/* Exhibition Match: alternating story panels with typewriter copy and photo slides. */
+#greetings{height:900px}
+#greetings .section-heading h2{font-family:'Barlow Condensed',sans-serif;letter-spacing:1px}
+#greetings .greeting-grid{position:absolute;top:278px;left:50px;right:50px;display:grid;grid-template-columns:1fr;gap:18px}
+#greetings .exhibition-card{display:grid;grid-template-columns:1fr 1fr;width:100%;height:246px;margin:0;padding:0;overflow:hidden;text-align:left;border-radius:14px;background:linear-gradient(110deg,rgba(15,14,11,.98),rgba(9,9,8,.9)),url('../assets/images/card-texture.png') center/cover}
+#greetings .exhibition-card:nth-child(even) .exhibition-copy{order:2}
+#greetings .exhibition-card:nth-child(even) .exhibition-photo{order:1}
+.exhibition-copy{display:flex;flex-direction:column;justify-content:center;padding:28px 38px}
+.exhibition-copy small{position:static;color:var(--gold);font-size:9px;letter-spacing:2px}
+.exhibition-copy>span{margin-top:8px;color:var(--bright);font:700 12px 'Barlow Condensed';letter-spacing:2px}
+.exhibition-copy h3{max-width:330px;margin:8px 0;color:#f3efe4;font:700 28px/1.05 'Barlow Condensed';letter-spacing:.3px}
+.exhibition-copy p{min-height:48px;max-width:460px;margin:0;color:#c9c4b8;font-size:12px;line-height:1.65}
+.exhibition-copy p::after{content:'▋';margin-left:2px;color:var(--bright);animation:typeCursor .8s steps(1) infinite}
+.exhibition-copy b{margin-top:13px;color:#9c8a62;font-size:10px;letter-spacing:1px}
+.exhibition-photo{position:relative;min-width:0;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(201,151,38,.42),transparent 50%),#100e09}
+.exhibition-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,7,6,.4),transparent 45%,rgba(7,7,6,.15));pointer-events:none}
+.exhibition-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.04);transition:opacity .7s ease,transform 3s ease;filter:saturate(.85) contrast(1.05)}
+.exhibition-slide.active{opacity:.86;transform:scale(1)}
+.exhibition-photo>i,.exhibition-photo>em{position:absolute;z-index:2;color:#f2c14b;font-style:normal;font-weight:700;letter-spacing:1.7px}
+.exhibition-photo>i{left:20px;bottom:17px;font-size:9px}.exhibition-photo>em{right:20px;top:17px;font-size:12px}
+@keyframes typeCursor{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.exhibition-copy p::after{animation:none}.exhibition-slide{transition:none;transform:none}}
+@media(max-width:700px){#greetings{height:980px}#greetings .section-heading{padding-top:116px}#greetings .greeting-grid{top:230px;left:20px;right:20px;gap:14px}#greetings .exhibition-card{grid-template-columns:1fr;height:350px}#greetings .exhibition-card:nth-child(even) .exhibition-copy{order:1}#greetings .exhibition-card:nth-child(even) .exhibition-photo{order:2}.exhibition-photo{min-height:150px;order:2!important}.exhibition-copy{order:1!important;padding:21px 24px}.exhibition-copy h3{font-size:24px}.exhibition-copy p{font-size:11px;line-height:1.5}.exhibition-photo>i{bottom:11px}.exhibition-photo>em{top:11px}}
+@media(max-width:420px){#greetings{height:1010px}.exhibition-copy{padding:18px 20px}.exhibition-copy h3{font-size:22px}}
+
 /* Bridgestone 50th Golden Era identity — tire engineering meets six sports. */
 .golden-era-emblem{position:absolute;z-index:1;right:72px;bottom:68px;width:290px;height:290px;pointer-events:none;opacity:.72}
 .tire-ring{position:absolute;inset:30px;display:grid;place-items:center;border:2px solid rgba(235,181,58,.4);border-radius:50%;background:radial-gradient(circle,rgba(216,157,31,.12) 0 37%,transparent 38%);filter:drop-shadow(0 0 16px rgba(214,158,38,.25));animation:goldenTireSpin 24s linear infinite}

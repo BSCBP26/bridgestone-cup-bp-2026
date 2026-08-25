@@ -1,8 +1,10 @@
 import './public-i18n.js?v=20260821-live-bracket-counts';
 import { API_BASE as apiBase } from './api-config.js';
-import { renderGalleryPreview, renderHome, renderGreetings, renderSchedules, renderSports, renderSupporters } from './components/home.js?v=20260821-hourly-gallery';
+import { exhibitionDemo } from './data/home-data.js?v=20260825-exhibition-demo';
+import { renderGalleryPreview, renderHome, renderGreetings, renderSchedules, renderSports, renderSupporters } from './components/home.js?v=20260825-exhibition';
 
-renderHome();
+const exhibitionDemoMode = new URLSearchParams(location.search).has('exhibitionDemo');
+renderHome(exhibitionDemoMode ? exhibitionDemo : []);
 
 const scheduleTournaments = {
   FUTSAL:'futsal-bp-2026',
@@ -48,7 +50,7 @@ if (apiBase) {
   fetch(`${apiBase}/greetings`)
     .then(response => response.ok ? response.json() : Promise.reject())
     .then(payload => {
-      if (payload.data?.length) { latestGreetings = payload.data; renderGreetings(latestGreetings, 'api'); }
+      if (payload.data?.length && !exhibitionDemoMode) { latestGreetings = payload.data; renderGreetings(latestGreetings, 'api'); }
     })
     .catch(() => {});
 

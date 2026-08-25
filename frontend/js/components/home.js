@@ -3,14 +3,32 @@ import { sports } from '../data/home-data.js?v=20260809-live-only';
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[character]));
 const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
 const emptySection = title => `<div class="home-empty-state"><strong>${title}</strong></div>`;
-const greetingCard = item => { const english = document.documentElement.lang === 'en'; const role = english ? (item.roleEn || item.role || item.roleId) : (item.roleId || item.role); const message = english ? (item.messageEn || item.message || item.messageId) : (item.messageId || item.message); return `<article class="greeting-card">${item.photoUrl ? `<div class="portrait live"><img src="${escapeHtml(item.photoUrl)}" alt="${english ? 'Photo of' : 'Foto'} ${escapeHtml(item.name)}"></div>` : `<div class="portrait"><img src="assets/images/portrait-head.svg" alt=""><i></i><span>${escapeHtml(item.initials || initials(item.name))}</span><b>BP</b></div>`}<h3>${escapeHtml(item.name)}</h3><strong>${escapeHtml(role)}</strong><blockquote>“<p>${escapeHtml(message)}</p></blockquote><small>BRIDGESTONE CUP BP 2026</small></article>`; };
+let exhibitionTimers = [];
+const greetingCard = (item, index, photoUrls) => { const english = document.documentElement.lang === 'en'; const message = english ? (item.messageEn || item.message || item.messageId) : (item.messageId || item.message); const slides = photoUrls.length ? photoUrls : ['assets/images/portrait-head.svg']; const slideMarkup = slides.map((url, slideIndex) => `<img class="exhibition-slide${slideIndex === 0 ? ' active' : ''}" src="${escapeHtml(url)}" alt="${english ? 'Exhibition match photo' : 'Foto exhibition match'}"${slideIndex ? ' aria-hidden="true"' : ''}>`).join(''); return `<article class="greeting-card exhibition-card" data-message="${escapeHtml(message)}"><div class="exhibition-copy"><small>BRIDGESTONE CUP BP 2026</small><span>EXHIBITION MATCH ${String(index + 1).padStart(2, '0')}</span><h3>${escapeHtml(english ? 'A shared start to the competition' : 'Awal kebersamaan menuju kompetisi')}</h3><p class="exhibition-type" aria-live="polite"></p><b>${escapeHtml(english ? (item.roleEn || item.role || item.roleId || 'Bridgestone Cup Family') : (item.roleId || item.role || 'Keluarga Bridgestone Cup'))}</b></div><div class="exhibition-photo" data-slide-count="${slides.length}">${slideMarkup}<i>PHOTO STORY</i><em>${String(index + 1).padStart(2, '0')}</em></div></article>`; };
+
+function startExhibitionMotion() {
+  exhibitionTimers.forEach(timer => clearInterval(timer)); exhibitionTimers = [];
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.exhibition-card').forEach(card => {
+    const message = card.dataset.message || '';
+    const type = card.querySelector('.exhibition-type');
+    if (reduced) type.textContent = message;
+    else { type.textContent = ''; let cursor = 0; const typeTimer = setInterval(() => { type.textContent = message.slice(0, cursor += 1); if (cursor >= message.length) clearInterval(typeTimer); }, 28); exhibitionTimers.push(typeTimer); }
+    if (reduced) return;
+    const slides = [...card.querySelectorAll('.exhibition-slide')]; if (slides.length < 2) return;
+    let active = 0; exhibitionTimers.push(setInterval(() => { slides[active].classList.remove('active'); active = (active + 1) % slides.length; slides[active].classList.add('active'); }, 3000));
+  });
+}
 
 export function renderGreetings(items = [], source = 'empty') {
   const list = document.querySelector('#greeting-list');
   list.dataset.source = source;
-  list.innerHTML = items.length
-    ? items.map(greetingCard).join('')
+  const exhibitionItems = items.slice(0, 2);
+  const photoUrls = items.map(item => item.photoUrl).filter(Boolean);
+  list.innerHTML = exhibitionItems.length
+    ? exhibitionItems.map((item, index) => greetingCard(item, index, photoUrls)).join('')
     : emptySection('GREETING BELUM TERSEDIA');
+  if (exhibitionItems.length) startExhibitionMotion();
 }
 
 const supporterImages = {
@@ -128,8 +146,8 @@ export function renderGalleryPreview(items = [], source = 'empty', hourBucket = 
   list.innerHTML = cards.join('');
 }
 
-export function renderHome() {
-  renderGreetings();
+export function renderHome(exhibitionItems = []) {
+  renderGreetings(exhibitionItems);
   renderSchedules();
   renderSports();
   renderGalleryPreview();

@@ -4,6 +4,11 @@ export const greetings = [
   { initials: 'BR', name: 'BARLIANTO', role: 'HEAD OF KOHABI', message: 'Salam olahraga! Kompetisi Bridgestone Cup bukan sekadar pertandingan, tetapi sarana menciptakan kekompakan yang memperkuat kerja sama. Selamat bertanding, junjung sportivitas, dan sukses untuk semua!' }
 ];
 
+export const exhibitionDemo = [
+  { name: 'EXHIBITION MATCH 01', role: 'OPENING CEREMONY', message: 'Satu lapangan, satu semangat. Kita mulai perjalanan Bridgestone Cup dengan sportivitas dan energi positif.', photoUrl: 'assets/images/futsal-ball.png' },
+  { name: 'EXHIBITION MATCH 02', role: 'ONE BRIDGESTONE TEAM', message: 'Setiap gerakan membawa cerita. Nikmati pertandingan, dukung tim, dan rayakan kebersamaan kita.', photoUrl: 'assets/images/badminton-shuttlecock.png' },
+];
+
 export const sports = [
   { name: 'FUTSAL', code: 'F', count: '16 TEAMS' }, { name: 'CHESS', code: 'C', count: '32 PLAYERS' },
   { name: 'BADMINTON', code: 'B', count: '16 PAIRS' }, { name: 'TABLE TENNIS', code: 'TT', count: '16 PLAYERS' },
