@@ -484,6 +484,19 @@ main{
 @media(max-width:700px){#greetings{height:1250px}#greetings .section-heading{padding-top:116px}#greetings .greeting-grid{top:230px;left:20px;right:20px;gap:14px}#greetings .exhibition-card{grid-template-columns:1fr;height:310px}#greetings .exhibition-card:nth-child(even) .exhibition-copy{order:1}#greetings .exhibition-card:nth-child(even) .exhibition-photo{order:2}.exhibition-photo{min-height:130px;order:2!important}.exhibition-copy{order:1!important;padding:21px 24px}.exhibition-copy h3{font-size:24px}.exhibition-copy p{font-size:11px;line-height:1.5}.exhibition-photo>i{bottom:11px}.exhibition-photo>em{top:11px}}
 @media(max-width:420px){#greetings{height:1300px}.exhibition-copy{padding:18px 20px}.exhibition-copy h3{font-size:22px}}
 
+/* Exhibition Match spacing and responsive media polish. */
+#greetings .section-heading span{display:block;max-width:620px;margin:0 auto;line-height:1.5}
+#greetings .greeting-grid{top:282px}
+@media(max-width:700px){
+  #greetings{height:1450px}
+  #greetings .greeting-grid{top:230px}
+  #greetings .exhibition-card{height:auto;min-height:0;grid-template-rows:auto auto}
+  .exhibition-copy{min-height:230px}
+  .exhibition-photo{height:auto;min-height:0;aspect-ratio:16/9}
+  .exhibition-slide{object-fit:contain}
+}
+@media(max-width:420px){#greetings{height:1480px}.exhibition-copy{min-height:225px}}
+
 /* Bridgestone 50th Golden Era identity — tire engineering meets six sports. */
 .golden-era-emblem{position:absolute;z-index:1;right:72px;bottom:68px;width:290px;height:290px;pointer-events:none;opacity:.72}
 .tire-ring{position:absolute;inset:30px;display:grid;place-items:center;border:2px solid rgba(235,181,58,.4);border-radius:50%;background:radial-gradient(circle,rgba(216,157,31,.12) 0 37%,transparent 38%);filter:drop-shadow(0 0 16px rgba(214,158,38,.25));animation:goldenTireSpin 24s linear infinite}
