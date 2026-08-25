@@ -48,6 +48,8 @@ app.use("/api/admin/gallery", adminGalleryRouter);
 app.use("/api/gallery", publicGalleryRouter);
 app.use("/api/admin/greetings", adminGreetingsRouter);
 app.use("/api/greetings", publicGreetingsRouter);
+app.use("/api/admin/exhibition-matches", adminGreetingsRouter);
+app.use("/api/exhibition-matches", publicGreetingsRouter);
 app.use("/api/admin/support", adminSupportRouter);
 app.use("/api/support", publicSupportRouter);
 app.use("/api/admin/announcements", adminAnnouncementsRouter);

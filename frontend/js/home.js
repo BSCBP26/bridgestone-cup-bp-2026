@@ -47,7 +47,7 @@ if (apiBase) {
     return loadTournamentSchedule(tournamentId).then(matches => [sport, matches]);
   })).then(entries => renderSchedules(Object.fromEntries(entries)));
 
-  fetch(`${apiBase}/greetings`)
+  fetch(`${apiBase}/exhibition-matches`)
     .then(response => response.ok ? response.json() : Promise.reject())
     .then(payload => {
       if (payload.data?.length && !exhibitionDemoMode) { latestGreetings = payload.data; renderGreetings(latestGreetings, 'api'); }
