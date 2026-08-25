@@ -7,6 +7,7 @@ export const greetings = [
 export const exhibitionDemo = [
   { name: 'EXHIBITION MATCH 01', role: 'OPENING CEREMONY', message: 'Satu lapangan, satu semangat. Kita mulai perjalanan Bridgestone Cup dengan sportivitas dan energi positif.', photoUrl: 'assets/images/futsal-ball.png' },
   { name: 'EXHIBITION MATCH 02', role: 'ONE BRIDGESTONE TEAM', message: 'Setiap gerakan membawa cerita. Nikmati pertandingan, dukung tim, dan rayakan kebersamaan kita.', photoUrl: 'assets/images/badminton-shuttlecock.png' },
+  { name: 'EXHIBITION MATCH 03', role: 'GOLDEN ERA 50TH ANNIVERSARY', message: 'Energi, komitmen, dan kebersamaan menghubungkan setiap cabang olahraga dalam satu perayaan.', photoUrl: 'assets/images/anniversary/e8-commitment.webp' },
 ];
 
 export const sports = [

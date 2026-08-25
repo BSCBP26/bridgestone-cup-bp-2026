@@ -10,12 +10,12 @@ const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, c => ({ '&':
 const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
 
 function setStatus(message, error = false) { status.textContent = message; status.className = error ? 'error' : ''; }
-function resetForm() { form.reset(); field('id').value = ''; field('sortOrder').value = '0'; document.querySelector('#form-title').textContent = 'Tambah Greeting'; cancel.hidden = true; }
+function resetForm() { form.reset(); field('id').value = ''; field('sortOrder').value = '0'; document.querySelector('#form-title').textContent = 'Tambah Exhibition Match'; cancel.hidden = true; }
 function render() {
-  if (!greetings.length) { items.innerHTML = '<p>Belum ada greeting tersimpan.</p>'; return; }
+  if (!greetings.length) { items.innerHTML = '<p>Belum ada Exhibition Match tersimpan.</p>'; return; }
   items.innerHTML = greetings.map(item => `<article class="item greeting-item" data-id="${item.id}">${item.photoUrl ? `<img src="${escapeHtml(item.photoUrl)}" alt="Foto ${escapeHtml(item.name)}">` : `<div class="placeholder">${escapeHtml(initials(item.name))}</div>`}<div class="item-body"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.roleId)} · ${escapeHtml(item.status)}</span><p>${escapeHtml(item.messageId)}</p><div class="item-actions"><button class="edit" type="button">Edit</button><button class="toggle" type="button">${item.status === 'published' ? 'Jadikan draft' : 'Publish'}</button><button class="danger" type="button">Hapus</button></div></div></article>`).join('');
 }
-async function load() { items.innerHTML = '<p>Memuat greeting…</p>'; greetings = (await adminRequest('/admin/greetings')).data; render(); }
+async function load() { items.innerHTML = '<p>Memuat Exhibition Match…</p>'; greetings = (await adminRequest('/admin/greetings')).data; render(); }
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -34,7 +34,7 @@ form.addEventListener('submit', async event => {
     const payload = { name:field('name').value.trim(), roleId:field('roleId').value.trim(), roleEn:field('roleEn').value.trim(), messageId:field('messageId').value.trim(), messageEn:field('messageEn').value.trim(), photoStoragePath, sortOrder:Number(field('sortOrder').value), status:field('status').value };
     await adminRequest(current ? `/admin/greetings/${current.id}` : '/admin/greetings', { method:current ? 'PUT' : 'POST', body:JSON.stringify(payload) });
     if (uploaded && current?.photoStoragePath) await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({ storagePath:current.photoStoragePath }) }).catch(() => {});
-    setStatus(current ? 'Greeting berhasil diperbarui.' : 'Greeting berhasil disimpan.');
+    setStatus(current ? 'Exhibition Match berhasil diperbarui.' : 'Exhibition Match berhasil disimpan.');
     resetForm(); await load();
   } catch (error) {
     if (uploaded?.storagePath) await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({ storagePath:uploaded.storagePath }) }).catch(() => {});
@@ -48,11 +48,11 @@ items.addEventListener('click', async event => {
   try {
     if (event.target.closest('.edit')) {
       for (const name of ['id','name','roleId','roleEn','messageId','messageEn','sortOrder','status']) field(name).value = item[name] ?? '';
-      document.querySelector('#form-title').textContent = 'Edit Greeting'; cancel.hidden = false; form.scrollIntoView({ behavior:'smooth' }); return;
+      document.querySelector('#form-title').textContent = 'Edit Exhibition Match'; cancel.hidden = false; form.scrollIntoView({ behavior:'smooth' }); return;
     }
     if (event.target.closest('.toggle')) await adminRequest(`/admin/greetings/${item.id}`, { method:'PUT', body:JSON.stringify({ ...item, status:item.status === 'published' ? 'draft' : 'published' }) });
     if (event.target.closest('.danger')) {
-      if (!confirm(`Hapus greeting “${item.name}”?`)) return;
+      if (!confirm(`Hapus Exhibition Match “${item.name}”?`)) return;
       await adminRequest(`/admin/greetings/${item.id}`, { method:'DELETE' });
       if (item.photoStoragePath) await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({ storagePath:item.photoStoragePath }) });
     }

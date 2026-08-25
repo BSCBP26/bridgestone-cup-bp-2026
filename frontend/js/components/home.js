@@ -23,7 +23,7 @@ function startExhibitionMotion() {
 export function renderGreetings(items = [], source = 'empty') {
   const list = document.querySelector('#greeting-list');
   list.dataset.source = source;
-  const exhibitionItems = items.slice(0, 2);
+  const exhibitionItems = items.slice(0, 3);
   const photoUrls = items.map(item => item.photoUrl).filter(Boolean);
   list.innerHTML = exhibitionItems.length
     ? exhibitionItems.map((item, index) => greetingCard(item, index, photoUrls)).join('')
