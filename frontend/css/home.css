@@ -491,11 +491,11 @@ main{
   #greetings{height:1450px}
   #greetings .greeting-grid{top:230px}
   #greetings .exhibition-card{height:auto;min-height:0;grid-template-rows:auto auto}
-  .exhibition-copy{min-height:230px}
-  .exhibition-photo{height:auto;min-height:0;aspect-ratio:16/9}
+  .exhibition-copy{min-height:178px;padding:18px 22px}
+  .exhibition-photo{height:clamp(180px,56.25vw,240px);min-height:0;aspect-ratio:auto}
   .exhibition-slide{object-fit:contain}
 }
-@media(max-width:420px){#greetings{height:1480px}.exhibition-copy{min-height:225px}}
+@media(max-width:420px){#greetings{height:1420px}.exhibition-copy{min-height:178px;padding:17px 20px}.exhibition-copy h3{margin:7px 0;font-size:22px}.exhibition-copy p{min-height:34px}}
 
 /* Bridgestone 50th Golden Era identity — tire engineering meets six sports. */
 .golden-era-emblem{position:absolute;z-index:1;right:72px;bottom:68px;width:290px;height:290px;pointer-events:none;opacity:.72}
@@ -794,6 +794,16 @@ main::before{inset:8px;border-radius:16px}
 .sport-card{height:330px}
 }
 
+/* Final Exhibition Match mobile sizing overrides. */
+@media(max-width:767px){
+  #greetings{height:auto;min-height:0;padding-bottom:64px}
+  #greetings .greeting-grid{margin-top:27px;gap:18px}
+  #greetings .exhibition-card{height:auto;min-height:0;grid-template-rows:auto auto}
+  #greetings .exhibition-copy{min-height:178px;padding:17px 20px}
+  #greetings .exhibition-photo{height:clamp(180px,56.25vw,240px);min-height:0;aspect-ratio:auto}
+  #greetings .exhibition-slide{object-fit:contain}
+}
+
 /* Figma: 01 / HOME — MOBILE (390 px). The existing mobile navbar is retained. */
 @media(max-width:600px){
   main::before{inset:0;border-width:1px;border-radius:18px}
@@ -1010,4 +1020,14 @@ main{background:#020202}
   #sports .section-brand-art.brand-emblem-round,
   #sports .section-brand-art.brand-emblem-round::before,
   #sports .section-brand-art.brand-emblem-round::after{animation:none!important}
+}
+
+/* Final Exhibition Match mobile sizing overrides. */
+@media(max-width:767px){
+  #greetings{height:auto;min-height:0;padding-bottom:64px}
+  #greetings .greeting-grid{margin-top:27px;gap:18px}
+  #greetings .exhibition-card{height:auto;min-height:0;grid-template-rows:auto auto}
+  #greetings .exhibition-copy{min-height:178px;padding:17px 20px}
+  #greetings .exhibition-photo{height:clamp(180px,56.25vw,240px);min-height:0;aspect-ratio:auto}
+  #greetings .exhibition-slide{object-fit:contain}
 }
