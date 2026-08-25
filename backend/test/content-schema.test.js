@@ -31,6 +31,13 @@ test("content migration provisions a limited public event-media bucket", async (
   assert.match(migration, /image\/webp/);
 });
 
+test("gallery media migration allows common photo and video formats", async () => {
+  const migrationUrl = new URL("../supabase/migrations/20260825190000_gallery_media_formats.sql", import.meta.url);
+  const migration = (await readFile(migrationUrl, "utf8")).toLowerCase();
+  for (const type of ["image/gif", "image/avif", "image/heic", "image/heif", "video/mp4", "video/webm"]) assert.match(migration, new RegExp(type.replace("/", "\\/")));
+  assert.match(migration, /52428800/);
+});
+
 test("bracket snapshot migration creates protected persistent bracket storage", async () => {
   const snapshotUrl = new URL("../supabase/migrations/20260808151000_bracket_snapshots.sql", import.meta.url);
   const migration = (await readFile(snapshotUrl, "utf8")).toLowerCase();

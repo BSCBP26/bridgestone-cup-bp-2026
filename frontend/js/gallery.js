@@ -35,10 +35,9 @@ if (collectionGrid) {
     const sportItems = publishedItems.filter(item => item.sportId === `sport-${sport.id}`);
     const featured = sportItems.length ? sportItems[Math.floor(Math.random() * sportItems.length)] : null;
     const count = sportItems.length;
-    const photoWord = english ? (count === 1 ? 'PHOTO' : 'PHOTOS') : 'FOTO';
-    const title = english ? (featured?.titleEn || featured?.titleId) : featured?.titleId;
-    const alt = english ? (featured?.altEn || featured?.altId || title || `Photo of ${sport.name}`) : (featured?.altId || title || `Foto ${sport.name}`);
-    return `<a class="collection-card${featured ? ' live' : ' empty'}" style="--accent:${sport.accent}" href="gallery-sport.html?sport=${sport.id}">${featured ? `<img src="${escapeHtml(featured.publicUrl)}" alt="${escapeHtml(alt)}">` : ''}<small>${String(index + 1).padStart(2, '0')}</small><span class="sport-code">${sport.code}</span><div><h2>${sport.name} ${english ? 'GALLERY' : 'GALERI'}</h2><p>${count ? `${english ? 'OPEN COLLECTION' : 'BUKA KOLEKSI'} &middot; ${count} ${photoWord}` : (english ? 'PHOTO NOT AVAILABLE' : 'FOTO BELUM TERSEDIA')}</p><b>&rarr;</b></div></a>`;
+    const mediaWord = english ? (count === 1 ? 'MEDIA' : 'MEDIA') : 'MEDIA';
+    const mediaPreview = featured?.mediaType === 'video' ? `<video src="${escapeHtml(featured.publicUrl)}" muted autoplay loop playsinline preload="metadata" aria-label="${sport.name} video"></video>` : (featured ? `<img src="${escapeHtml(featured.publicUrl)}" alt="${escapeHtml(`Photo of ${sport.name}`)}">` : '');
+    return `<a class="collection-card${featured ? ' live' : ' empty'}" style="--accent:${sport.accent}" href="gallery-sport.html?sport=${sport.id}">${mediaPreview}<small>${String(index + 1).padStart(2, '0')}</small><span class="sport-code">${sport.code}</span><div><h2>${sport.name} ${english ? 'GALLERY' : 'GALERI'}</h2><p>${count ? `${english ? 'OPEN COLLECTION' : 'BUKA KOLEKSI'} &middot; ${count} ${mediaWord}` : (english ? 'MEDIA NOT AVAILABLE' : 'MEDIA BELUM TERSEDIA')}</p><b>&rarr;</b></div></a>`;
   }).join('');
 }
 
@@ -50,28 +49,28 @@ if (momentsGrid) {
   momentsGrid.style.setProperty('--accent', selectedSport.accent);
 
   const payloadItems = await loadGallery(`?sportId=sport-${encodeURIComponent(selectedSport.id)}`);
-  const moments = payloadItems.map((item, index) => ({ number:String(index + 1).padStart(2, '0'), title:english ? (item.titleEn || item.titleId || `${selectedSport.name} TOURNAMENT MOMENT`) : (item.titleId || `${selectedSport.name} MOMEN TURNAMEN`), sport:selectedSport.name, imageUrl:item.publicUrl, alt:english ? (item.altEn || item.altId || item.titleEn || item.titleId || `Photo of ${selectedSport.name}`) : (item.altId || item.titleId || `Foto ${selectedSport.name}`) }));
+  const moments = payloadItems.map((item, index) => ({ number:String(index + 1).padStart(2, '0'), title:item.mediaType === 'video' ? 'VIDEO TURNAMEN' : 'FOTO TURNAMEN', sport:selectedSport.name, mediaType:item.mediaType, imageUrl:item.publicUrl, alt:`${selectedSport.name} media` }));
   momentsGrid.dataset.source = moments.length ? 'api' : 'empty';
-  const photoWord = moments.length === 1 ? 'PHOTO' : 'PHOTOS';
+  const photoWord = moments.length === 1 ? 'MEDIA' : 'MEDIA';
   const momentWord = moments.length === 1 ? 'MOMENT' : 'MOMENTS';
   const photoCount = document.querySelector('#photo-count');
   if (photoCount) photoCount.textContent = `${moments.length} ${photoWord}`;
   document.querySelector('#archive-count').textContent = `${moments.length} ${momentWord} ARCHIVED`;
-  document.querySelector('.gallery-heading>span').textContent = moments.length ? `${moments.length} tournament ${photoWord.toLowerCase()} — select any image to view the full moment.` : 'Belum ada foto yang dipublikasikan untuk cabang olahraga ini.';
+  document.querySelector('.gallery-heading>span').textContent = moments.length ? `${moments.length} tournament media — select any item to view it.` : 'Belum ada media yang dipublikasikan untuk cabang olahraga ini.';
 
   if (!moments.length) {
-    momentsGrid.innerHTML = '<div class="gallery-empty-state"><strong>FOTO BELUM TERSEDIA</strong></div>';
+    momentsGrid.innerHTML = '<div class="gallery-empty-state"><strong>MEDIA BELUM TERSEDIA</strong></div>';
   } else {
-    momentsGrid.innerHTML = moments.map((moment, index) => `<button class="moment-card live" style="--accent:${selectedSport.accent}" type="button" data-index="${index}" aria-label="Buka ${escapeHtml(moment.title)} ${moment.number}"><img src="${escapeHtml(moment.imageUrl)}" alt="${escapeHtml(moment.alt)}"><span>${moment.number}</span><i>↗</i><div><small>${escapeHtml(moment.sport)}</small><strong>${escapeHtml(moment.title)}</strong></div></button>`).join('');
+    momentsGrid.innerHTML = moments.map((moment, index) => `<button class="moment-card live" style="--accent:${selectedSport.accent}" type="button" data-index="${index}" aria-label="Buka ${escapeHtml(moment.title)} ${moment.number}">${moment.mediaType === 'video' ? `<video src="${escapeHtml(moment.imageUrl)}" muted autoplay loop playsinline preload="metadata" aria-label="${escapeHtml(moment.alt)}"></video>` : `<img src="${escapeHtml(moment.imageUrl)}" alt="${escapeHtml(moment.alt)}">`}<span>${moment.number}</span><i>↗</i><div><small>${escapeHtml(moment.sport)}</small><strong>${escapeHtml(moment.title)}</strong></div></button>`).join('');
     const dialog = document.querySelector('#gallery-lightbox');
     let activeIndex = 0;
     const paint = index => {
       activeIndex = (index + moments.length) % moments.length;
       const moment = moments[activeIndex];
       const image = document.querySelector('#lightbox-photo');
-      image.src = moment.imageUrl;
-      image.alt = moment.alt;
-      image.hidden = false;
+      const existingVideo = document.querySelector('#lightbox-video');
+      image.hidden = moment.mediaType === 'video';
+      if (moment.mediaType === 'video') { existingVideo.src = moment.imageUrl; existingVideo.hidden = false; existingVideo.load(); } else { existingVideo.hidden = true; existingVideo.pause(); existingVideo.removeAttribute('src'); image.src = moment.imageUrl; image.alt = moment.alt; }
       document.querySelector('#lightbox-number').hidden = true;
       document.querySelector('#lightbox-sport').textContent = moment.sport;
       document.querySelector('#lightbox-title').textContent = moment.title;

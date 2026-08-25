@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import { authenticateAdmin } from "../../middleware/admin-auth.js";
-import { postImage, removeImage } from "./media.controller.js";
+import { postImage, postMedia, removeImage } from "./media.controller.js";
 import { getPublicR2Media } from "./public-media.controller.js";
 
 export const mediaRouter = Router();
@@ -11,5 +11,11 @@ mediaRouter.post(
   authenticateAdmin,
   express.raw({ type: ["image/jpeg", "image/png", "image/webp"], limit: "8mb" }),
   postImage,
+);
+mediaRouter.post(
+  "/media/files",
+  authenticateAdmin,
+  express.raw({ type: [/^image\//, /^video\//], limit: "50mb" }),
+  postMedia,
 );
 mediaRouter.delete("/media/images", authenticateAdmin, removeImage);

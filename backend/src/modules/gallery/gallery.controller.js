@@ -2,7 +2,8 @@ import { AppError } from "../../shared/app-error.js";
 import { createGalleryItem, deleteGalleryItem, listGallery, updateGalleryItem } from "./gallery.service.js";
 
 function validate(body) {
-  if (!body || typeof body.storagePath !== "string" || !/^(?:r2\/)?gallery\/[a-f0-9-]+\.(jpg|png|webp)$/.test(body.storagePath)) throw new AppError(422, "storagePath is required");
+  if (!body || typeof body.storagePath !== "string" || !/^(?:r2\/)?gallery\/[a-f0-9-]+\.[a-z0-9]+$/.test(body.storagePath)) throw new AppError(422, "storagePath is required");
+  if (body.mediaType && !["photo", "video"].includes(body.mediaType)) throw new AppError(422, "Invalid gallery media type");
   if (body.status && !["draft", "published", "archived"].includes(body.status)) throw new AppError(422, "Invalid gallery status");
   if (body.sortOrder !== undefined && (!Number.isInteger(body.sortOrder) || body.sortOrder < 0)) throw new AppError(422, "sortOrder must be a non-negative integer");
   return body;

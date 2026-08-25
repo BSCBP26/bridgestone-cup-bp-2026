@@ -3,17 +3,22 @@ import { getActiveMediaStorage, getMediaStorageForPath, mediaPublicUrl, R2_PREFI
 import { AppError } from "../../shared/app-error.js";
 
 const EXTENSIONS = new Map([
-  ["image/jpeg", "jpg"],
-  ["image/png", "png"],
-  ["image/webp", "webp"],
+  ["image/jpeg", "jpg"], ["image/png", "png"], ["image/webp", "webp"],
+  ["image/gif", "gif"], ["image/avif", "avif"], ["image/bmp", "bmp"],
+  ["image/tiff", "tif"], ["image/svg+xml", "svg"], ["image/heic", "heic"], ["image/heif", "heif"],
+  ["video/mp4", "mp4"], ["video/webm", "webm"], ["video/quicktime", "mov"],
+  ["video/x-msvideo", "avi"], ["video/ogg", "ogv"], ["video/mpeg", "mpeg"],
+  ["video/3gpp", "3gp"], ["video/x-matroska", "mkv"],
 ]);
+
+const IMAGE_TYPES = new Set([...EXTENSIONS.keys()].filter(type => type.startsWith("image/")));
 
 const FOLDERS = new Set(["gallery", "greetings", "support"]);
 
-export async function uploadImage(buffer, mimeType, storage, folder = "gallery") {
+export async function uploadMedia(buffer, mimeType, storage, folder = "gallery", imagesOnly = false) {
   const extension = EXTENSIONS.get(mimeType);
-  if (!extension) throw new AppError(415, "Image must be JPEG, PNG, or WebP");
-  if (!Buffer.isBuffer(buffer) || buffer.length === 0) throw new AppError(422, "Image file is required");
+  if (!extension || (imagesOnly && !IMAGE_TYPES.has(mimeType))) throw new AppError(415, "Format file tidak didukung");
+  if (!Buffer.isBuffer(buffer) || buffer.length === 0) throw new AppError(422, "File media wajib diisi");
 
   if (!FOLDERS.has(folder)) throw new AppError(422, "Invalid media folder");
   const activeStorage = storage || getActiveMediaStorage();
@@ -21,14 +26,18 @@ export async function uploadImage(buffer, mimeType, storage, folder = "gallery")
   try {
     await activeStorage.upload(objectPath, buffer, mimeType);
   } catch {
-    throw new AppError(502, "Image upload failed");
+    throw new AppError(502, "Media upload failed");
   }
   const storagePath = `${activeStorage.prefix || ""}${objectPath}`;
   return { storagePath, publicUrl: mediaPublicUrl(storagePath), size: buffer.length, mimeType, provider: activeStorage.provider };
 }
 
+export async function uploadImage(buffer, mimeType, storage, folder = "gallery") {
+  return uploadMedia(buffer, mimeType, storage, folder, true);
+}
+
 export async function deleteImage(storagePath, storage) {
-  if (typeof storagePath !== "string" || !/^(?:r2\/)?(gallery|greetings|support)\/[a-f0-9-]+\.(jpg|png|webp)$/.test(storagePath)) {
+  if (typeof storagePath !== "string" || !/^(?:r2\/)?(gallery|greetings|support)\/[a-f0-9-]+\.[a-z0-9]+$/.test(storagePath)) {
     throw new AppError(422, "Invalid media storage path");
   }
   const selectedStorage = storage || getMediaStorageForPath(storagePath);
@@ -36,6 +45,6 @@ export async function deleteImage(storagePath, storage) {
   try {
     await selectedStorage.delete(objectPath);
   } catch {
-    throw new AppError(502, "Image deletion failed");
+    throw new AppError(502, "Media deletion failed");
   }
 }

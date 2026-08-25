@@ -4,10 +4,10 @@ import { mediaPublicUrl } from "../../config/media-storage.js";
 
 const SELECT = "id, sport_id, media_type, storage_path, title_id, title_en, alt_id, alt_en, sort_order, status, published_at, created_at, updated_at";
 const mapItem = item => ({ id: item.id, sportId: item.sport_id, mediaType: item.media_type, storagePath: item.storage_path, publicUrl: mediaPublicUrl(item.storage_path), titleId: item.title_id, titleEn: item.title_en, altId: item.alt_id, altEn: item.alt_en, sortOrder: item.sort_order, status: item.status, publishedAt: item.published_at, createdAt: item.created_at, updatedAt: item.updated_at });
-const row = (input, adminId) => ({ sport_id: input.sportId || null, media_type: "photo", storage_path: input.storagePath, title_id: input.titleId || null, title_en: input.titleEn || null, alt_id: input.altId || null, alt_en: input.altEn || null, sort_order: input.sortOrder ?? 0, status: input.status || "draft", published_at: input.status === "published" ? new Date().toISOString() : null, ...(adminId ? { created_by: adminId } : {}) });
+const row = (input, adminId) => ({ sport_id: input.sportId || null, media_type: input.mediaType || "photo", storage_path: input.storagePath, title_id: input.titleId || null, title_en: input.titleEn || null, alt_id: input.altId || null, alt_en: input.altEn || null, sort_order: input.sortOrder ?? 0, status: input.status || "draft", published_at: input.status === "published" ? new Date().toISOString() : null, ...(adminId ? { created_by: adminId } : {}) });
 
 export async function listGallery({ includeUnpublished = false, sportId } = {}, client = getSupabaseAdminClient()) {
-  let query = client.from("gallery_items").select(SELECT).eq("media_type", "photo").order("sort_order").order("created_at", { ascending: false });
+  let query = client.from("gallery_items").select(SELECT).order("sort_order").order("created_at", { ascending: false });
   if (!includeUnpublished) query = query.eq("status", "published");
   if (sportId) query = query.eq("sport_id", sportId);
   const { data, error } = await query;

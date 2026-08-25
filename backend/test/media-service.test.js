@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { deleteImage, uploadImage } from "../src/modules/media/media.service.js";
+import { deleteImage, uploadImage, uploadMedia } from "../src/modules/media/media.service.js";
 
 function fakeStorage(provider = "supabase") {
   const calls = { upload: [], delete: [] };
@@ -30,8 +30,14 @@ test("R2 uploads are namespaced so legacy Supabase paths keep working", async ()
   assert.match(storage.calls.upload[0].path, /^greetings\/[a-f0-9-]+\.jpg$/);
 });
 
-test("image upload rejects unsupported MIME types", async () => {
-  await assert.rejects(() => uploadImage(Buffer.from("file"), "image/gif", fakeStorage()), error => error.statusCode === 415);
+test("image upload accepts additional image formats and media upload accepts video", async () => {
+  const image = await uploadImage(Buffer.from("file"), "image/gif", fakeStorage());
+  assert.match(image.storagePath, /\.gif$/);
+  const heic = await uploadImage(Buffer.from("file"), "image/heic", fakeStorage());
+  assert.match(heic.storagePath, /\.heic$/);
+  const video = await uploadMedia(Buffer.from("video"), "video/mp4", fakeStorage());
+  assert.match(video.storagePath, /^gallery\/[a-f0-9-]+\.mp4$/);
+  await assert.rejects(() => uploadImage(Buffer.from("file"), "video/mp4", fakeStorage()), error => error.statusCode === 415);
 });
 
 test("image deletion accepts generated Supabase and R2 paths only", async () => {

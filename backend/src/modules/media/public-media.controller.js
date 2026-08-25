@@ -1,7 +1,7 @@
 import { getR2Client } from "../../config/r2.js";
 import { AppError } from "../../shared/app-error.js";
 
-const VALID_KEY = /^(gallery|greetings|support)\/[a-f0-9-]+\.(jpg|png|webp)$/;
+const VALID_KEY = /^(gallery|greetings|support)\/[a-f0-9-]+\.[a-z0-9]+$/;
 
 export async function getPublicR2Media(request, response, next) {
   try {

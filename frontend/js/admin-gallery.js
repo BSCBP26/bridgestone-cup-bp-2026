@@ -15,8 +15,8 @@ async function loadSports() {
 }
 
 function renderItems() {
-  if (!galleryItems.length) { items.innerHTML = '<p>Belum ada foto tersimpan.</p>'; return; }
-  items.innerHTML = galleryItems.map(item => `<article class="item" data-id="${item.id}"><img src="${escapeHtml(item.publicUrl)}" alt="${escapeHtml(item.altId || item.titleId || 'Foto turnamen')}"><div class="item-body"><strong>${escapeHtml(item.titleId || 'Tanpa judul')}</strong><span>${escapeHtml(item.sportId || 'Umum')} · ${escapeHtml(item.status)}</span><div class="item-actions"><button class="toggle" type="button">${item.status === 'published' ? 'Jadikan draft' : 'Publish'}</button><button class="danger" type="button">Hapus</button></div></div></article>`).join('');
+  if (!galleryItems.length) { items.innerHTML = '<p>Belum ada media tersimpan.</p>'; return; }
+  items.innerHTML = galleryItems.map(item => `<article class="item" data-id="${item.id}">${item.mediaType === 'video' ? `<video src="${escapeHtml(item.publicUrl)}" controls preload="metadata"></video>` : `<img src="${escapeHtml(item.publicUrl)}" alt="Foto turnamen">`}<div class="item-body"><strong>${item.mediaType === 'video' ? 'Video' : 'Foto'}</strong><span>${escapeHtml(item.sportId || 'Umum')} · ${escapeHtml(item.status)}</span><div class="item-actions"><button class="toggle" type="button">${item.status === 'published' ? 'Jadikan draft' : 'Publish'}</button><button class="danger" type="button">Hapus</button></div></div></article>`).join('');
 }
 
 async function loadGallery() {
@@ -32,14 +32,14 @@ form.addEventListener('submit', async event => {
   if (!file) return;
   const button = form.querySelector('.primary');
   button.disabled = true;
-  setStatus('Mengunggah gambar…');
+  setStatus('Mengunggah media…');
   let uploaded;
   try {
-    uploaded = (await adminRequest('/admin/media/images', { method: 'POST', body: file, headers: { 'Content-Type': file.type } })).data;
+    uploaded = (await adminRequest('/admin/media/files', { method: 'POST', body: file, headers: { 'Content-Type': file.type } })).data;
     setStatus('Menyimpan metadata Gallery…');
-    await adminRequest('/admin/gallery', { method: 'POST', body: JSON.stringify({ storagePath: uploaded.storagePath, sportId: form.sport.value || null, titleId: form.title.value.trim(), altId: form.alt.value.trim(), sortOrder: Number(form.sortOrder.value), status: form.status.value }) });
+    await adminRequest('/admin/gallery', { method: 'POST', body: JSON.stringify({ storagePath: uploaded.storagePath, mediaType: uploaded.mimeType.startsWith('video/') ? 'video' : 'photo', sportId: form.sport.value || null, status: form.status.value }) });
     form.reset();
-    setStatus('Foto berhasil disimpan.');
+    setStatus('Media berhasil disimpan.');
     await loadGallery();
   } catch (error) {
     if (uploaded?.storagePath) await adminRequest('/admin/media/images', { method: 'DELETE', body: JSON.stringify({ storagePath: uploaded.storagePath }) }).catch(() => {});
@@ -58,7 +58,7 @@ items.addEventListener('click', async event => {
       setStatus(`Status diubah menjadi ${nextStatus}.`);
     }
     if (event.target.closest('.danger')) {
-      if (!confirm(`Hapus foto “${item.titleId || 'Tanpa judul'}”?`)) return;
+      if (!confirm(`Hapus media ${item.mediaType === 'video' ? 'video' : 'foto'} ini?`)) return;
       await adminRequest(`/admin/gallery/${item.id}`, { method: 'DELETE' });
       await adminRequest('/admin/media/images', { method: 'DELETE', body: JSON.stringify({ storagePath: item.storagePath }) });
       setStatus('Foto berhasil dihapus.');
