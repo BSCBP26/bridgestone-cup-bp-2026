@@ -6,9 +6,9 @@ function validate(body) {
   if(typeof body.roleId!=="string" || !body.roleId.trim()) throw new AppError(422,"roleId is required");
   if(typeof body.messageId!=="string" || !body.messageId.trim()) throw new AppError(422,"messageId is required");
   if(body.photoStoragePath && !/^(?:r2\/)?greetings\/[a-f0-9-]+\.(jpg|png|webp)$/.test(body.photoStoragePath)) throw new AppError(422,"Invalid greeting photo path");
-  if(body.photoStoragePaths !== undefined && (!Array.isArray(body.photoStoragePaths) || body.photoStoragePaths.some(path => typeof path !== "string" || !/^(?:r2\/)?greetings\/[a-f0-9-]+\.(jpg|png|webp)$/.test(path)))) throw new AppError(422,"Invalid Exhibition Match photo paths");
+  if(body.photoStoragePaths !== undefined && (!Array.isArray(body.photoStoragePaths) || body.photoStoragePaths.length > 5 || body.photoStoragePaths.some(path => typeof path !== "string" || !/^(?:r2\/)?greetings\/[a-f0-9-]+\.(jpg|png|webp)$/.test(path)))) throw new AppError(422,"Exhibition Match supports up to 5 photos per panel");
   if(body.status && !["draft","published","archived"].includes(body.status)) throw new AppError(422,"Invalid greeting status");
-  if(body.sortOrder!==undefined && (!Number.isInteger(body.sortOrder)||body.sortOrder<0)) throw new AppError(422,"sortOrder must be a non-negative integer");
+  if(body.sortOrder!==undefined && (!Number.isInteger(body.sortOrder)||body.sortOrder<1||body.sortOrder>3)) throw new AppError(422,"Exhibition Match order must be between 1 and 3");
   return body;
 }
 export async function getPublicGreetings(_req,res,next){try{const data=await listGreetings();res.json({success:true,data,meta:{total:data.length,visibility:"published"}})}catch(error){next(error)}}

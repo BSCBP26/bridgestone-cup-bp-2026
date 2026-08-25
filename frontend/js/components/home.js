@@ -28,7 +28,7 @@ export function renderGreetings(items = [], source = 'empty') {
   list.innerHTML = exhibitionItems.length
     ? exhibitionItems.map((item, index) => greetingCard(item, index, item.photoUrls?.length ? item.photoUrls : (item.photoUrl ? [item.photoUrl] : []))).join('')
     : emptySection('GREETING BELUM TERSEDIA');
-  if (exhibitionItems.length) startExhibitionMotion();
+  if (exhibitionItems.length) { [...list.querySelectorAll('.exhibition-card')].forEach((card, index) => { const title = card.querySelector('.exhibition-copy h3'); if (title) title.textContent = exhibitionItems[index].name || title.textContent; }); startExhibitionMotion(); }
 }
 
 const supporterImages = {
