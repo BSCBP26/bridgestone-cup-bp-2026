@@ -36,7 +36,9 @@ Before enabling the GitHub Pages deployment:
 
 1. Deploy the `backend/` application to a Node.js hosting provider.
 2. Configure `NODE_ENV=production`, the Supabase variables, and
-   `ALLOWED_ORIGINS=https://ekoputranugraha.github.io` on that provider.
+   `ALLOWED_ORIGINS=https://bscbp26.github.io` on that provider. During the
+   account migration, the legacy origin may remain comma-separated as a
+   temporary fallback.
 3. Verify `https://<backend-host>/api/health` and confirm the database status is
    connected.
 4. Set `window.BRIDGESTONE_API_URL` to `https://<backend-host>/api` before the
@@ -44,5 +46,6 @@ Before enabling the GitHub Pages deployment:
 5. Smoke-test the public pages, admin login, one read action, and one reversible
    admin update against production before announcing the site.
 
-The current repository remains configured for local development until a
-backend provider and production URL are approved by the project owner.
+The public frontend is deployed at
+`https://bscbp26.github.io/bridgestone-cup-bp-2026/`, while the production API
+is available at `https://bridgestone-cup-api.netlify.app/api`.
