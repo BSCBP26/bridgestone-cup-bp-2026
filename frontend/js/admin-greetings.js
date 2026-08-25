@@ -13,7 +13,7 @@ function setStatus(message, error = false) { status.textContent = message; statu
 function resetForm() { form.reset(); field('id').value = ''; field('sortOrder').value = '0'; document.querySelector('#form-title').textContent = 'Tambah Exhibition Match'; cancel.hidden = true; }
 function render() {
   if (!greetings.length) { items.innerHTML = '<p>Belum ada Exhibition Match tersimpan.</p>'; return; }
-  items.innerHTML = greetings.map(item => `<article class="item greeting-item" data-id="${item.id}">${item.photoUrl ? `<img src="${escapeHtml(item.photoUrl)}" alt="Foto ${escapeHtml(item.name)}">` : `<div class="placeholder">${escapeHtml(initials(item.name))}</div>`}<div class="item-body"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.roleId)} · ${escapeHtml(item.status)}</span><p>${escapeHtml(item.messageId)}</p><div class="item-actions"><button class="edit" type="button">Edit</button><button class="toggle" type="button">${item.status === 'published' ? 'Jadikan draft' : 'Publish'}</button><button class="danger" type="button">Hapus</button></div></div></article>`).join('');
+  items.innerHTML = greetings.map(item => { const photos = item.photoUrls || (item.photoUrl ? [item.photoUrl] : []); return `<article class="item greeting-item" data-id="${item.id}">${photos.length ? `<div class="panel-photos">${photos.map(url => `<img src="${escapeHtml(url)}" alt="Foto ${escapeHtml(item.name)}">`).join('')}</div>` : `<div class="placeholder">${escapeHtml(initials(item.name))}</div>`}<div class="item-body"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.roleId)} · ${escapeHtml(item.status)} · ${photos.length} foto</span><p>${escapeHtml(item.messageId)}</p><div class="item-actions"><button class="edit" type="button">Edit panel</button><button class="toggle" type="button">${item.status === 'published' ? 'Jadikan draft' : 'Publish'}</button><button class="danger" type="button">Hapus</button></div></div></article>`; }).join('');
 }
 async function load() { items.innerHTML = '<p>Memuat Exhibition Match…</p>'; greetings = (await adminRequest('/admin/greetings')).data; render(); }
 
@@ -24,20 +24,21 @@ form.addEventListener('submit', async event => {
   let uploaded;
   button.disabled = true;
   try {
-    let photoStoragePath = current?.photoStoragePath || null;
-    const file = field('photo').files[0];
-    if (file) {
-      setStatus('Mengunggah foto…');
-      uploaded = (await adminRequest('/admin/media/images', { method:'POST', body:file, headers:{ 'Content-Type':file.type, 'X-Media-Folder':'greetings' } })).data;
-      photoStoragePath = uploaded.storagePath;
+    let photoStoragePaths = current?.photoStoragePaths || (current?.photoStoragePath ? [current.photoStoragePath] : []);
+    const files = [...field('photo').files];
+    if (files.length) {
+      setStatus(`Mengunggah ${files.length} foto panel…`);
+      uploaded = { storagePaths: [] };
+      for (const file of files) uploaded.storagePaths.push((await adminRequest('/admin/media/images', { method:'POST', body:file, headers:{ 'Content-Type':file.type, 'X-Media-Folder':'greetings' } })).data.storagePath);
+      photoStoragePaths = uploaded.storagePaths;
     }
-    const payload = { name:field('name').value.trim(), roleId:field('roleId').value.trim(), roleEn:field('roleEn').value.trim(), messageId:field('messageId').value.trim(), messageEn:field('messageEn').value.trim(), photoStoragePath, sortOrder:Number(field('sortOrder').value), status:field('status').value };
+    const payload = { name:field('name').value.trim(), roleId:field('roleId').value.trim(), roleEn:field('roleEn').value.trim(), messageId:field('messageId').value.trim(), messageEn:field('messageEn').value.trim(), photoStoragePaths, sortOrder:Number(field('sortOrder').value), status:field('status').value };
     await adminRequest(current ? `/admin/greetings/${current.id}` : '/admin/greetings', { method:current ? 'PUT' : 'POST', body:JSON.stringify(payload) });
-    if (uploaded && current?.photoStoragePath) await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({ storagePath:current.photoStoragePath }) }).catch(() => {});
+    if (uploaded && current?.photoStoragePaths?.length) for (const storagePath of current.photoStoragePaths) await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({ storagePath }) }).catch(() => {});
     setStatus(current ? 'Exhibition Match berhasil diperbarui.' : 'Exhibition Match berhasil disimpan.');
     resetForm(); await load();
   } catch (error) {
-    if (uploaded?.storagePath) await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({ storagePath:uploaded.storagePath }) }).catch(() => {});
+    if (uploaded?.storagePaths) for (const storagePath of uploaded.storagePaths) await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({ storagePath }) }).catch(() => {});
     setStatus(error.message, true);
   } finally { button.disabled = false; }
 });
@@ -54,7 +55,7 @@ items.addEventListener('click', async event => {
     if (event.target.closest('.danger')) {
       if (!confirm(`Hapus Exhibition Match “${item.name}”?`)) return;
       await adminRequest(`/admin/greetings/${item.id}`, { method:'DELETE' });
-      if (item.photoStoragePath) await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({ storagePath:item.photoStoragePath }) });
+      for (const storagePath of (item.photoStoragePaths || (item.photoStoragePath ? [item.photoStoragePath] : []))) await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({ storagePath }) });
     }
     await load();
   } catch (error) { setStatus(error.message, true); }

@@ -26,7 +26,7 @@ export function renderGreetings(items = [], source = 'empty') {
   const exhibitionItems = items.slice(0, 3);
   const photoUrls = items.map(item => item.photoUrl).filter(Boolean);
   list.innerHTML = exhibitionItems.length
-    ? exhibitionItems.map((item, index) => greetingCard(item, index, photoUrls)).join('')
+    ? exhibitionItems.map((item, index) => greetingCard(item, index, item.photoUrls?.length ? item.photoUrls : (item.photoUrl ? [item.photoUrl] : []))).join('')
     : emptySection('GREETING BELUM TERSEDIA');
   if (exhibitionItems.length) startExhibitionMotion();
 }
