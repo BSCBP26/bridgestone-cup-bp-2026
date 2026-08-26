@@ -804,6 +804,12 @@ main::before{inset:8px;border-radius:16px}
   #greetings .exhibition-slide{object-fit:contain}
 }
 
+/* Desktop Exhibition Match must grow with all story panels. */
+@media(min-width:768px){
+  #greetings{height:auto;min-height:0;overflow:visible;padding-bottom:60px}
+  #greetings .greeting-grid{position:relative;inset:auto;width:100%;margin-top:24px}
+}
+
 /* Figma: 01 / HOME — MOBILE (390 px). The existing mobile navbar is retained. */
 @media(max-width:600px){
   main::before{inset:0;border-width:1px;border-radius:18px}
