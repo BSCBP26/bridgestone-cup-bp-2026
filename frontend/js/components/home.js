@@ -9,13 +9,28 @@ const greetingCard = (item, index, photoUrls) => { const english = document.docu
 function startExhibitionMotion() {
   exhibitionTimers.forEach(timer => clearInterval(timer)); exhibitionTimers = [];
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const loopType = (element, text) => { if (reduced) { element.textContent = text; return; } let cursor = 0, deleting = false, pause = 0; const tick = () => { if (pause) { pause -= 1; exhibitionTimers.push(setTimeout(tick, 90)); return; } if (!deleting) { cursor += 1; if (cursor >= text.length) { cursor = text.length; deleting = true; pause = 14; } } else { cursor -= 1; if (cursor <= 0) { cursor = 0; deleting = false; pause = 5; } } element.textContent = text.slice(0, cursor); exhibitionTimers.push(setTimeout(tick, deleting ? 42 : 58)); }; tick(); };
+  const loopTypewriter = (titleElement, descriptionElement, titleText, descriptionText) => {
+    if (reduced) { titleElement.textContent = titleText; descriptionElement.textContent = descriptionText; return; }
+    let phase = 'title', cursor = 0, pause = 0;
+    const timer = setInterval(() => {
+      if (pause > 0) { pause -= 1; return; }
+      if (phase === 'title') { cursor += 1; titleElement.textContent = titleText.slice(0, cursor); if (cursor >= titleText.length) { phase = 'titlePause'; pause = 5; } }
+      else if (phase === 'titlePause') { phase = 'description'; cursor = 0; descriptionElement.textContent = ''; }
+      else if (phase === 'description') { cursor += 1; descriptionElement.textContent = descriptionText.slice(0, cursor); if (cursor >= descriptionText.length) { phase = 'hold'; pause = 91; } }
+      else if (phase === 'hold') { phase = 'deleteDescription'; cursor = descriptionText.length; }
+      else if (phase === 'deleteDescription') { cursor -= 1; descriptionElement.textContent = descriptionText.slice(0, cursor); if (cursor <= 0) { phase = 'between'; pause = 5; } }
+      else if (phase === 'between') { phase = 'deleteTitle'; cursor = titleText.length; }
+      else if (phase === 'deleteTitle') { cursor -= 1; titleElement.textContent = titleText.slice(0, cursor); if (cursor <= 0) { phase = 'restart'; pause = 7; } }
+      else if (phase === 'restart') { phase = 'title'; cursor = 0; descriptionElement.textContent = ''; }
+    }, 55);
+    exhibitionTimers.push(timer);
+  };
   document.querySelectorAll('.exhibition-card').forEach(card => {
     const title = card.querySelector('.exhibition-title');
-    loopType(title, card.dataset.title || '');
+    const titleText = card.dataset.title || '';
     const message = card.dataset.message || '';
     const type = card.querySelector('.exhibition-type');
-    loopType(type, message);
+    loopTypewriter(title, type, titleText, message);
     if (reduced) return;
     const slides = [...card.querySelectorAll('.exhibition-slide')]; if (slides.length < 2) return;
     let active = 0; exhibitionTimers.push(setInterval(() => { slides[active].classList.remove('active'); active = (active + 1) % slides.length; slides[active].classList.add('active'); }, 3000));
