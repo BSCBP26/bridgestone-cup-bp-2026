@@ -166,6 +166,7 @@
 .gallery-collage-feature span{position:absolute;right:8px;top:6px;color:#f5c34e;font-size:10px;font-weight:800;text-shadow:0 1px 5px #000}
 @media (prefers-reduced-motion:reduce){.gallery-collage-tile,.gallery-collage-tile img,.gallery-collage-feature{transition:none}}
 @media (max-width:700px){#gallery .gallery-grid{height:238px !important}.gallery-collage{border-radius:12px}.gallery-collage-wall{inset:8px;gap:4px;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}.gallery-collage-feature{border-width:1px;border-radius:8px;padding:2px}.gallery-collage-feature:nth-child(1){left:7%;width:29%;height:58%}.gallery-collage-feature:nth-child(2){left:35%;top:22%;width:31%;height:70%}.gallery-collage-feature:nth-child(3){right:7%;width:29%;height:58%}.gallery-collage-feature:nth-child(4){left:18%;width:25%;height:42%}.gallery-collage-feature:nth-child(5){right:16%;width:24%;height:40%}}
+@media (min-width:1101px){#gallery .gallery-grid{left:95px;right:95px}}
 
 @media (max-width: 430px) {
   .schedule-card {
