@@ -51,10 +51,13 @@ if (momentsGrid) {
   } else {
     momentsGrid.innerHTML = moments.map((moment, index) => `<button class="moment-card live" style="--accent:${selectedSport.accent}" type="button" data-index="${index}" aria-label="Buka ${escapeHtml(moment.title)} ${moment.number}">${moment.mediaType === 'video' ? `<video src="${escapeHtml(moment.imageUrl)}" muted autoplay loop playsinline preload="metadata" aria-label="${escapeHtml(moment.alt)}"></video>` : `<img src="${escapeHtml(moment.imageUrl)}" alt="${escapeHtml(moment.alt)}">`}<span>${moment.number}</span><i>↗</i><div><small>${escapeHtml(moment.sport)}</small><strong>${escapeHtml(moment.title)}</strong></div></button>`).join('');
     const dialog = document.querySelector('#gallery-lightbox');
+    const download = dialog.querySelector('#lightbox-download') || (() => { const link = document.createElement('a'); link.id = 'lightbox-download'; link.className = 'lightbox-download'; link.href = '#'; link.download = ''; link.setAttribute('aria-label', 'Unduh foto'); link.textContent = '↓'; dialog.append(link); return link; })();
     let activeIndex = 0;
     const paint = index => {
       activeIndex = (index + moments.length) % moments.length;
       const moment = moments[activeIndex];
+      download.href = moment.imageUrl;
+      download.download = `bridgestone-cup-${selectedSport.id}-${moment.number}.${moment.mediaType === 'video' ? 'mp4' : 'jpg'}`;
       const image = document.querySelector('#lightbox-photo');
       const existingVideo = document.querySelector('#lightbox-video');
       image.hidden = moment.mediaType === 'video';
