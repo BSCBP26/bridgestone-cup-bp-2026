@@ -10,20 +10,16 @@ function startExhibitionMotion() {
   exhibitionTimers.forEach(timer => clearInterval(timer)); exhibitionTimers = [];
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const loopTypewriter = (titleElement, descriptionElement, titleText, descriptionText) => {
-    if (reduced) { titleElement.textContent = titleText; descriptionElement.textContent = descriptionText; return; }
-    let phase = 'title', cursor = 0, pause = 0;
+    titleElement.textContent = titleText;
+    if (reduced) { descriptionElement.textContent = descriptionText; return; }
+    let phase = 'description', cursor = 0, pause = 0;
     const timer = setInterval(() => {
-      titleElement.classList.toggle('typing-active', phase === 'title' || phase === 'titlePause' || phase === 'deleteTitle');
       descriptionElement.classList.toggle('typing-active', phase === 'description' || phase === 'hold' || phase === 'deleteDescription');
       if (pause > 0) { pause -= 1; return; }
-      if (phase === 'title') { cursor += 1; titleElement.textContent = titleText.slice(0, cursor); if (cursor >= titleText.length) { phase = 'titlePause'; pause = 5; } }
-      else if (phase === 'titlePause') { phase = 'description'; cursor = 0; descriptionElement.textContent = ''; }
-      else if (phase === 'description') { cursor += 1; descriptionElement.textContent = descriptionText.slice(0, cursor); if (cursor >= descriptionText.length) { phase = 'hold'; pause = 364; } }
+      if (phase === 'description') { cursor += 1; descriptionElement.textContent = descriptionText.slice(0, cursor); if (cursor >= descriptionText.length) { phase = 'hold'; pause = 364; } }
       else if (phase === 'hold') { phase = 'deleteDescription'; cursor = descriptionText.length; }
       else if (phase === 'deleteDescription') { cursor -= 1; descriptionElement.textContent = descriptionText.slice(0, cursor); if (cursor <= 0) { phase = 'between'; pause = 5; } }
-      else if (phase === 'between') { phase = 'deleteTitle'; cursor = titleText.length; }
-      else if (phase === 'deleteTitle') { cursor -= 1; titleElement.textContent = titleText.slice(0, cursor); if (cursor <= 0) { phase = 'restart'; pause = 7; } }
-      else if (phase === 'restart') { phase = 'title'; cursor = 0; descriptionElement.textContent = ''; }
+      else if (phase === 'between') { phase = 'description'; cursor = 0; descriptionElement.textContent = ''; }
     }, 55);
     exhibitionTimers.push(timer);
   };
