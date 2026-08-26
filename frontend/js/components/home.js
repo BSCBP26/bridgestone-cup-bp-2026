@@ -4,6 +4,7 @@ const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character =>
 const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
 const emptySection = title => `<div class="home-empty-state"><strong>${title}</strong></div>`;
 let exhibitionTimers = [];
+let galleryCollageTimers = [];
 const greetingCard = (item, index, photoUrls) => { const english = document.documentElement.lang === 'en'; const message = english ? (item.messageEn || item.message || item.messageId) : (item.messageId || item.message); const title = item.name || (english ? 'A shared start to the competition' : 'Awal kebersamaan menuju kompetisi'); const slides = photoUrls.length ? photoUrls : ['assets/images/portrait-head.svg']; const slideMarkup = slides.map((url, slideIndex) => `<img class="exhibition-slide${slideIndex === 0 ? ' active' : ''}" src="${escapeHtml(url)}" alt="${english ? 'Exhibition match photo' : 'Foto exhibition match'}"${slideIndex ? ' aria-hidden="true"' : ''}>`).join(''); return `<article class="greeting-card exhibition-card" data-title="${escapeHtml(title)}" data-message="${escapeHtml(message)}"><div class="exhibition-copy"><small>BRIDGESTONE CUP BP 2026</small><span>EXHIBITION MATCH ${String(index + 1).padStart(2, '0')}</span><h3 class="exhibition-title" aria-live="polite"></h3><p class="exhibition-type" aria-live="polite"></p><b>${escapeHtml(english ? (item.roleEn || item.role || item.roleId || 'Bridgestone Cup Family') : (item.roleId || item.role || 'Keluarga Bridgestone Cup'))}</b></div><div class="exhibition-photo" data-slide-count="${slides.length}">${slideMarkup}<i>PHOTO STORY</i><em>${String(index + 1).padStart(2, '0')}</em></div></article>`; };
 
 function startExhibitionMotion() {
@@ -131,6 +132,7 @@ const hourlyGalleryRandom = hourBucket => {
 export function renderGalleryPreview(items = [], source = 'empty', hourBucket = Math.floor(Date.now() / 3600000)) {
   const list = document.querySelector('#gallery-list');
   list.dataset.source = source;
+  galleryCollageTimers.forEach(timer => clearInterval(timer)); galleryCollageTimers = [];
   const itemsBySport = new Map();
   items.filter(item => item.sportId).forEach(item => {
     if (!itemsBySport.has(item.sportId)) itemsBySport.set(item.sportId, []);
@@ -144,21 +146,40 @@ export function renderGalleryPreview(items = [], source = 'empty', hourBucket = 
     const randomIndex = Math.floor(random() * (index + 1));
     [sportGroups[index], sportGroups[randomIndex]] = [sportGroups[randomIndex], sportGroups[index]];
   }
-  const selectedItems = sportGroups.slice(0, 3).map(([, sportItems]) => sportItems[Math.floor(random() * sportItems.length)]);
-  list.dataset.count = String(selectedItems.length);
-  list.closest('#gallery')?.setAttribute('data-gallery-count', String(selectedItems.length));
-  if (!selectedItems.length) {
+  const allItems = sportGroups.flatMap(([, sportItems]) => sportItems);
+  const shuffledItems = [...allItems];
+  for (let index = shuffledItems.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(random() * (index + 1));
+    [shuffledItems[index], shuffledItems[randomIndex]] = [shuffledItems[randomIndex], shuffledItems[index]];
+  }
+  const collageItems = shuffledItems.slice(0, 28);
+  list.dataset.count = String(collageItems.length);
+  list.closest('#gallery')?.setAttribute('data-gallery-count', String(collageItems.length));
+  if (!collageItems.length) {
     list.innerHTML = '<article class="gallery-preview-empty"><strong>FOTO BELUM TERSEDIA</strong></article>';
     return;
   }
-  const cards = selectedItems.map((item, index) => {
-    const slug = String(item.sportId || '').replace(/^sport-/, '');
-    const english = document.documentElement.lang === 'en';
-    const title = english ? (item.titleEn || item.titleId || 'TOURNAMENT MOMENT') : (item.titleId || 'MOMEN TURNAMEN');
-    const link = slug ? `pages/gallery-sport.html?sport=${encodeURIComponent(slug)}` : 'pages/gallery.html';
-    return `<a href="${link}"><article class="live"><img src="${escapeHtml(item.publicUrl)}" alt="${escapeHtml(english ? (item.altEn || item.altId || title) : (item.altId || title))}"><small>0${index + 1}</small><h3>${escapeHtml(title)}</h3></article></a>`;
-  });
-  list.innerHTML = cards.join('');
+  const collageAlt = item => document.documentElement.lang === 'en'
+    ? (item.altEn || item.altId || 'Tournament moment')
+    : (item.altId || 'Momen turnamen');
+  const backgroundTiles = collageItems.map((item, index) => `<a class="gallery-collage-tile" href="${item.sportId ? `pages/gallery-sport.html?sport=${encodeURIComponent(String(item.sportId).replace(/^sport-/, ''))}` : 'pages/gallery.html'}" aria-label="${escapeHtml(collageAlt(item))}"><img src="${escapeHtml(item.publicUrl)}" alt="" loading="lazy"></a>`).join('');
+  const featuredItems = collageItems.slice(0, Math.min(5, collageItems.length));
+  const featuredTiles = featuredItems.map((item, index) => `<a class="gallery-collage-feature${index === 0 ? ' is-active' : ''}" href="${item.sportId ? `pages/gallery-sport.html?sport=${encodeURIComponent(String(item.sportId).replace(/^sport-/, ''))}` : 'pages/gallery.html'}"><img src="${escapeHtml(item.publicUrl)}" alt="${escapeHtml(collageAlt(item))}" loading="lazy"><span>${String(index + 1).padStart(2, '0')}</span></a>`).join('');
+  list.innerHTML = `<div class="gallery-collage" aria-label="${document.documentElement.lang === 'en' ? 'Tournament photo collage' : 'Kolase foto turnamen'}"><div class="gallery-collage-wall">${backgroundTiles}</div><div class="gallery-collage-features">${featuredTiles}</div></div>`;
+  if (featuredItems.length < 2) return;
+  let activeFeature = 0;
+  let activeBackground = Math.floor(random() * collageItems.length);
+  const rotateCollage = () => {
+    const features = [...list.querySelectorAll('.gallery-collage-feature')];
+    const tiles = [...list.querySelectorAll('.gallery-collage-tile')];
+    features[activeFeature]?.classList.remove('is-active');
+    tiles[activeBackground]?.classList.remove('is-highlighted');
+    activeFeature = Math.floor(random() * features.length);
+    activeBackground = Math.floor(random() * tiles.length);
+    features[activeFeature]?.classList.add('is-active');
+    tiles[activeBackground]?.classList.add('is-highlighted');
+  };
+  galleryCollageTimers.push(setInterval(rotateCollage, 3200));
 }
 
 export function renderHome(exhibitionItems = []) {
