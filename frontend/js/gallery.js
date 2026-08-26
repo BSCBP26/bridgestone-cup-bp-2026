@@ -36,7 +36,7 @@ if (momentsGrid) {
   document.querySelector('#footer-sport').textContent = selectedSport.name;
   momentsGrid.style.setProperty('--accent', selectedSport.accent);
 
-  const payloadItems = await loadGallery(selectedId === 'all' ? '' : `?sportId=sport-${encodeURIComponent(selectedSport.id)}`);
+  const payloadItems = await loadGallery(!selectedId || selectedId === 'all' ? '' : `?sportId=sport-${encodeURIComponent(selectedSport.id)}`);
   const moments = payloadItems.map((item, index) => ({ number:String(index + 1).padStart(2, '0'), title:item.mediaType === 'video' ? 'VIDEO TURNAMEN' : 'FOTO TURNAMEN', sport:selectedSport.name, mediaType:item.mediaType, imageUrl:item.publicUrl, alt:`${selectedSport.name} media` }));
   momentsGrid.dataset.source = moments.length ? 'api' : 'empty';
   const photoWord = moments.length === 1 ? 'MEDIA' : 'MEDIA';
