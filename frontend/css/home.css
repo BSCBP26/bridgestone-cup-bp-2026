@@ -415,6 +415,10 @@ main{
 #greetings .section-heading{background-image:none}
 #greetings .section-heading::before,#greetings .section-heading::after{content:"";position:absolute;top:181px;width:min(29vw,397px);height:2px;background:linear-gradient(90deg,transparent 0%,rgba(171,119,20,.18) 14%,#dba936 44%,#fff1b0 50%,#dba936 56%,rgba(171,119,20,.18) 86%,transparent 100%);background-size:220% 100%;filter:drop-shadow(0 0 6px rgba(232,181,52,.55));animation:headingShimmer 3.8s linear infinite}
 #greetings .section-heading::before{left:3%}#greetings .section-heading::after{right:3%;animation-direction:reverse}
+#greetings .section-heading::before,#greetings .section-heading::after{display:none}
+#greetings .section-heading span{position:relative;display:inline-block;padding-bottom:18px}
+#greetings .section-heading span::after{content:'';position:absolute;left:50%;bottom:0;width:64px;height:4px;transform:translateX(-50%);border:1px solid rgba(238,190,66,.75);border-radius:99px;background:linear-gradient(90deg,transparent,#ffe59b 48%,transparent);box-shadow:0 0 12px rgba(232,181,52,.7);animation:exhibitionAccent 2.8s ease-in-out infinite}
+@keyframes exhibitionAccent{0%,100%{opacity:.45;transform:translateX(-50%) scaleX(.72)}50%{opacity:1;transform:translateX(-50%) scaleX(1.08)}}
 .site-header{transition:background .3s ease,border-color .3s ease,box-shadow .3s ease}
 .site-header.is-scrolled{background:rgba(9,9,8,.92);border-color:rgba(212,163,46,.36);box-shadow:0 14px 34px rgba(0,0,0,.38);backdrop-filter:blur(14px)}
 .site-header nav a{position:relative;transition:color .22s ease}
