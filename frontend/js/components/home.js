@@ -4,16 +4,18 @@ const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character =>
 const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
 const emptySection = title => `<div class="home-empty-state"><strong>${title}</strong></div>`;
 let exhibitionTimers = [];
-const greetingCard = (item, index, photoUrls) => { const english = document.documentElement.lang === 'en'; const message = english ? (item.messageEn || item.message || item.messageId) : (item.messageId || item.message); const slides = photoUrls.length ? photoUrls : ['assets/images/portrait-head.svg']; const slideMarkup = slides.map((url, slideIndex) => `<img class="exhibition-slide${slideIndex === 0 ? ' active' : ''}" src="${escapeHtml(url)}" alt="${english ? 'Exhibition match photo' : 'Foto exhibition match'}"${slideIndex ? ' aria-hidden="true"' : ''}>`).join(''); return `<article class="greeting-card exhibition-card" data-message="${escapeHtml(message)}"><div class="exhibition-copy"><small>BRIDGESTONE CUP BP 2026</small><span>EXHIBITION MATCH ${String(index + 1).padStart(2, '0')}</span><h3>${escapeHtml(english ? 'A shared start to the competition' : 'Awal kebersamaan menuju kompetisi')}</h3><p class="exhibition-type" aria-live="polite"></p><b>${escapeHtml(english ? (item.roleEn || item.role || item.roleId || 'Bridgestone Cup Family') : (item.roleId || item.role || 'Keluarga Bridgestone Cup'))}</b></div><div class="exhibition-photo" data-slide-count="${slides.length}">${slideMarkup}<i>PHOTO STORY</i><em>${String(index + 1).padStart(2, '0')}</em></div></article>`; };
+const greetingCard = (item, index, photoUrls) => { const english = document.documentElement.lang === 'en'; const message = english ? (item.messageEn || item.message || item.messageId) : (item.messageId || item.message); const title = item.name || (english ? 'A shared start to the competition' : 'Awal kebersamaan menuju kompetisi'); const slides = photoUrls.length ? photoUrls : ['assets/images/portrait-head.svg']; const slideMarkup = slides.map((url, slideIndex) => `<img class="exhibition-slide${slideIndex === 0 ? ' active' : ''}" src="${escapeHtml(url)}" alt="${english ? 'Exhibition match photo' : 'Foto exhibition match'}"${slideIndex ? ' aria-hidden="true"' : ''}>`).join(''); return `<article class="greeting-card exhibition-card" data-title="${escapeHtml(title)}" data-message="${escapeHtml(message)}"><div class="exhibition-copy"><small>BRIDGESTONE CUP BP 2026</small><span>EXHIBITION MATCH ${String(index + 1).padStart(2, '0')}</span><h3 class="exhibition-title" aria-live="polite"></h3><p class="exhibition-type" aria-live="polite"></p><b>${escapeHtml(english ? (item.roleEn || item.role || item.roleId || 'Bridgestone Cup Family') : (item.roleId || item.role || 'Keluarga Bridgestone Cup'))}</b></div><div class="exhibition-photo" data-slide-count="${slides.length}">${slideMarkup}<i>PHOTO STORY</i><em>${String(index + 1).padStart(2, '0')}</em></div></article>`; };
 
 function startExhibitionMotion() {
   exhibitionTimers.forEach(timer => clearInterval(timer)); exhibitionTimers = [];
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const loopType = (element, text) => { if (reduced) { element.textContent = text; return; } let cursor = 0, deleting = false, pause = 0; const tick = () => { if (pause) { pause -= 1; exhibitionTimers.push(setTimeout(tick, 90)); return; } if (!deleting) { cursor += 1; if (cursor >= text.length) { cursor = text.length; deleting = true; pause = 14; } } else { cursor -= 1; if (cursor <= 0) { cursor = 0; deleting = false; pause = 5; } } element.textContent = text.slice(0, cursor); exhibitionTimers.push(setTimeout(tick, deleting ? 42 : 58)); }; tick(); };
   document.querySelectorAll('.exhibition-card').forEach(card => {
+    const title = card.querySelector('.exhibition-title');
+    loopType(title, card.dataset.title || '');
     const message = card.dataset.message || '';
     const type = card.querySelector('.exhibition-type');
-    if (reduced) type.textContent = message;
-    else { type.textContent = ''; let cursor = 0; const typeTimer = setInterval(() => { type.textContent = message.slice(0, cursor += 1); if (cursor >= message.length) clearInterval(typeTimer); }, 28); exhibitionTimers.push(typeTimer); }
+    loopType(type, message);
     if (reduced) return;
     const slides = [...card.querySelectorAll('.exhibition-slide')]; if (slides.length < 2) return;
     let active = 0; exhibitionTimers.push(setInterval(() => { slides[active].classList.remove('active'); active = (active + 1) % slides.length; slides[active].classList.add('active'); }, 3000));
@@ -27,8 +29,8 @@ export function renderGreetings(items = [], source = 'empty') {
   const photoUrls = items.map(item => item.photoUrl).filter(Boolean);
   list.innerHTML = exhibitionItems.length
     ? exhibitionItems.map((item, index) => greetingCard(item, index, item.photoUrls?.length ? item.photoUrls : (item.photoUrl ? [item.photoUrl] : []))).join('')
-    : emptySection('GREETING BELUM TERSEDIA');
-  if (exhibitionItems.length) { [...list.querySelectorAll('.exhibition-card')].forEach((card, index) => { const title = card.querySelector('.exhibition-copy h3'); if (title) title.textContent = exhibitionItems[index].name || title.textContent; }); startExhibitionMotion(); }
+    : emptySection('LOADING…');
+  if (exhibitionItems.length) startExhibitionMotion();
 }
 
 const supporterImages = {
