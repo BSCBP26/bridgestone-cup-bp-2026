@@ -4,73 +4,33 @@ const form = document.querySelector('#gallery-form');
 const status = document.querySelector('#form-status');
 const items = document.querySelector('#gallery-items');
 const sport = document.querySelector('#sport');
-let galleryItems = [];
+const photoInput = document.querySelector('#photo');
+const filePreview = document.querySelector('#file-preview');
+const cropModal = document.querySelector('#crop-modal');
+const cropCanvas = document.querySelector('#crop-canvas');
+const cropCounter = document.querySelector('#crop-counter');
+const cropStage = document.querySelector('.crop-stage');
+const cropBox = document.createElement('div');
+cropBox.className = 'crop-box'; cropBox.innerHTML = '<i data-resize="nw"></i><i data-resize="ne"></i><i data-resize="sw"></i><i data-resize="se"></i>'; cropStage.append(cropBox);
+let galleryItems = [], selectedFiles = [], cropQueue = [], croppedFiles = [], cropIndex = 0, cropImage = null, cropSelection = null, dragStart = null, cropMode = 'move';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[character]));
 function setStatus(message, error = false) { status.textContent = message; status.className = error ? 'error' : ''; }
-
-async function loadSports() {
-  const payload = await adminRequest('/sports');
-  sport.insertAdjacentHTML('beforeend', payload.data.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join(''));
-}
-
-function renderItems() {
-  if (!galleryItems.length) { items.innerHTML = '<p>Belum ada media tersimpan.</p>'; return; }
-  items.innerHTML = galleryItems.map(item => `<article class="item" data-id="${item.id}">${item.mediaType === 'video' ? `<video src="${escapeHtml(item.publicUrl)}" controls preload="metadata"></video>` : `<img src="${escapeHtml(item.publicUrl)}" alt="Foto turnamen">`}<div class="item-body"><strong>${item.mediaType === 'video' ? 'Video' : 'Foto'}</strong><span>${escapeHtml(item.sportId || 'Umum')} · ${escapeHtml(item.status)}</span><div class="item-actions"><button class="toggle" type="button">${item.status === 'published' ? 'Jadikan draft' : 'Publish'}</button><button class="danger" type="button">Hapus</button></div></div></article>`).join('');
-}
-
-async function loadGallery() {
-  items.innerHTML = '<p>Memuat foto…</p>';
-  const payload = await adminRequest('/admin/gallery');
-  galleryItems = payload.data;
-  renderItems();
-}
-
-form.addEventListener('submit', async event => {
-  event.preventDefault();
-  const file = form.photo.files[0];
-  if (!file) return;
-  const button = form.querySelector('.primary');
-  button.disabled = true;
-  setStatus('Mengunggah media…');
-  let uploaded;
-  try {
-    uploaded = (await adminRequest('/admin/media/files', { method: 'POST', body: file, headers: { 'Content-Type': file.type } })).data;
-    setStatus('Menyimpan metadata Gallery…');
-    await adminRequest('/admin/gallery', { method: 'POST', body: JSON.stringify({ storagePath: uploaded.storagePath, mediaType: uploaded.mimeType.startsWith('video/') ? 'video' : 'photo', sportId: form.sport.value || null, status: form.status.value }) });
-    form.reset();
-    setStatus('Media berhasil disimpan.');
-    await loadGallery();
-  } catch (error) {
-    if (uploaded?.storagePath) await adminRequest('/admin/media/images', { method: 'DELETE', body: JSON.stringify({ storagePath: uploaded.storagePath }) }).catch(() => {});
-    setStatus(error.message, true);
-  } finally { button.disabled = false; }
-});
-
-items.addEventListener('click', async event => {
-  const card = event.target.closest('.item');
-  if (!card) return;
-  const item = galleryItems.find(entry => entry.id === card.dataset.id);
-  try {
-    if (event.target.closest('.toggle')) {
-      const nextStatus = item.status === 'published' ? 'draft' : 'published';
-      await adminRequest(`/admin/gallery/${item.id}`, { method: 'PUT', body: JSON.stringify({ ...item, status: nextStatus }) });
-      setStatus(`Status diubah menjadi ${nextStatus}.`);
-    }
-    if (event.target.closest('.danger')) {
-      if (!confirm(`Hapus media ${item.mediaType === 'video' ? 'video' : 'foto'} ini?`)) return;
-      await adminRequest(`/admin/gallery/${item.id}`, { method: 'DELETE' });
-      await adminRequest('/admin/media/images', { method: 'DELETE', body: JSON.stringify({ storagePath: item.storagePath }) });
-      setStatus('Foto berhasil dihapus.');
-    }
-    await loadGallery();
-  } catch (error) { setStatus(error.message, true); }
-});
-
-document.querySelector('#refresh-button').addEventListener('click', () => loadGallery().catch(error => setStatus(error.message, true)));
-document.querySelector('#logout-button').addEventListener('click', () => { clearAdminSession(); location.replace('admin-login.html'); });
-
-if (await requireAdmin()) {
-  try { await Promise.all([loadSports(), loadGallery()]); }
-  catch (error) { setStatus(error.message, true); }
-}
+async function loadSports() { const payload = await adminRequest('/sports'); sport.insertAdjacentHTML('beforeend', payload.data.map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join('')); }
+function renderItems() { if (!galleryItems.length) { items.innerHTML = '<p>Belum ada media tersimpan.</p>'; return; } items.innerHTML = galleryItems.map(item => `<article class="item" data-id="${item.id}">${item.mediaType === 'video' ? `<video src="${escapeHtml(item.publicUrl)}" controls preload="metadata"></video>` : `<img src="${escapeHtml(item.publicUrl)}" alt="Foto turnamen">`}<div class="item-body"><strong>${item.mediaType === 'video' ? 'Video' : 'Foto'}</strong><span>${escapeHtml(item.sportId || 'Umum')} · ${escapeHtml(item.status)}</span><div class="item-actions"><button class="toggle" type="button">${item.status === 'published' ? 'Jadikan draft' : 'Publish'}</button><button class="danger" type="button">Hapus</button></div></div></article>`).join(''); }
+async function loadGallery() { items.innerHTML = '<p>Memuat media…</p>'; const payload = await adminRequest('/admin/gallery'); galleryItems = payload.data; renderItems(); }
+function renderFilePreview() { filePreview.innerHTML = selectedFiles.length ? `<span>${selectedFiles.length} file dipilih</span><small>${selectedFiles.map(file => escapeHtml(file.name)).join(' · ')}</small>` : ''; }
+function syncCropBox() { if (!cropSelection) return; cropBox.style.left = `${cropSelection.x / cropCanvas.width * 100}%`; cropBox.style.top = `${cropSelection.y / cropCanvas.height * 100}%`; cropBox.style.width = `${cropSelection.w / cropCanvas.width * 100}%`; cropBox.style.height = `${cropSelection.h / cropCanvas.height * 100}%`; }
+function drawCrop() { if (!cropImage) return; const ctx = cropCanvas.getContext('2d'); const base = Math.min(cropCanvas.width / cropImage.width, cropCanvas.height / cropImage.height); const width = cropImage.width * base, height = cropImage.height * base, dx = (cropCanvas.width - width) / 2, dy = (cropCanvas.height - height) / 2; ctx.clearRect(0, 0, cropCanvas.width, cropCanvas.height); ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, cropCanvas.width, cropCanvas.height); ctx.drawImage(cropImage, dx, dy, width, height); syncCropBox(); }
+async function showCrop() { if (cropIndex >= cropQueue.length) { cropModal.hidden = true; photoInput.value = ''; selectedFiles = [...croppedFiles]; renderFilePreview(); setStatus(`${croppedFiles.length} foto siap diunggah. Klik Upload dan simpan semua.`); return; } cropCounter.textContent = `Foto ${cropIndex + 1} dari ${cropQueue.length}: atur kotak crop`; try { cropImage = await createImageBitmap(cropQueue[cropIndex]); } catch { croppedFiles.push(cropQueue[cropIndex]); cropIndex += 1; return showCrop(); } cropCanvas.width = 1200; cropCanvas.height = Math.max(675, Math.round(1200 * cropImage.height / cropImage.width)); cropSelection = { x:cropCanvas.width * .08, y:cropCanvas.height * .08, w:cropCanvas.width * .84, h:cropCanvas.height * .84 }; drawCrop(); }
+async function openCropQueue(files) { selectedFiles = files; const images = files.filter(file => file.type.startsWith('image/') || /\.(heic|heif)$/i.test(file.name)); cropQueue = images; croppedFiles = files.filter(file => !images.includes(file)); cropIndex = 0; renderFilePreview(); if (!cropQueue.length) return; cropModal.hidden = false; await showCrop(); }
+function finishCrop(skip = false) { const file = cropQueue[cropIndex]; if (skip) { croppedFiles.push(file); cropIndex += 1; showCrop(); return; } const selection = cropSelection || { x:0, y:0, w:cropCanvas.width, h:cropCanvas.height }; const base = Math.min(cropCanvas.width / cropImage.width, cropCanvas.height / cropImage.height); const dx = (cropCanvas.width - cropImage.width * base) / 2, dy = (cropCanvas.height - cropImage.height * base) / 2; const sx = Math.max(0, (selection.x - dx) / base), sy = Math.max(0, (selection.y - dy) / base), sw = Math.min(cropImage.width - sx, selection.w / base), sh = Math.min(cropImage.height - sy, selection.h / base); const out = document.createElement('canvas'); out.width = 1200; out.height = 675; out.getContext('2d').drawImage(cropImage, sx, sy, sw, sh, 0, 0, out.width, out.height); out.toBlob(blob => { croppedFiles.push(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type:'image/jpeg' })); cropIndex += 1; showCrop(); }, 'image/jpeg', .9); }
+cropBox.addEventListener('pointerdown', event => { event.stopPropagation(); cropBox.setPointerCapture(event.pointerId); const rect = cropCanvas.getBoundingClientRect(), scale = cropCanvas.width / rect.width; dragStart = { x:event.clientX, y:event.clientY, selection:{...cropSelection}, scale }; cropMode = event.target.dataset.resize || 'move'; });
+cropBox.addEventListener('pointermove', event => { if (!dragStart) return; const dx = (event.clientX - dragStart.x) * dragStart.scale, dy = (event.clientY - dragStart.y) * dragStart.scale, s = dragStart.selection, next = {...s}; if (cropMode === 'move') { next.x = Math.max(0, Math.min(cropCanvas.width-s.w, s.x+dx)); next.y = Math.max(0, Math.min(cropCanvas.height-s.h, s.y+dy)); } else { if (cropMode.includes('e')) next.w = Math.max(80, Math.min(cropCanvas.width-next.x, s.w+dx)); if (cropMode.includes('s')) next.h = Math.max(80, Math.min(cropCanvas.height-next.y, s.h+dy)); if (cropMode.includes('w')) { const nx=Math.max(0,Math.min(s.x+s.w-80,s.x+dx)); next.w=s.w-(nx-s.x); next.x=nx; } if (cropMode.includes('n')) { const ny=Math.max(0,Math.min(s.y+s.h-80,s.y+dy)); next.h=s.h-(ny-s.y); next.y=ny; } } cropSelection=next; syncCropBox(); });
+cropBox.addEventListener('pointerup', () => { dragStart = null; }); cropBox.addEventListener('pointercancel', () => { dragStart = null; });
+photoInput.addEventListener('change', () => openCropQueue([...photoInput.files]).catch(error => setStatus(error.message, true)));
+document.querySelector('#crop-apply').addEventListener('click', () => finishCrop(false)); document.querySelector('#crop-skip').addEventListener('click', () => finishCrop(true)); document.querySelector('#crop-cancel').addEventListener('click', () => { cropQueue = []; croppedFiles = []; selectedFiles = []; cropModal.hidden = true; photoInput.value = ''; renderFilePreview(); });
+form.addEventListener('submit', async event => { event.preventDefault(); if (!selectedFiles.length) return; const button = form.querySelector('.primary'); button.disabled = true; setStatus(`Mengunggah ${selectedFiles.length} media…`); const uploaded = []; try { for (const file of selectedFiles) { const result = (await adminRequest('/admin/media/files', { method:'POST', body:file, headers:{ 'Content-Type':file.type || 'application/octet-stream' } })).data; uploaded.push(result); await adminRequest('/admin/gallery', { method:'POST', body:JSON.stringify({ storagePath:result.storagePath, mediaType:result.mimeType.startsWith('video/') ? 'video' : 'photo', sportId:form.sport.value || null, status:form.status.value }) }); } form.reset(); selectedFiles=[]; croppedFiles=[]; renderFilePreview(); setStatus(`${uploaded.length} media berhasil disimpan.`); await loadGallery(); } catch (error) { setStatus(error.message, true); } finally { button.disabled = false; } });
+items.addEventListener('click', async event => { const card = event.target.closest('.item'); if (!card) return; const item = galleryItems.find(entry => entry.id === card.dataset.id); try { if (event.target.closest('.toggle')) { const nextStatus = item.status === 'published' ? 'draft' : 'published'; await adminRequest(`/admin/gallery/${item.id}`, { method:'PUT', body:JSON.stringify({...item,status:nextStatus}) }); setStatus(`Status diubah menjadi ${nextStatus}.`); } if (event.target.closest('.danger')) { if (!confirm(`Hapus media ${item.mediaType === 'video' ? 'video' : 'foto'} ini?`)) return; await adminRequest(`/admin/gallery/${item.id}`, { method:'DELETE' }); await adminRequest('/admin/media/images', { method:'DELETE', body:JSON.stringify({storagePath:item.storagePath}) }); setStatus('Media berhasil dihapus.'); } await loadGallery(); } catch (error) { setStatus(error.message, true); } });
+document.querySelector('#refresh-button').addEventListener('click', () => loadGallery().catch(error => setStatus(error.message, true))); if (document.querySelector('#logout-button')) document.querySelector('#logout-button').addEventListener('click', () => { clearAdminSession(); location.replace('admin-login.html'); });
+if (await requireAdmin()) { try { await Promise.all([loadSports(), loadGallery()]); } catch (error) { setStatus(error.message, true); } }
