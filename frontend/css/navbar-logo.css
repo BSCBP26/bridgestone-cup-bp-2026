@@ -12,15 +12,20 @@
 .brand::before,
 .sports-brand::before,
 .gallery-brand::before {
-  content: none;
+  content: "";
+  display: inline-block;
+  flex: 0 0 auto;
+  width: clamp(108px, 12vw, 158px);
+  height: clamp(24px, 2.8vw, 34px);
+  background: url("../assets/images/bridgestone-navbar.png") center / 100% 215% no-repeat;
 }
 
 .brand::after,
 .sports-brand::after,
 .gallery-brand::after {
-  content: "";
+  content: " CUP BP 2026";
   display: inline-block;
-  width: clamp(112px, 13vw, 168px);
-  height: clamp(18px, 2vw, 27px);
-  background: url("../assets/images/bridgestone-navbar.png") center / contain no-repeat;
+  color: #fff;
+  font: 700 clamp(11px, 1.15vw, 16px) / 1 "DM Sans", Arial, sans-serif;
+  letter-spacing: -0.3px;
 }
