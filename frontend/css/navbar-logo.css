@@ -1,0 +1,26 @@
+.brand,
+.sports-brand,
+.gallery-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0 !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap;
+}
+
+.brand::before,
+.sports-brand::before,
+.gallery-brand::before {
+  content: none;
+}
+
+.brand::after,
+.sports-brand::after,
+.gallery-brand::after {
+  content: "";
+  display: inline-block;
+  width: clamp(112px, 13vw, 168px);
+  height: clamp(18px, 2vw, 27px);
+  background: url("../assets/images/bridgestone-navbar.png") center / contain no-repeat;
+}
