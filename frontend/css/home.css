@@ -450,6 +450,18 @@ main{
 .hero .timeline{border-bottom:0;background:linear-gradient(90deg,transparent,#b99d5f 12%,#d1af58 50%,#b99d5f 88%,transparent) center bottom/100% 2px no-repeat;font:700 24px/30px 'Barlow Condensed';letter-spacing:1.2px;text-transform:uppercase}.hero .timeline li{padding-bottom:20px}.hero .timeline li::after{width:14px;height:14px;bottom:-6px;border:3px solid #080704;background:#e4c26e;box-shadow:0 0 0 1px #a77a22,0 0 18px rgba(226,194,110,.35)}.hero .timeline .current{font-size:25px;color:#f0e6ca}
 @media(max-width:600px){.hero .pill{min-width:0;width:min(100%,342px);font-size:13px;letter-spacing:2.2px}.hero .anniversary{min-width:0;width:min(100%,342px);font-size:16px;letter-spacing:.7px}.hero .timeline{font-size:14px;letter-spacing:.5px}.hero .timeline .current{font-size:14px}}
 
+/* Sequential timeline shimmer: 48th -> 49th -> 50th. */
+.hero .timeline{isolation:isolate;background:linear-gradient(90deg,transparent,#b99d5f 12%,#d1af58 50%,#b99d5f 88%,transparent) center bottom/100% 2px no-repeat}
+.hero .timeline::after{content:"";position:absolute;left:-8%;bottom:-1px;width:18%;height:3px;border-radius:999px;background:#ffe8a0;filter:blur(2px);opacity:.85;animation:timelineRailSweep 6s ease-in-out infinite}
+.hero .timeline li{isolation:isolate;height:45px;padding:6px 10px 21px;border:1px solid rgba(184,145,57,.34);border-radius:3px;background:linear-gradient(145deg,rgba(24,18,8,.9),rgba(7,7,6,.8));box-shadow:inset 0 0 0 1px rgba(255,224,132,.03);animation:timelineBoxGlow 6s ease-in-out infinite}
+.hero .timeline li::before{content:"";position:absolute;z-index:0;inset:-50% -80%;background:linear-gradient(110deg,transparent 38%,rgba(255,231,157,.55) 50%,transparent 62%);transform:translateX(-70%);animation:timelineBoxSweep 6s ease-in-out infinite;pointer-events:none}
+.hero .timeline li::after{z-index:1}
+.hero .timeline li:nth-child(2),.hero .timeline li:nth-child(2)::before{animation-delay:2s}.hero .timeline li:nth-child(3),.hero .timeline li:nth-child(3)::before{animation-delay:4s}
+@keyframes timelineRailSweep{0%,8%{transform:translateX(0);opacity:0}18%,28%{transform:translateX(380%);opacity:1}38%,100%{transform:translateX(620%);opacity:0}}
+@keyframes timelineBoxSweep{0%,8%{transform:translateX(-70%);opacity:0}18%,34%{transform:translateX(70%);opacity:.9}45%,100%{transform:translateX(170%);opacity:0}}
+@keyframes timelineBoxGlow{0%,8%,45%,100%{border-color:rgba(184,145,57,.34);box-shadow:inset 0 0 0 1px rgba(255,224,132,.03),0 0 0 rgba(246,195,79,0)}18%,34%{border-color:#e7bd55;box-shadow:inset 0 0 0 1px rgba(255,224,132,.18),0 0 22px rgba(246,195,79,.3)}}
+@media(prefers-reduced-motion:reduce){.hero .timeline::after,.hero .timeline li,.hero .timeline li::before{animation:none}.hero .timeline li{border-color:rgba(184,145,57,.55)}}
+
 /* Richer continuous atmosphere for every public-home section. */
 .panel.section{isolation:isolate;background-image:radial-gradient(circle at 18% 26%,rgba(145,92,8,.23),transparent 26%),radial-gradient(circle at 82% 72%,rgba(102,62,5,.2),transparent 28%),repeating-linear-gradient(90deg,transparent 0 79px,rgba(214,161,42,.018) 80px),repeating-linear-gradient(0deg,transparent 0 79px,rgba(214,161,42,.014) 80px),linear-gradient(145deg,#030303,#090704 50%,#020202)!important;background-position:calc(var(--page-scroll,0px) * -.008) 0,calc(var(--page-scroll,0px) * .01) 0,0 0,0 0,0 0}
 .panel.section::before{border-color:rgba(181,132,34,.68);box-shadow:inset 0 0 30px rgba(202,144,25,.025),0 0 26px rgba(0,0,0,.42)}
