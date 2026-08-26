@@ -18,7 +18,7 @@ function startExhibitionMotion() {
       if (pause > 0) { pause -= 1; return; }
       if (phase === 'title') { cursor += 1; titleElement.textContent = titleText.slice(0, cursor); if (cursor >= titleText.length) { phase = 'titlePause'; pause = 5; } }
       else if (phase === 'titlePause') { phase = 'description'; cursor = 0; descriptionElement.textContent = ''; }
-      else if (phase === 'description') { cursor += 1; descriptionElement.textContent = descriptionText.slice(0, cursor); if (cursor >= descriptionText.length) { phase = 'hold'; pause = 91; } }
+      else if (phase === 'description') { cursor += 1; descriptionElement.textContent = descriptionText.slice(0, cursor); if (cursor >= descriptionText.length) { phase = 'hold'; pause = 364; } }
       else if (phase === 'hold') { phase = 'deleteDescription'; cursor = descriptionText.length; }
       else if (phase === 'deleteDescription') { cursor -= 1; descriptionElement.textContent = descriptionText.slice(0, cursor); if (cursor <= 0) { phase = 'between'; pause = 5; } }
       else if (phase === 'between') { phase = 'deleteTitle'; cursor = titleText.length; }
