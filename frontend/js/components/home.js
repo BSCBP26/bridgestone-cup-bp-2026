@@ -163,9 +163,10 @@ export function renderGalleryPreview(items = [], source = 'empty', hourBucket = 
   const collageAlt = item => document.documentElement.lang === 'en'
     ? (item.altEn || item.altId || 'Tournament moment')
     : (item.altId || 'Momen turnamen');
-  const backgroundTiles = collageItems.map((item, index) => `<a class="gallery-collage-tile" href="${item.sportId ? `pages/gallery-sport.html?sport=${encodeURIComponent(String(item.sportId).replace(/^sport-/, ''))}` : 'pages/gallery.html'}" aria-label="${escapeHtml(collageAlt(item))}"><img src="${escapeHtml(item.publicUrl)}" alt="" loading="lazy"></a>`).join('');
+  const galleryLink = item => item.sportId ? `pages/gallery-sport.html?sport=${encodeURIComponent(String(item.sportId).replace(/^sport-/, ''))}` : 'pages/gallery-sport.html?sport=all';
+  const backgroundTiles = collageItems.map((item, index) => `<a class="gallery-collage-tile" href="${galleryLink(item)}" aria-label="${escapeHtml(collageAlt(item))}"><img src="${escapeHtml(item.publicUrl)}" alt="" loading="lazy"></a>`).join('');
   const featuredItems = collageItems.slice(0, Math.min(5, collageItems.length));
-  const featuredTiles = featuredItems.map((item, index) => `<a class="gallery-collage-feature${index === 0 ? ' is-active' : ''}" href="${item.sportId ? `pages/gallery-sport.html?sport=${encodeURIComponent(String(item.sportId).replace(/^sport-/, ''))}` : 'pages/gallery.html'}"><img src="${escapeHtml(item.publicUrl)}" alt="${escapeHtml(collageAlt(item))}" loading="lazy"><span>${String(index + 1).padStart(2, '0')}</span></a>`).join('');
+  const featuredTiles = featuredItems.map((item, index) => `<a class="gallery-collage-feature${index === 0 ? ' is-active' : ''}" href="${galleryLink(item)}"><img src="${escapeHtml(item.publicUrl)}" alt="${escapeHtml(collageAlt(item))}" loading="lazy"><span>${String(index + 1).padStart(2, '0')}</span></a>`).join('');
   list.innerHTML = `<div class="gallery-collage" aria-label="${document.documentElement.lang === 'en' ? 'Tournament photo collage' : 'Kolase foto turnamen'}"><div class="gallery-collage-wall">${backgroundTiles}</div><div class="gallery-collage-features">${featuredTiles}</div></div>`;
   if (featuredItems.length < 2) return;
   let activeFeature = 0;
@@ -177,6 +178,10 @@ export function renderGalleryPreview(items = [], source = 'empty', hourBucket = 
     tiles[activeBackground]?.classList.remove('is-highlighted');
     activeFeature = Math.floor(random() * features.length);
     activeBackground = Math.floor(random() * tiles.length);
+    const featureItem = allItems[Math.floor(random() * allItems.length)];
+    const backgroundItem = allItems[Math.floor(random() * allItems.length)];
+    if (featureItem && features[activeFeature]) { features[activeFeature].href = galleryLink(featureItem); features[activeFeature].querySelector('img').src = featureItem.publicUrl; features[activeFeature].querySelector('img').alt = collageAlt(featureItem); }
+    if (backgroundItem && tiles[activeBackground]) { tiles[activeBackground].href = galleryLink(backgroundItem); tiles[activeBackground].querySelector('img').src = backgroundItem.publicUrl; }
     features[activeFeature]?.classList.add('is-active');
     tiles[activeBackground]?.classList.add('is-highlighted');
   };

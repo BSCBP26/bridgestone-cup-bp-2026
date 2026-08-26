@@ -4,7 +4,9 @@ import { gallerySports } from './data/gallery-data.js?v=20260809-live-only';
 
 const filters = document.querySelector('#gallery-filters');
 const selectedId = new URLSearchParams(location.search).get('sport');
-const selectedSport = gallerySports.find(item => item.id === selectedId) || gallerySports[0];
+const selectedSport = selectedId === 'all'
+  ? { id:'all', name:'ALL', code:'ALL', accent:'#d4a32e' }
+  : (gallerySports.find(item => item.id === selectedId) || gallerySports[0]);
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[character]));
 const english = document.documentElement.lang === 'en';
 window.addEventListener('publiclanguagechange', () => location.reload());
@@ -31,7 +33,11 @@ const collectionGrid = document.querySelector('#collection-grid');
 if (collectionGrid) {
   const publishedItems = await loadGallery();
   collectionGrid.dataset.source = publishedItems.length ? 'api' : 'empty';
-  collectionGrid.innerHTML = gallerySports.map((sport, index) => {
+  const allItems = publishedItems.filter(item => !item.sportId);
+  const allFeatured = allItems.length ? allItems[Math.floor(Math.random() * allItems.length)] : null;
+  const allMediaPreview = allFeatured?.mediaType === 'video' ? `<video src="${escapeHtml(allFeatured.publicUrl)}" muted autoplay loop playsinline preload="metadata" aria-label="All gallery video"></video>` : (allFeatured ? `<img src="${escapeHtml(allFeatured.publicUrl)}" alt="All tournament photos">` : '');
+  const allCard = `<a class="collection-card${allFeatured ? ' live' : ' empty'}" style="--accent:#d4a32e" href="gallery-sport.html?sport=all">${allMediaPreview}<small>00</small><span class="sport-code">ALL</span><div><h2>ALL GALLERY</h2><p>${allItems.length ? `BUKA KOLEKSI &middot; ${allItems.length} MEDIA` : 'MEDIA BELUM TERSEDIA'}</p><b>&rarr;</b></div></a>`;
+  collectionGrid.innerHTML = allCard + gallerySports.map((sport, index) => {
     const sportItems = publishedItems.filter(item => item.sportId === `sport-${sport.id}`);
     const featured = sportItems.length ? sportItems[Math.floor(Math.random() * sportItems.length)] : null;
     const count = sportItems.length;
@@ -48,7 +54,7 @@ if (momentsGrid) {
   document.querySelector('#footer-sport').textContent = selectedSport.name;
   momentsGrid.style.setProperty('--accent', selectedSport.accent);
 
-  const payloadItems = await loadGallery(`?sportId=sport-${encodeURIComponent(selectedSport.id)}`);
+  const payloadItems = await loadGallery(selectedId === 'all' ? '' : `?sportId=sport-${encodeURIComponent(selectedSport.id)}`);
   const moments = payloadItems.map((item, index) => ({ number:String(index + 1).padStart(2, '0'), title:item.mediaType === 'video' ? 'VIDEO TURNAMEN' : 'FOTO TURNAMEN', sport:selectedSport.name, mediaType:item.mediaType, imageUrl:item.publicUrl, alt:`${selectedSport.name} media` }));
   momentsGrid.dataset.source = moments.length ? 'api' : 'empty';
   const photoWord = moments.length === 1 ? 'MEDIA' : 'MEDIA';
