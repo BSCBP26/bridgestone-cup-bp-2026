@@ -52,13 +52,16 @@ if (momentsGrid) {
     momentsGrid.innerHTML = moments.map((moment, index) => `<button class="moment-card live" style="--accent:${selectedSport.accent}" type="button" data-index="${index}" aria-label="Buka ${escapeHtml(moment.title)} ${moment.number}">${moment.mediaType === 'video' ? `<video src="${escapeHtml(moment.imageUrl)}" muted autoplay loop playsinline preload="metadata" aria-label="${escapeHtml(moment.alt)}"></video>` : `<img src="${escapeHtml(moment.imageUrl)}" alt="${escapeHtml(moment.alt)}">`}<span>${moment.number}</span><i>↗</i><div><small>${escapeHtml(moment.sport)}</small><strong>${escapeHtml(moment.title)}</strong></div></button>`).join('');
     const dialog = document.querySelector('#gallery-lightbox');
     const download = dialog.querySelector('#lightbox-download') || (() => { const link = document.createElement('a'); link.id = 'lightbox-download'; link.className = 'lightbox-download'; link.href = '#'; link.download = ''; link.setAttribute('aria-label', 'Unduh foto'); link.textContent = '↓'; dialog.append(link); return link; })();
-    download.addEventListener('click', async event => { event.preventDefault(); const url = download.href; if (!url || url.endsWith('#')) return; const originalLabel = download.textContent; download.textContent = '…'; try { const response = await fetch(url, { mode:'cors' }); if (!response.ok) throw new Error('Download failed'); const blobUrl = URL.createObjectURL(await response.blob()); const link = document.createElement('a'); link.href = blobUrl; link.download = download.download || 'bridgestone-cup-media'; document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(blobUrl), 1000); } catch { window.open(url, '_blank', 'noopener,noreferrer'); } finally { download.textContent = originalLabel; } });
     let activeIndex = 0;
     const paint = index => {
       activeIndex = (index + moments.length) % moments.length;
       const moment = moments[activeIndex];
-      download.href = moment.imageUrl;
-      download.download = `bridgestone-cup-${selectedSport.id}-${moment.number}.${moment.mediaType === 'video' ? 'mp4' : 'jpg'}`;
+      const downloadName = `bridgestone-cup-${selectedSport.id}-${moment.number}.${moment.mediaType === 'video' ? 'mp4' : 'jpg'}`;
+      const downloadUrl = new URL(moment.imageUrl, location.href);
+      downloadUrl.searchParams.set('download', '1');
+      downloadUrl.searchParams.set('name', downloadName);
+      download.href = downloadUrl.href;
+      download.download = downloadName;
       const image = document.querySelector('#lightbox-photo');
       const existingVideo = document.querySelector('#lightbox-video');
       image.hidden = moment.mediaType === 'video';
