@@ -4,7 +4,7 @@ import { gallerySports } from './data/gallery-data.js?v=20260809-live-only';
 
 const filters = document.querySelector('#gallery-filters');
 const selectedId = new URLSearchParams(location.search).get('sport');
-const selectedSport = selectedId === 'all'
+const selectedSport = (!selectedId || selectedId === 'all')
   ? { id:'all', name:'ALL', code:'ALL', accent:'#d4a32e' }
   : (gallerySports.find(item => item.id === selectedId) || gallerySports[0]);
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[character]));
@@ -12,7 +12,7 @@ const english = document.documentElement.lang === 'en';
 window.addEventListener('publiclanguagechange', () => location.reload());
 
 if (filters) {
-  const all = `<a class="${document.querySelector('#collection-grid') ? 'active' : ''}" href="gallery.html">ALL</a>`;
+  const all = `<a class="${!selectedId ? 'active' : ''}" href="gallery.html">ALL</a>`;
   const sports = gallerySports.map(sport => `<a class="${sport.id === selectedId ? 'active' : ''}" href="gallery-sport.html?sport=${sport.id}">${sport.name}</a>`).join('');
   const video = '<a class="gallery-video-link" href="https://drive.google.com/drive/folders/1VaQ7tqffTW3U4CJslgH-LlO7anHGg8Hy?usp=drive_link" target="_blank" rel="noopener noreferrer">VIDEO <span aria-hidden="true">↗</span></a>';
   filters.innerHTML = all + sports + video;
@@ -27,24 +27,6 @@ async function loadGallery(path = '') {
   } catch {
     return [];
   }
-}
-
-const collectionGrid = document.querySelector('#collection-grid');
-if (collectionGrid) {
-  const publishedItems = await loadGallery();
-  collectionGrid.dataset.source = publishedItems.length ? 'api' : 'empty';
-  const allItems = publishedItems.filter(item => !item.sportId);
-  const allFeatured = allItems.length ? allItems[Math.floor(Math.random() * allItems.length)] : null;
-  const allMediaPreview = allFeatured?.mediaType === 'video' ? `<video src="${escapeHtml(allFeatured.publicUrl)}" muted autoplay loop playsinline preload="metadata" aria-label="All gallery video"></video>` : (allFeatured ? `<img src="${escapeHtml(allFeatured.publicUrl)}" alt="All tournament photos">` : '');
-  const allCard = `<a class="collection-card${allFeatured ? ' live' : ' empty'}" style="--accent:#d4a32e" href="gallery-sport.html?sport=all">${allMediaPreview}<small>00</small><span class="sport-code">ALL</span><div><h2>ALL GALLERY</h2><p>${allItems.length ? `BUKA KOLEKSI &middot; ${allItems.length} MEDIA` : 'MEDIA BELUM TERSEDIA'}</p><b>&rarr;</b></div></a>`;
-  collectionGrid.innerHTML = allCard + gallerySports.map((sport, index) => {
-    const sportItems = publishedItems.filter(item => item.sportId === `sport-${sport.id}`);
-    const featured = sportItems.length ? sportItems[Math.floor(Math.random() * sportItems.length)] : null;
-    const count = sportItems.length;
-    const mediaWord = english ? (count === 1 ? 'MEDIA' : 'MEDIA') : 'MEDIA';
-    const mediaPreview = featured?.mediaType === 'video' ? `<video src="${escapeHtml(featured.publicUrl)}" muted autoplay loop playsinline preload="metadata" aria-label="${sport.name} video"></video>` : (featured ? `<img src="${escapeHtml(featured.publicUrl)}" alt="${escapeHtml(`Photo of ${sport.name}`)}">` : '');
-    return `<a class="collection-card${featured ? ' live' : ' empty'}" style="--accent:${sport.accent}" href="gallery-sport.html?sport=${sport.id}">${mediaPreview}<small>${String(index + 1).padStart(2, '0')}</small><span class="sport-code">${sport.code}</span><div><h2>${sport.name} ${english ? 'GALLERY' : 'GALERI'}</h2><p>${count ? `${english ? 'OPEN COLLECTION' : 'BUKA KOLEKSI'} &middot; ${count} ${mediaWord}` : (english ? 'MEDIA NOT AVAILABLE' : 'MEDIA BELUM TERSEDIA')}</p><b>&rarr;</b></div></a>`;
-  }).join('');
 }
 
 const momentsGrid = document.querySelector('#moments-grid');

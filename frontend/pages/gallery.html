@@ -18,12 +18,13 @@
       <button class="language-toggle gallery-language-toggle" type="button" aria-label="Ganti bahasa"><span>ID</span><span>EN</span></button>
     </header>
     <section class="gallery-content" aria-labelledby="gallery-title">
-      <header class="gallery-heading"><p>EXPLORE BY SPORT</p><h1 id="gallery-title">ALL PHOTOS</h1><span>Choose a sport to explore its published tournament gallery.</span></header>
+      <header class="gallery-heading"><p>COMPLETE PHOTO COLLECTION</p><h1 id="sport-gallery-title">ALL MOMENTS</h1><span>Loading published tournament photos.</span></header>
       <nav class="gallery-filters" id="gallery-filters" aria-label="Filter gallery"></nav>
-      <div class="collection-grid" id="collection-grid"></div>
+      <div class="moments-grid" id="moments-grid"></div>
     </section>
-    <footer class="gallery-footer"><b>ALL MOMENTS</b><span>SETIAP MOMEN, SATU CERITA TURNAMEN.</span><small>6 SPORTS</small></footer>
+    <footer class="gallery-footer"><b id="archive-count">0 MOMENTS ARCHIVED</b><span>BRIDGESTONE CUP BP 2026</span><small id="footer-sport">ALL</small></footer>
   </main>
-  <script type="module" src="../js/gallery.js?v=20260826-gallery-all-v1"></script>
+  <dialog class="lightbox" id="gallery-lightbox" aria-labelledby="lightbox-title"><button class="lightbox-close" type="button" aria-label="Tutup foto">×</button><button class="lightbox-arrow previous" type="button" aria-label="Foto sebelumnya">‹</button><div class="lightbox-image" id="lightbox-image"><img id="lightbox-photo" alt="" hidden><video id="lightbox-video" controls playsinline hidden></video><span id="lightbox-number"></span></div><div class="lightbox-caption"><small id="lightbox-sport"></small><h2 id="lightbox-title"></h2><p>BRIDGESTONE CUP BP 2026</p></div><button class="lightbox-arrow next" type="button" aria-label="Foto berikutnya">›</button></dialog>
+  <script type="module" src="../js/gallery.js?v=20260826-gallery-all-v2"></script>
 </body>
 </html>
