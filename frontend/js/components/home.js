@@ -134,9 +134,10 @@ export function renderGalleryPreview(items = [], source = 'empty', hourBucket = 
   list.dataset.source = source;
   galleryCollageTimers.forEach(timer => clearInterval(timer)); galleryCollageTimers = [];
   const itemsBySport = new Map();
-  items.filter(item => item.sportId).forEach(item => {
-    if (!itemsBySport.has(item.sportId)) itemsBySport.set(item.sportId, []);
-    itemsBySport.get(item.sportId).push(item);
+  items.forEach(item => {
+    const classification = item.sportId || 'all';
+    if (!itemsBySport.has(classification)) itemsBySport.set(classification, []);
+    itemsBySport.get(classification).push(item);
   });
   const random = hourlyGalleryRandom(hourBucket);
   const sportGroups = [...itemsBySport.entries()]
