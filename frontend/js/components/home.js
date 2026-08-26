@@ -13,6 +13,8 @@ function startExhibitionMotion() {
     if (reduced) { titleElement.textContent = titleText; descriptionElement.textContent = descriptionText; return; }
     let phase = 'title', cursor = 0, pause = 0;
     const timer = setInterval(() => {
+      titleElement.classList.toggle('typing-active', phase === 'title' || phase === 'titlePause' || phase === 'deleteTitle');
+      descriptionElement.classList.toggle('typing-active', phase === 'description' || phase === 'hold' || phase === 'deleteDescription');
       if (pause > 0) { pause -= 1; return; }
       if (phase === 'title') { cursor += 1; titleElement.textContent = titleText.slice(0, cursor); if (cursor >= titleText.length) { phase = 'titlePause'; pause = 5; } }
       else if (phase === 'titlePause') { phase = 'description'; cursor = 0; descriptionElement.textContent = ''; }
