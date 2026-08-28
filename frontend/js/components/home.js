@@ -79,7 +79,9 @@ const emptyScheduleCard = sport => sport.name === 'FISHING'
   ? `<a class="schedule-card fishing" data-source="event" href="${sportLinks.FISHING}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="fishing-panel"><time><b>30</b><small>AGUSTUS</small></time><label>LOKASI</label><p>N/A</p><label>WAKTU</label><strong>--:-- WIB</strong></div><div class="final-event">FINAL EVENT<br>Timbang hasil tangkapan</div></a>`
   : `<a class="schedule-card schedule-card-empty" data-source="empty" href="${scheduleLinks[sport.name] || '#sports'}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="schedule-empty"><strong>JADWAL BELUM TERSEDIA</strong></div></a>`;
 
-const liveScheduleCard = (sport, matches) => `<a class="schedule-card" data-source="api" href="${scheduleLinks[sport.name] || '#sports'}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="schedule-rows">${matches.map((match, index) => {
+const liveScheduleCard = (sport, matches) => {
+  const activeRound = matches[0]?.roundName || '';
+  return `<a class="schedule-card" data-source="api" href="${scheduleLinks[sport.name] || '#sports'}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header>${activeRound ? `<div class="schedule-round">${escapeHtml(activeRound)}</div>` : ''}<div class="schedule-rows">${matches.map((match, index) => {
   const scheduledAt = new Date(match.scheduledAt);
   const day = new Intl.DateTimeFormat('id-ID', { day:'2-digit', timeZone:'Asia/Jakarta' }).format(scheduledAt);
   const month = new Intl.DateTimeFormat('id-ID', { month:'short', timeZone:'Asia/Jakarta' }).format(scheduledAt).replace('.', '').toUpperCase();
@@ -102,6 +104,7 @@ const liveScheduleCard = (sport, matches) => `<a class="schedule-card" data-sour
     </p>
   </div>`;
 }).join('')}</div></a>`;
+};
 
 export function renderSchedules(scheduleBySport = {}) {
   const list = document.querySelector('#schedule-list');
