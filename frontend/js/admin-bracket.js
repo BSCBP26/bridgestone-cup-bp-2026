@@ -15,6 +15,7 @@ const elements = {
 };
 
 const query = new URLSearchParams(location.search);
+const MAX_BRACKET_PARTICIPANTS = 64;
 const requestedSport = query.get('sport');
 const requestedTournament = query.get('tournament');
 let groupBracketMode = false;
@@ -87,7 +88,14 @@ function participantPayload() {
 
 function updateParticipantSummary() {
   const count = participantPayload().length;
-  elements.summary.textContent = `${count} peserta`;
+  elements.summary.textContent = `${count}/${MAX_BRACKET_PARTICIPANTS} peserta`;
+  elements.summary.classList.toggle('error', count > MAX_BRACKET_PARTICIPANTS);
+}
+
+function participantLimitExceeded(participants) {
+  if (participants.length <= MAX_BRACKET_PARTICIPANTS) return false;
+  setStatus(`Maksimal ${MAX_BRACKET_PARTICIPANTS} peserta untuk satu bracket.`, 'error');
+  return true;
 }
 
 function dateTimeLocalValue(value) {
@@ -191,11 +199,13 @@ async function initialize() {
 
 async function previewBracket() {
   const tournamentId = elements.tournament.value;
+  const participants = participantPayload();
+  if (participantLimitExceeded(participants)) return;
   setStatus('Membuat preview…');
   try {
     const payload = await api(`/admin/tournaments/${tournamentId}/bracket/preview`, {
       method: 'POST',
-      body: JSON.stringify({ participants: participantPayload() }),
+      body: JSON.stringify({ participants }),
     });
     renderBracket(payload.data.bracket, 'preview');
   } catch (error) { setStatus(error.message, 'error'); }
@@ -204,6 +214,7 @@ async function previewBracket() {
 async function saveBracket() {
   const tournamentId = elements.tournament.value;
   const participants = participantPayload();
+  if (participantLimitExceeded(participants)) return;
   const replacingExisting = Boolean(activeBracket);
   if (participants.length === 0) {
     if (activeBracket?.participantCount > 0
@@ -239,13 +250,15 @@ async function saveBracket() {
 }
 
 async function regenerateBracket() {
+  const participants = participantPayload();
+  if (participantLimitExceeded(participants)) return;
   if (!confirm('Regenerate akan menghapus seluruh skor, jadwal, progres, dan juara pada bracket lama. Lanjutkan?')) return;
   const tournamentId = elements.tournament.value;
   setStatus('Membuat ulang bracket…');
   try {
     const payload = await api(`/admin/tournaments/${tournamentId}/bracket`, {
       method: 'PUT',
-      body: JSON.stringify({ participants: participantPayload(), confirmReplace: true }),
+      body: JSON.stringify({ participants, confirmReplace: true }),
     });
     renderBracket(payload.data, 'hasil regenerate');
   } catch (error) { setStatus(error.message, 'error'); }

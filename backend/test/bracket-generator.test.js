@@ -41,3 +41,12 @@ test("bye winners are placed into their next matches", () => {
     assert.equal(target[`${match.nextMatchSlot}Participant`].id, match.winnerParticipantId);
   }
 });
+
+test("64 participants create a complete six-round bracket", () => {
+  const bracket = generateSingleEliminationBracket(participants(64));
+
+  assert.equal(bracket.participantCount, 64);
+  assert.equal(bracket.bracketSize, 64);
+  assert.equal(bracket.byeCount, 0);
+  assert.deepEqual(bracket.rounds.map((round) => round.matches.length), [32, 16, 8, 4, 2, 1]);
+});

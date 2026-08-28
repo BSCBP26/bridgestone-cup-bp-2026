@@ -3,6 +3,8 @@ const ROUND_NAMES = Object.freeze({
   4: ["Semi Final", "Final"],
   8: ["Quarter Final", "Semi Final", "Final"],
   16: ["Round of 16", "Quarter Final", "Semi Final", "Final"],
+  32: ["Round of 32", "Round of 16", "Quarter Final", "Semi Final", "Final"],
+  64: ["Round of 64", "Round of 32", "Round of 16", "Quarter Final", "Semi Final", "Final"],
 });
 
 function nextPowerOfTwo(value) {

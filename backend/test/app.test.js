@@ -157,7 +157,7 @@ test("GET /api/sports/:slug returns one sport", async () => {
 
   assert.equal(response.status, 200);
   assert.equal(body.data.participantType, "pair");
-  assert.equal(body.data.participantLimit, 16);
+  assert.equal(body.data.participantLimit, 64);
 });
 
 test("GET /api/sports/:slug/tournaments returns that sport's tournaments", async () => {
@@ -238,7 +238,7 @@ test("bracket preview rejects invalid participant input", async () => {
   const body = await response.json();
 
   assert.equal(response.status, 422);
-  assert.equal(body.message, "Participant count must be between 2 and 16");
+  assert.equal(body.message, "Participant count must be between 2 and 64");
 });
 
 test("a saved bracket accepts scores and advances the champion", async () => {

@@ -68,7 +68,7 @@ export function previewTournamentBracket(tournamentId, input) {
     throw new AppError(422, "This tournament does not support a single-elimination bracket");
   }
 
-  const maximum = Math.min(sport.participantLimit, 16);
+  const maximum = Math.min(sport.participantLimit, 64);
   const participants = validateParticipants(input, maximum);
 
   return {
