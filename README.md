@@ -48,4 +48,4 @@ Before enabling the GitHub Pages deployment:
 
 The public frontend is deployed at
 `https://bscbp26.github.io/bridgestone-cup-bp-2026/`, while the production API
-is available at `https://bridgestone-cup-api.netlify.app/api`.
+is available at `https://bridgestone-cup-api-v2.netlify.app/api`.

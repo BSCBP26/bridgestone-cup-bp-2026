@@ -1,6 +1,6 @@
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1']);
 
-export const PRODUCTION_API_BASE = 'https://bridgestone-cup-api.netlify.app/api';
+export const PRODUCTION_API_BASE = 'https://bridgestone-cup-api-v2.netlify.app/api';
 
 export function getApiBase() {
   const configuredApi = window.BRIDGESTONE_API_URL?.trim();
