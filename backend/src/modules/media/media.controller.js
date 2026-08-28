@@ -1,4 +1,11 @@
-import { deleteImage, uploadImage, uploadMedia } from "./media.service.js";
+import { createMediaUploadUrl, deleteImage, uploadImage, uploadMedia } from "./media.service.js";
+
+export function postMediaUploadUrl(request, response, next) {
+  try {
+    const { mimeType, folder } = request.body || {};
+    response.status(200).json({ success: true, data: createMediaUploadUrl(mimeType, folder || "gallery") });
+  } catch (error) { next(error); }
+}
 
 export async function postImage(request, response, next) {
   try {

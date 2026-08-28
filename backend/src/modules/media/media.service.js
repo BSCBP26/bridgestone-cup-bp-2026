@@ -1,6 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { getActiveMediaStorage, getMediaStorageForPath, mediaPublicUrl, R2_PREFIX } from "../../config/media-storage.js";
 import { AppError } from "../../shared/app-error.js";
+import { env } from "../../config/env.js";
+import { getR2PresignedPutUrl } from "../../config/r2.js";
 
 const EXTENSIONS = new Map([
   ["image/jpeg", "jpg"], ["image/png", "png"], ["image/webp", "webp"],
@@ -14,6 +16,16 @@ const EXTENSIONS = new Map([
 const IMAGE_TYPES = new Set([...EXTENSIONS.keys()].filter(type => type.startsWith("image/")));
 
 const FOLDERS = new Set(["gallery", "greetings", "support"]);
+
+export function createMediaUploadUrl(mimeType, folder = "gallery") {
+  const extension = EXTENSIONS.get(mimeType);
+  if (!extension) throw new AppError(415, "Format file tidak didukung");
+  if (!FOLDERS.has(folder)) throw new AppError(422, "Invalid media folder");
+  if (env.mediaStorageProvider !== "r2") throw new AppError(503, "Direct upload belum tersedia untuk storage ini");
+  const objectPath = `${folder}/${randomUUID()}.${extension}`;
+  const storagePath = `${R2_PREFIX}${objectPath}`;
+  return { uploadUrl: getR2PresignedPutUrl(objectPath), storagePath, publicUrl: mediaPublicUrl(storagePath), mimeType, provider: "r2" };
+}
 
 export async function uploadMedia(buffer, mimeType, storage, folder = "gallery", imagesOnly = false) {
   const extension = EXTENSIONS.get(mimeType);

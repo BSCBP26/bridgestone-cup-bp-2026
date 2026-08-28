@@ -5,6 +5,27 @@ import { AppError } from "../shared/app-error.js";
 const sha256 = value => createHash("sha256").update(value).digest("hex");
 const hmac = (key, value) => createHmac("sha256", key).update(value).digest();
 const encodeKey = key => key.split("/").map(encodeURIComponent).join("/");
+const encodeQuery = value => encodeURIComponent(value).replace(/[!'()*]/g, character => `%${character.charCodeAt(0).toString(16).toUpperCase()}`);
+
+export function createPresignedPutUrl(config, key, expiresIn = 900, now = () => new Date()) {
+  const endpoint = `https://${config.accountId}.r2.cloudflarestorage.com`;
+  const timestamp = now().toISOString().replace(/[:-]|\.\d{3}/g, "");
+  const date = timestamp.slice(0, 8);
+  const host = `${config.accountId}.r2.cloudflarestorage.com`;
+  const canonicalUri = `/${encodeURIComponent(config.bucket)}/${encodeKey(key)}`;
+  const credential = `${config.accessKeyId}/${date}/auto/s3/aws4_request`;
+  const query = [["X-Amz-Algorithm", "AWS4-HMAC-SHA256"], ["X-Amz-Credential", credential], ["X-Amz-Date", timestamp], ["X-Amz-Expires", String(expiresIn)], ["X-Amz-SignedHeaders", "host"]].sort(([left], [right]) => left.localeCompare(right));
+  const canonicalQuery = query.map(([name, value]) => `${encodeQuery(name)}=${encodeQuery(value)}`).join("&");
+  const canonicalRequest = ["PUT", canonicalUri, canonicalQuery, `host:${host}\n`, "host", "UNSIGNED-PAYLOAD"].join("\n");
+  const scope = `${date}/auto/s3/aws4_request`;
+  const stringToSign = ["AWS4-HMAC-SHA256", timestamp, scope, sha256(canonicalRequest)].join("\n");
+  const dateKey = hmac(`AWS4${config.secretAccessKey}`, date);
+  const regionKey = hmac(dateKey, "auto");
+  const serviceKey = hmac(regionKey, "s3");
+  const signingKey = hmac(serviceKey, "aws4_request");
+  const signature = createHmac("sha256", signingKey).update(stringToSign).digest("hex");
+  return `${endpoint}${canonicalUri}?${canonicalQuery}&X-Amz-Signature=${signature}`;
+}
 
 export function createR2Client(config, fetchImpl = fetch, now = () => new Date()) {
   const endpoint = `https://${config.accountId}.r2.cloudflarestorage.com`;
@@ -74,4 +95,9 @@ export function getR2Client() {
     bucket: env.r2Bucket,
   });
   return r2Client;
+}
+
+export function getR2PresignedPutUrl(key, expiresIn = 900) {
+  if (!env.r2Configured) throw new AppError(503, "Cloudflare R2 is not configured");
+  return createPresignedPutUrl({ accountId: env.r2AccountId, accessKeyId: env.r2AccessKeyId, secretAccessKey: env.r2SecretAccessKey, bucket: env.r2Bucket }, key, expiresIn);
 }
