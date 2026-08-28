@@ -30,7 +30,7 @@ export function createPresignedPutUrl(config, key, expiresIn = 900, now = () => 
 export function createR2Client(config, fetchImpl = fetch, now = () => new Date()) {
   const endpoint = `https://${config.accountId}.r2.cloudflarestorage.com`;
 
-  async function request(method, key, body = Buffer.alloc(0), contentType, query = "") {
+  async function request(method, key, body = Buffer.alloc(0), contentType, query = "", extraHeaders = {}) {
     const timestamp = now().toISOString().replace(/[:-]|\.\d{3}/g, "");
     const date = timestamp.slice(0, 8);
     const host = `${config.accountId}.r2.cloudflarestorage.com`;
@@ -53,6 +53,7 @@ export function createR2Client(config, fetchImpl = fetch, now = () => new Date()
       authorization: `AWS4-HMAC-SHA256 Credential=${config.accessKeyId}/${scope}, SignedHeaders=${signedHeaders}, Signature=${signature}`,
       "x-amz-content-sha256": payloadHash,
       "x-amz-date": timestamp,
+      ...extraHeaders,
     };
     if (contentType) headers["content-type"] = contentType;
     const response = await fetchImpl(`${endpoint}${canonicalUri}${canonicalQuery ? `?${canonicalQuery}` : ""}`, {
@@ -70,7 +71,7 @@ export function createR2Client(config, fetchImpl = fetch, now = () => new Date()
   return {
     putObject: (key, body, contentType) => request("PUT", key, body, contentType),
     deleteObject: key => request("DELETE", key),
-    getObject: key => request("GET", key),
+    getObject: (key, headers = {}) => request("GET", key, Buffer.alloc(0), undefined, "", headers),
     async listObjects(continuationToken = "") {
       const parameters = new URLSearchParams();
       if (continuationToken) parameters.set("continuation-token", continuationToken);

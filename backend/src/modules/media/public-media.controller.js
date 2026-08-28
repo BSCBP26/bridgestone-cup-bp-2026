@@ -20,15 +20,18 @@ export async function getPublicR2Media(request, response, next) {
     const key = `${request.params.folder}/${request.params.filename}`;
     if (!VALID_KEY.test(key)) throw new AppError(404, "Media not found");
 
-    const object = await getR2Client().getObject(key);
+    const range = request.headers?.range;
+    const object = await getR2Client().getObject(key, range ? { range } : {});
     const contentType = object.headers.get("content-type");
     const contentLength = object.headers.get("content-length");
     if (contentType) response.set("content-type", contentType);
     if (contentLength) response.set("content-length", contentLength);
+    response.set("accept-ranges", object.headers.get("accept-ranges") || "bytes");
+    if (object.headers.get("content-range")) response.set("content-range", object.headers.get("content-range"));
     const disposition = getDownloadDisposition(request, key);
     if (disposition) response.set("content-disposition", disposition);
     response.set("cache-control", "public, max-age=31536000, immutable");
-    response.send(Buffer.from(await object.arrayBuffer()));
+    response.status(object.status === 206 ? 206 : 200).send(Buffer.from(await object.arrayBuffer()));
   } catch (error) {
     next(error);
   }
