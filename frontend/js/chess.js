@@ -1,3 +1,4 @@
+import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260809-clean-empty-copy';
 import { API_BASE as apiBase } from './api-config.js';
 import { loadCompetitionFormat, withOptionalStanding } from './competition-format.js';
@@ -60,3 +61,4 @@ if (apiBase) {
     const requestedView=location.hash.slice(1);render(!competitionFormat.usesGroupStage&&requestedView==='group-standing'?'bracket':requestedView||(competitionFormat.usesGroupStage?'group-standing':'bracket'));
   });
 }
+import './analytics.js';

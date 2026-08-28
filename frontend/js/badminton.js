@@ -1,3 +1,4 @@
+import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260809-public-i18n';
 import { advancedMatches, badmintonSchedule, openingMatches } from './data/badminton-data.js';
 
@@ -29,3 +30,4 @@ if (bracket) {
   const finals = advancedMatches.filter(item => item.round === 'final');
   document.querySelector('.bracket-scroll').insertAdjacentHTML('afterend', `<section class="mobile-bracket clean-bracket" aria-label="Bracket Badminton"><header><p>CLASSIC SERIES &bull; SINGLE ELIMINATION</p><h2>CHAMPIONSHIP BRACKET</h2></header><section class="bracket-stage"><h3>ROUND OF 16</h3>${pairCards(openingMatches,true)}</section><section class="bracket-stage"><h3>QUARTER FINAL</h3>${pairCards(qf)}</section><section class="bracket-stage"><h3>SEMI FINAL</h3>${pairCards(sf)}</section><section class="bracket-stage"><h3>GRAND FINAL</h3>${pairCards(finals)}</section><section class="bracket-stage champion-stage"><h3>CHAMPION</h3><div class="mobile-champion"><small>WINNER</small><strong>GOLDEN ERA</strong><b>3</b></div></section></section>`);
 }
+import './analytics.js';

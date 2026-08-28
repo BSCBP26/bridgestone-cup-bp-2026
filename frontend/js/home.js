@@ -1,3 +1,4 @@
+import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260821-live-bracket-counts';
 import { API_BASE as apiBase } from './api-config.js';
 import { exhibitionDemo } from './data/home-data.js?v=20260825-exhibition-demo-v2';
@@ -330,3 +331,4 @@ if (apiBase) {
     })
     .catch(() => {});
 }
+import './analytics.js';

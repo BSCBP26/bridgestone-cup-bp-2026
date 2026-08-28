@@ -1,3 +1,4 @@
+import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260809-clean-empty-copy';
 import { API_BASE } from './api-config.js';
 import { loadCompetitionFormat, withOptionalStanding } from './competition-format.js';
@@ -74,3 +75,4 @@ shell('Football', withOptionalStanding(competitionFormat,[
     : emptyBracket;
   host.dataset.source = hasBracket ? 'api' : 'empty';
 });
+import './analytics.js';

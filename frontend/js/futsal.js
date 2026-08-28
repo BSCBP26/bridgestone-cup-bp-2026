@@ -1,3 +1,4 @@
+import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260809-public-i18n';
 import './api-config.js';
 import{futsalEntries,futsalGroups,futsalSchedule,futsalScorers}from'./data/futsal-data.js';
@@ -11,3 +12,4 @@ const bracket=document.querySelector('#futsal-bracket');if(bracket){const entrie
  document.querySelector('.bracket-scroll').insertAdjacentHTML('afterend',`<section class="mobile-bracket clean-bracket" aria-label="Bracket Futsal"><header><p>16 TEAMS &bull; SINGLE ELIMINATION</p><h2>TOURNAMENT BRACKET</h2></header><section class="bracket-stage"><h3>ROUND OF 16</h3>${opening}</section><section class="bracket-stage"><h3>QUARTER FINAL</h3>${pending(4,'QUARTER FINAL')}</section><section class="bracket-stage"><h3>SEMI FINAL</h3>${pending(2,'SEMI FINAL')}</section><section class="bracket-stage"><h3>FINAL</h3>${pending(1,'FINAL')}</section><section class="bracket-stage champion-stage"><h3>CHAMPION</h3><div class="mobile-champion pending"><small>WINNER</small><strong>MENUNGGU HASIL</strong></div></section></section>`)
 }
 const scorers=document.querySelector('#futsal-scorers');if(scorers)scorers.innerHTML=futsalScorers.map((s,i)=>`<article><b>${i+1}</b><strong>${s[0]}</strong><span>${s[1]}</span></article>`).join('');
+import './analytics.js';

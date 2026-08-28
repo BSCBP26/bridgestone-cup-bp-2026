@@ -1,3 +1,4 @@
+import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260809-clean-empty-copy';
 import { API_BASE as apiBase } from './api-config.js';
 import { loadTournamentCompetitionFormat, withOptionalStanding } from './competition-format.js';
@@ -63,3 +64,4 @@ shell('Badminton', withOptionalStanding(competitionFormat,[
     : (apiBracketView('CHAMPIONSHIP BRACKET', apiData.bracket) || emptyBracket);
 });
 renderCategorySelector(categories,category);
+import './analytics.js';

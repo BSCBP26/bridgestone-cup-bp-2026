@@ -1,3 +1,4 @@
+import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260812-gallery-nav-v2';
 import { API_BASE as apiBase } from './api-config.js';
 import { gallerySports } from './data/gallery-data.js?v=20260809-live-only';
@@ -78,3 +79,4 @@ if (momentsGrid) {
     dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
   }
 }
+import './analytics.js';
