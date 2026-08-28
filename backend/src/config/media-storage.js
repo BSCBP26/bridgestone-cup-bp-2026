@@ -10,8 +10,8 @@ const encodePath = path => path.split("/").map(encodeURIComponent).join("/");
 export function mediaPublicUrl(storagePath) {
   if (!storagePath) return null;
   if (storagePath.startsWith(R2_PREFIX)) {
-    if (env.publicApiBaseUrl) return `${env.publicApiBaseUrl}/media/${encodePath(storagePath.slice(R2_PREFIX.length))}`;
-    return env.r2PublicBaseUrl ? `${env.r2PublicBaseUrl}/${encodePath(storagePath.slice(R2_PREFIX.length))}` : null;
+    if (env.r2PublicBaseUrl) return `${env.r2PublicBaseUrl}/${encodePath(storagePath.slice(R2_PREFIX.length))}`;
+    return env.publicApiBaseUrl ? `${env.publicApiBaseUrl}/media/${encodePath(storagePath.slice(R2_PREFIX.length))}` : null;
   }
   return `${env.supabaseUrl}/storage/v1/object/public/${SUPABASE_BUCKET}/${encodePath(storagePath)}`;
 }
