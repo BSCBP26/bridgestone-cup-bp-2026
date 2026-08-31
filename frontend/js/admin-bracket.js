@@ -106,6 +106,12 @@ function renderBracket(bracket, source) {
   activeBracket = bracket;
   const tournamentName = elements.tournament.selectedOptions[0]?.textContent || 'Turnamen';
   if (!bracket.participantCount || !bracket.rounds?.length) {
+    if (groupBracketMode) {
+      elements.title.textContent = `${tournamentName} · menunggu juara grup`;
+      elements.workspace.innerHTML = `<div class="empty-state group-empty-state"><strong>Semifinal belum dibuat</strong><span>Futsal mengambil 1 juara dari masing-masing 4 grup.</span><button id="create-group-bracket" class="primary" type="button">Buat semifinal dari juara grup</button><a href="admin-standings.html?tournament=${encodeURIComponent(elements.tournament.value)}">Kelola Group Standing</a></div>`;
+      setStatus('Simpan klasemen grup terlebih dahulu, lalu buat semifinal dari juara grup.');
+      return;
+    }
     elements.title.textContent = `${tournamentName} · 0 peserta`;
     elements.workspace.innerHTML = '<div class="empty-state"><strong>Pertandingan belum tersedia</strong></div>';
     setStatus(`Bracket ${source} berhasil disimpan dalam kondisi kosong.`, 'success');
@@ -284,6 +290,22 @@ async function loadSavedBracket() {
 }
 
 elements.workspace.addEventListener('click', async event => {
+  if (event.target.closest('#create-group-bracket')) {
+    if (!confirm('Buat semifinal dari juara 4 grup? Jika bracket sudah ada, jadwal dan hasil lama akan direset.')) return;
+    try {
+      setStatus('Membentuk semifinal dari juara grup…');
+      const payload = await adminRequest(`/admin/tournaments/${elements.tournament.value}/qualifiers`, {
+        method: 'POST',
+        body: JSON.stringify({ topPerGroup: 1, confirmReplace: true }),
+      });
+      elements.participants.value = (payload.data?.participants || []).map(item => item.name).join('\n');
+      updateParticipantSummary();
+      renderBracket(payload.data, 'hasil kelolosan grup');
+    } catch (error) {
+      setStatus(error.message || 'Klasemen grup belum siap.', 'error');
+    }
+    return;
+  }
   const card = event.target.closest('.admin-match');
   if (!card) return;
   const tournamentId = elements.tournament.value;
