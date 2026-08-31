@@ -35,7 +35,7 @@ function teamCards() {
   }
   return `<h1 class="section-title">FISHING TEAM PAIRS</h1><section class="participant-grid">${teams.map(team => `
     <article class="participant"><b>${escape(team[0])}</b><div class="team-pair"><strong>${escape(team[1])}</strong><strong>${escape(team[2])}</strong></div></article>`).join('')}
-    <article class="participant event-date"><b>PERTANDINGAN DILAKSANAKAN</b><strong>SABTU, 13 DESEMBER 2026</strong><small>07.00 WIB &bull; EMPANG IKAN MAS BUNGUR</small></article>
+    <article class="participant event-date"><b>PERTANDINGAN DILAKSANAKAN</b><strong>MINGGU, 30 AGUSTUS 2026</strong><small>09.00 WIB &bull; PMC JAMBLANG</small></article>
   </section>`;
 }
 
