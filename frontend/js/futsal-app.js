@@ -11,6 +11,7 @@ import {
 } from './sports.js?v=20260821-empty-bracket';
 
 const host = document.querySelector('#sport-view');
+document.head.insertAdjacentHTML('beforeend','<style>.match-row small{padding:0!important;border:0!important;border-radius:0!important;color:var(--gold);font-weight:600}</style>');
 let groups = [];
 let liveBracket = null;
 let topScorers = [];
@@ -47,7 +48,7 @@ function render(id) {
     const rows = groupMatches.filter(match => match.scheduledAt).sort((a,b) => new Date(a.scheduledAt) - new Date(b.scheduledAt)).map(match => {
       const date = new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'short',timeZone:'Asia/Jakarta'}).format(new Date(match.scheduledAt)).toUpperCase();
       const time = new Intl.DateTimeFormat('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Jakarta'}).format(new Date(match.scheduledAt)).replace('.',':');
-      return [`${date} • ${time} WIB`, match.home, match.away, `${match.groupName}${match.venue ? ` • ${match.venue}` : ''}`];
+      return [`${date} • ${time} WIB`, match.home, match.away, match.venue || ''];
     });
     host.innerHTML = scheduleView(rows);
     return;
