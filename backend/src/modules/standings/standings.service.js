@@ -1,5 +1,6 @@
 import { getSupabaseAdminClient } from "../../config/supabase.js";
 import { AppError } from "../../shared/app-error.js";
+import { createBracket, findBracketByTournamentId, replaceBracket } from "../brackets/brackets.repository.js";
 
 const number = value => Number(value) || 0;
 export function calculateGroupStandings(rows) {
@@ -65,4 +66,30 @@ export async function replaceRanking(tournamentId, rows, client=getSupabaseAdmin
   const {error:deleteError}=await client.from("standings").delete().eq("tournament_id",tournamentId);if(deleteError)throw new AppError(502,"Existing fishing ranking could not be replaced");
   if(records.length){const {error}=await client.from("standings").insert(records);if(error)throw new AppError(422,"Fishing ranking could not be saved");}
   return ranked;
+}
+
+export async function listGroupMatches(tournamentId) {
+  const bracket = await findBracketByTournamentId(tournamentId);
+  return bracket?.groupMatches || [];
+}
+
+export async function replaceGroupMatches(tournamentId, input, adminId) {
+  if (tournamentId !== "futsal-bp-2026") throw new AppError(422, "Group matches are only available for Futsal");
+  if (!Array.isArray(input) || input.length > 100) throw new AppError(422, "groupMatches must be an array with at most 100 matches");
+  const matches = input.map((match, index) => {
+    const group = typeof match?.groupName === "string" ? match.groupName.trim().toUpperCase() : "";
+    const home = typeof match?.home === "string" ? match.home.trim() : "";
+    const away = typeof match?.away === "string" ? match.away.trim() : "";
+    if (!group || !home || !away || home === away) throw new AppError(422, `Group match ${index + 1} requires two different teams and a group`);
+    return { id: typeof match.id === "string" && match.id.trim() ? match.id.trim() : `group-${index + 1}`, groupName: group, home, away, scheduledAt: match.scheduledAt || null, venue: typeof match.venue === "string" ? match.venue.trim() : "", homeScore: Number.isInteger(match.homeScore) ? match.homeScore : null, awayScore: Number.isInteger(match.awayScore) ? match.awayScore : null, status: match.status === "completed" ? "completed" : match.scheduledAt ? "scheduled" : "pending" };
+  });
+  let bracket = await findBracketByTournamentId(tournamentId);
+  if (!bracket) {
+    const now = new Date().toISOString();
+    bracket = { format: "single_elimination", status: "empty", participantCount: 0, participants: [], bracketSize: 0, byeCount: 0, championParticipantId: null, thirdPlaceParticipantId: null, rounds: [], tournamentId, createdAt: now, updatedAt: now };
+    bracket = await createBracket(tournamentId, bracket, adminId);
+  }
+  bracket.groupMatches = matches;
+  bracket.updatedAt = new Date().toISOString();
+  return replaceBracket(tournamentId, bracket);
 }
