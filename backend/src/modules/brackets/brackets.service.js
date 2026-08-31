@@ -74,7 +74,9 @@ export function previewTournamentBracket(tournamentId, input) {
   return {
     tournament: { id: tournament.id, name: tournament.name },
     sport: { id: sport.id, slug: sport.slug, name: sport.name },
-    bracket: generateSingleEliminationBracket(participants),
+    bracket: generateSingleEliminationBracket(participants, {
+      footballTenTeam: tournamentId === "football-bp-2026",
+    }),
   };
 }
 

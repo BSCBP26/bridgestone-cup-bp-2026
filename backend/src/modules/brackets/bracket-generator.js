@@ -46,7 +46,56 @@ function advanceBye(match, nextRound) {
   nextMatch[`${match.nextMatchSlot}Participant`] = participant;
 }
 
-export function generateSingleEliminationBracket(participants) {
+function connect(match, nextMatch, slot) {
+  match.nextMatchId = nextMatch.id;
+  match.nextMatchSlot = slot;
+}
+
+function generateFootballTenTeamBracket(participants) {
+  const rounds = [
+    { number: 1, name: "Babak Pendahuluan", matches: Array.from({ length: 4 }, (_, index) => createMatch(1, index + 1, "Babak Pendahuluan")) },
+    { number: 2, name: "Quarter Final", matches: Array.from({ length: 2 }, (_, index) => createMatch(2, index + 1, "Quarter Final")) },
+    { number: 3, name: "Semi Final", matches: Array.from({ length: 2 }, (_, index) => createMatch(3, index + 1, "Semi Final")) },
+    { number: 4, name: "Final", matches: [createMatch(4, 1, "Final")] },
+  ];
+  const [preliminary, quarterFinal, semiFinal, final] = rounds.map(round => round.matches);
+
+  // Dua tim pertama mendapat bye. Empat pemenang babak pendahuluan
+  // mengisi jalur seperti format 10 tim pada rancangan Football.
+  quarterFinal[0].homeParticipant = participants[0];
+  quarterFinal[1].homeParticipant = participants[1];
+  [[2, 3], [4, 5], [6, 7], [8, 9]].forEach(([homeIndex, awayIndex], index) => {
+    preliminary[index].homeParticipant = participants[homeIndex];
+    preliminary[index].awayParticipant = participants[awayIndex];
+    preliminary[index].status = "scheduled";
+  });
+
+  connect(preliminary[0], semiFinal[0], "home");
+  connect(preliminary[1], quarterFinal[0], "away");
+  connect(preliminary[2], semiFinal[1], "home");
+  connect(preliminary[3], quarterFinal[1], "away");
+  connect(quarterFinal[0], semiFinal[0], "away");
+  connect(quarterFinal[1], semiFinal[1], "away");
+  connect(semiFinal[0], final[0], "home");
+  connect(semiFinal[1], final[0], "away");
+
+  return {
+    format: "single_elimination",
+    status: "active",
+    participantCount: participants.length,
+    participants,
+    bracketSize: 10,
+    byeCount: 2,
+    championParticipantId: null,
+    rounds,
+  };
+}
+
+export function generateSingleEliminationBracket(participants, options = {}) {
+  if (options.footballTenTeam === true && participants.length === 10) {
+    return generateFootballTenTeamBracket(participants);
+  }
+
   const bracketSize = nextPowerOfTwo(participants.length);
   const roundNames = ROUND_NAMES[bracketSize];
   const rounds = roundNames.map((name, roundIndex) => ({
