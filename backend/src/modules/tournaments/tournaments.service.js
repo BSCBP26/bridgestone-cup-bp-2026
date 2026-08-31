@@ -21,6 +21,7 @@ export function listTournamentsBySport(slug) {
 export async function getCompetitionFormat(id) {
   const tournament = getTournament(id);
   if (tournament.format === "ranking") throw new AppError(422, "Fishing competition format is managed through ranking");
+  if (id === "futsal-bp-2026") return { tournamentId: id, format: "group_and_single_elimination", usesGroupStage: true };
   const format = await findTournamentCompetitionFormat(id);
   return { tournamentId: id, format, usesGroupStage: format === "group_and_single_elimination" };
 }
@@ -29,6 +30,9 @@ export async function updateCompetitionFormat(id, format) {
   const tournament = getTournament(id);
   if (tournament.format === "ranking") throw new AppError(422, "Fishing competition format cannot be changed");
   if (!PLAYOFF_FORMATS.has(format)) throw new AppError(422, "format must be single_elimination or group_and_single_elimination");
+  if (id === "futsal-bp-2026" && format !== "group_and_single_elimination") {
+    throw new AppError(422, "Futsal wajib menggunakan fase grup sebelum semifinal");
+  }
   const savedFormat = await saveTournamentCompetitionFormat(id, format);
   return { tournamentId: id, format: savedFormat, usesGroupStage: savedFormat === "group_and_single_elimination" };
 }
