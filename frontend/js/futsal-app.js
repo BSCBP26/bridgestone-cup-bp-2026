@@ -17,6 +17,7 @@ let topScorers = [];
 let standingSource = 'empty';
 let bracketSource = 'empty';
 let scorerSource = 'empty';
+let groupMatches = [];
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
@@ -42,8 +43,13 @@ function render(id) {
     return;
   }
   if (id === 'schedule') {
-    host.dataset.source = 'empty';
-    host.innerHTML = scheduleView([]);
+    host.dataset.source = groupMatches.length ? 'api' : 'empty';
+    const rows = groupMatches.filter(match => match.scheduledAt).sort((a,b) => new Date(a.scheduledAt) - new Date(b.scheduledAt)).map(match => {
+      const date = new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'short',timeZone:'Asia/Jakarta'}).format(new Date(match.scheduledAt)).toUpperCase();
+      const time = new Intl.DateTimeFormat('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Jakarta'}).format(new Date(match.scheduledAt)).replace('.',':');
+      return [`${date} • ${time} WIB`, match.home, match.away, `${match.groupName}${match.venue ? ` • ${match.venue}` : ''}`];
+    });
+    host.innerHTML = scheduleView(rows);
     return;
   }
   if (id === 'winner') {
@@ -72,7 +78,8 @@ if (apiBase) {
     fetch(`${apiBase}/tournaments/futsal-bp-2026/standings`).then(response => response.ok ? response.json() : Promise.reject()),
     fetch(`${apiBase}/tournaments/futsal-bp-2026/bracket`).then(response => response.ok ? response.json() : Promise.reject()),
     fetch(`${apiBase}/tournaments/futsal-bp-2026/top-scorers`).then(response => response.ok ? response.json() : Promise.reject()),
-  ]).then(([standingResult, bracketResult, scorerResult]) => {
+    fetch(`${apiBase}/tournaments/futsal-bp-2026/group-matches`).then(response => response.ok ? response.json() : Promise.reject()),
+  ]).then(([standingResult, bracketResult, scorerResult, groupMatchResult]) => {
     const standingData = standingResult.status === 'fulfilled' ? standingResult.value.data : null;
     if (standingData?.length) {
       groups = standingData.map(group => group.rows.map(row => [row.name, row.points]));
@@ -86,6 +93,7 @@ if (apiBase) {
       topScorers = scorerResult.value.data || [];
       scorerSource = topScorers.length ? 'api' : 'empty';
     }
+    if (groupMatchResult.status === 'fulfilled') groupMatches = groupMatchResult.value.data || [];
     const requestedView=location.hash.slice(1);render(!competitionFormat.usesGroupStage&&requestedView==='group-standing'?'bracket':requestedView||(competitionFormat.usesGroupStage?'group-standing':'bracket'));
   });
 }
