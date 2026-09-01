@@ -232,9 +232,10 @@ body {
 .item video {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  height: clamp(180px, 18vw, 280px);
+  aspect-ratio: auto;
+  object-fit: contain;
+  object-position: center;
   background: #16130c;
 }
 

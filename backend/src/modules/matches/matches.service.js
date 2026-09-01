@@ -19,7 +19,7 @@ export async function listTournamentMatches(tournamentId, query = {}) {
     throw new AppError(422, "status must be pending, scheduled, completed, or bye");
   }
 
-  let matches = bracket.rounds.flatMap(round => round.matches);
+  let matches = [...(bracket.groupMatches || []).map(match => ({ ...match, teamA: match.home, teamB: match.away, roundName: match.groupName || 'Group Stage' })), ...bracket.rounds.flatMap(round => round.matches)];
   if (status) matches = matches.filter(match => match.status === status);
   if (scheduledOnly) matches = matches.filter(match => match.scheduledAt !== null);
 
