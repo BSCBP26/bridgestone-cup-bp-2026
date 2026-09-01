@@ -47,23 +47,23 @@ export function renderGreetings(items = [], source = 'empty') {
   if (exhibitionItems.length) startExhibitionMotion();
 }
 
-const supporterImages = {
-  'PRODUCTION TEAM':'assets/images/support-production.png',
-  'QA TEAM':'assets/images/support-qa.png',
-  'MAINTENANCE TEAM':'assets/images/support-maintenance.png',
-};
+// const supporterImages = {
+//   'PRODUCTION TEAM':'assets/images/support-production.png',
+//   'QA TEAM':'assets/images/support-qa.png',
+//   'MAINTENANCE TEAM':'assets/images/support-maintenance.png',
+// };
 
-export function renderSupporters(items = [], source = 'empty') {
-  const list = document.querySelector('#support-list');
-  list.dataset.source = source;
-  list.innerHTML = items.length
-    ? items.map(item => {
-      const team = String(item.team || 'OTHER TEAM').trim().replace(/\s+/g, ' ').toUpperCase();
-      const count = Number(item.count) || 0;
-      return `<article><b>${item.rank}</b><img src="${supporterImages[team] || 'assets/images/support-icon.png'}" alt=""><h4>${escapeHtml(team)}</h4><p>${count} Support Card${count === 1 ? '' : 's'}</p></article>`;
-    }).join('')
-    : emptySection('LEADERBOARD BELUM TERSEDIA');
-}
+// export function renderSupporters(items = [], source = 'empty') {
+//   const list = document.querySelector('#support-list');
+//   list.dataset.source = source;
+//   list.innerHTML = items.length
+//     ? items.map(item => {
+//       const team = String(item.team || 'OTHER TEAM').trim().replace(/\s+/g, ' ').toUpperCase();
+//       const count = Number(item.count) || 0;
+//       return `<article><b>${item.rank}</b><img src="${supporterImages[team] || 'assets/images/support-icon.png'}" alt=""><h4>${escapeHtml(team)}</h4><p>${count} Support Card${count === 1 ? '' : 's'}</p></article>`;
+//     }).join('')
+//     : emptySection('LEADERBOARD BELUM TERSEDIA');
+// }
 
 const sportLinks = {
   BADMINTON: 'pages/badminton.html',
@@ -196,5 +196,5 @@ export function renderHome(exhibitionItems = []) {
   renderSchedules();
   renderSports();
   renderGalleryPreview();
-  renderSupporters();
+  // renderSupporters();
 }
