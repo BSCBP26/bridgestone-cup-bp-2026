@@ -55,6 +55,7 @@ const supporterImages = {
 
 export function renderSupporters(items = [], source = 'empty') {
   const list = document.querySelector('#support-list');
+  if (!list) return;
   list.dataset.source = source;
   list.innerHTML = items.length
     ? items.map(item => {
