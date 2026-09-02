@@ -160,6 +160,14 @@ export async function getSavedTournamentBracket(tournamentId) {
       });
     });
     if (bracket.thirdPlaceMatch) {
+      const findParticipant = name => bracket.participants?.find(participant => participant.name.trim().toUpperCase() === name);
+      const bsdp = findParticipant("BSDP (NS)") || findParticipant("BSDP");
+      const bayu = findParticipant("BAYU (NS)") || findParticipant("BAYU");
+      if (bsdp && bayu && !bracket.thirdPlaceMatch.homeParticipant && !bracket.thirdPlaceMatch.awayParticipant) {
+        bracket.thirdPlaceMatch.homeParticipant = bsdp;
+        bracket.thirdPlaceMatch.awayParticipant = bayu;
+        bracket.thirdPlaceMatch.status = "scheduled";
+      }
       bracket.thirdPlaceMatch.scheduledAt = `2026-09-01T${String(15 + bracket.rounds.length / 2).padStart(2, "0")}:00:00+07:00`;
       bracket.thirdPlaceMatch.venue = "CANTEEN";
     }
