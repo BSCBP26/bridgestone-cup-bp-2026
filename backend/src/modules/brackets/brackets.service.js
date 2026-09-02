@@ -147,6 +147,14 @@ export async function getSavedTournamentBracket(tournamentId) {
   getTournament(tournamentId);
   const bracket = await findBracketByTournamentId(tournamentId);
   if (!bracket) throw new AppError(404, "Bracket not found");
+  // Table Tennis Singles ronde pertama berlangsung 1 September 2026.
+  // Normalisasi tanggal lama/typo tanpa mengubah jam, skor, atau peserta.
+  if (tournamentId === "table-tennis-bp-2026" && bracket.rounds?.[0]?.matches) {
+    bracket.rounds[0].matches.forEach(match => {
+      if (match.scheduledAt) match.scheduledAt = `2026-09-01T${match.scheduledAt.slice(11)}`;
+      if (!match.venue) match.venue = "CANTEEN";
+    });
+  }
   return bracket;
 }
 
