@@ -39,7 +39,8 @@ export function apiBracketView(title,bracket){
  const final=bracket.rounds.at(-1)?.matches?.[0];
  const champion=participantName(bracket.championParticipantId);
  const runnerUp=final?.status==='completed'?(final.winnerParticipantId===final.homeParticipant?.id?final.awayParticipant?.name:final.homeParticipant?.name):'MENUNGGU HASIL';
- const thirdPlace=participantName(bracket.thirdPlaceParticipantId);
+ const thirdMatchNames=title.toUpperCase().includes('TABLE TENNIS')&&bracket.thirdPlaceMatch?[bracket.thirdPlaceMatch.homeParticipant?.name,bracket.thirdPlaceMatch.awayParticipant?.name].filter(Boolean):[];
+ const thirdPlace=thirdMatchNames.length?thirdMatchNames.join(' & '):participantName(bracket.thirdPlaceParticipantId);
  const thirdNumber=rounds.length;
  const thirdPlaceStage=bracket.thirdPlaceMatch?`<section class="stage third-place-stage" style="--stage:${thirdNumber-1}"><h3><em>${String(thirdNumber).padStart(2,'0')}</em>THIRD PLACE</h3><div class="stage-matches">${matchCard(bracket.thirdPlaceMatch)}</div></section>`:'';
  const finalNumber=thirdNumber+(bracket.thirdPlaceMatch?1:0);
@@ -53,6 +54,7 @@ export function bracketWinnerView(title,bracket){
  const champion=bracket?.participants?.find(item=>item.id===bracket.championParticipantId)?.name||'MENUNGGU HASIL';
  let runnerUp='MENUNGGU HASIL';
  if(final?.status==='completed')runnerUp=final.winnerParticipantId===final.homeParticipant?.id?final.awayParticipant?.name:final.homeParticipant?.name;
- const thirdPlace=bracket?.participants?.find(item=>item.id===bracket.thirdPlaceParticipantId)?.name||'MENUNGGU HASIL';
+ const thirdMatchNames=title.toUpperCase().includes('TABLE TENNIS')&&bracket?.thirdPlaceMatch?[bracket.thirdPlaceMatch.homeParticipant?.name,bracket.thirdPlaceMatch.awayParticipant?.name].filter(Boolean):[];
+ const thirdPlace=thirdMatchNames.length?thirdMatchNames.join(' & '):(bracket?.participants?.find(item=>item.id===bracket.thirdPlaceParticipantId)?.name||'MENUNGGU HASIL');
  return `<section class="score-layout"><article class="winner-panel"><h2>${escapeHtml(title)}</h2><div class="ranking-row"><small>JUARA 1</small><strong>${escapeHtml(champion)}</strong><b>01</b></div><div class="ranking-row"><small>JUARA 2</small><strong>${escapeHtml(runnerUp)}</strong><b>02</b></div><div class="ranking-row"><small>JUARA 3</small><strong>${escapeHtml(thirdPlace)}</strong><b>03</b></div></article></section>`;
 }
