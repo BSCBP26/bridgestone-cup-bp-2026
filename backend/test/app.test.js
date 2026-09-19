@@ -134,13 +134,13 @@ test("CORS rejects an origin outside the allowlist", async () => {
   assert.equal(body.message, "Origin is not allowed by CORS");
 });
 
-test("GET /api/sports returns all six public sports", async () => {
+test("GET /api/sports returns all seven public sports", async () => {
   const response = await fetch(`${baseUrl}/api/sports`);
   const body = await response.json();
 
   assert.equal(response.status, 200);
   assert.equal(body.success, true);
-  assert.equal(body.meta.total, 6);
+  assert.equal(body.meta.total, 7);
   assert.deepEqual(body.data.map((sport) => sport.slug), [
     "badminton",
     "futsal",
@@ -148,6 +148,7 @@ test("GET /api/sports returns all six public sports", async () => {
     "table-tennis",
     "football",
     "fishing",
+    "running",
   ]);
 });
 

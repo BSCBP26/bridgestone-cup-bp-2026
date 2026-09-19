@@ -13,7 +13,8 @@ export const exhibitionDemo = [
 export const sports = [
   { name: 'FUTSAL', code: 'F', count: '16 TEAMS' }, { name: 'CHESS', code: 'C', count: '32 PLAYERS' },
   { name: 'BADMINTON', code: 'B', count: '16 PAIRS' }, { name: 'TABLE TENNIS', code: 'TT', count: '16 PLAYERS' },
-  { name: 'FOOTBALL', code: 'FB', count: '12 TEAMS' }, { name: 'FISHING', code: 'FI', count: '24 ANGLERS' }
+  { name: 'FOOTBALL', code: 'FB', count: '12 TEAMS' }, { name: 'FISHING', code: 'FI', count: '24 ANGLERS' },
+  { name: 'RUNNING', code: 'R', count: 'RUNNING CLUB' }
 ];
 
 export const dates = ['8', '9', '10', '11', '12'];

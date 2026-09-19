@@ -4,6 +4,7 @@ import test from "node:test";
 
 const migrationUrl = new URL("../supabase/migrations/20260808012000_initial_schema.sql", import.meta.url);
 const seedUrl = new URL("../supabase/seed.sql", import.meta.url);
+const runningMigrationUrl = new URL("../supabase/migrations/20260919090000_running_dashboard.sql", import.meta.url);
 const expectedTables = [
   "sports",
   "tournaments",
@@ -29,17 +30,25 @@ test("initial Supabase migration defines all planned tables with RLS", async () 
   assert.doesNotMatch(migration, /SUPABASE_SERVICE_ROLE_KEY|eyJ[A-Za-z0-9_-]+\./);
 });
 
-test("Supabase seed contains exactly the six approved sports and tournaments", async () => {
+test("Supabase seed contains all seven approved sports and tournaments", async () => {
   const seed = await readFile(seedUrl, "utf8");
-  const sportIds = [...seed.matchAll(/'sport-(badminton|futsal|chess|table-tennis|football|fishing)'/g)]
+  const sportIds = [...seed.matchAll(/'sport-(badminton|futsal|chess|table-tennis|football|fishing|running)'/g)]
     .map(match => match[1]);
-  const tournamentIds = [...seed.matchAll(/'(badminton|futsal|chess|table-tennis|football|fishing)-bp-2026'/g)]
+  const tournamentIds = [...seed.matchAll(/'(badminton|futsal|chess|table-tennis|football|fishing|running)-bp-2026'/g)]
     .map(match => match[1]);
 
   assert.deepEqual([...new Set(sportIds)].sort(), [
-    "badminton", "chess", "fishing", "football", "futsal", "table-tennis",
+    "badminton", "chess", "fishing", "football", "futsal", "running", "table-tennis",
   ]);
   assert.deepEqual([...new Set(tournamentIds)].sort(), [
-    "badminton", "chess", "fishing", "football", "futsal", "table-tennis",
+    "badminton", "chess", "fishing", "football", "futsal", "running", "table-tennis",
   ]);
+});
+
+test("running migration provisions protected activity storage and dashboard sport", async () => {
+  const migration = await readFile(runningMigrationUrl, "utf8");
+  assert.match(migration, /create table public\.running_activities/);
+  assert.match(migration, /source_hash text not null unique/);
+  assert.match(migration, /alter table public\.running_activities enable row level security/);
+  assert.match(migration, /'sport-running'/);
 });

@@ -63,4 +63,12 @@ export const tournaments = Object.freeze([
     status: "published",
     timezone: "Asia/Jakarta",
   },
+  {
+    id: "running-bp-2026",
+    sportId: "sport-running",
+    name: "Running Bridgestone Cup BP 2026",
+    format: "ranking",
+    status: "published",
+    timezone: "Asia/Jakarta",
+  },
 ]);

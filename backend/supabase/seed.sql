@@ -5,7 +5,8 @@ values
   ('sport-chess', 'chess', 'Chess', 'player', 32, array['standings', 'schedule']),
   ('sport-table-tennis', 'table-tennis', 'Table Tennis', 'player', 16, array['bracket', 'standings', 'winner']),
   ('sport-football', 'football', 'Football', 'team', 12, array['bracket', 'schedule']),
-  ('sport-fishing', 'fishing', 'Fishing', 'angler', 24, array['bracket', 'winner'])
+  ('sport-fishing', 'fishing', 'Fishing', 'angler', 24, array['bracket', 'winner']),
+  ('sport-running', 'running', 'Running', 'player', 500, array['leaderboard'])
 on conflict (id) do update set
   slug = excluded.slug,
   name = excluded.name,
@@ -22,7 +23,8 @@ values
   ('table-tennis-bp-2026', 'sport-table-tennis', 'Table Tennis Singles Bridgestone Cup BP 2026', 'single_elimination', 'published', 'Asia/Jakarta'),
   ('table-tennis-doubles-bp-2026', 'sport-table-tennis', 'Table Tennis Doubles Bridgestone Cup BP 2026', 'single_elimination', 'published', 'Asia/Jakarta'),
   ('football-bp-2026', 'sport-football', 'Football Bridgestone Cup BP 2026', 'single_elimination', 'published', 'Asia/Jakarta'),
-  ('fishing-bp-2026', 'sport-fishing', 'Fishing Bridgestone Cup BP 2026', 'ranking', 'published', 'Asia/Jakarta')
+  ('fishing-bp-2026', 'sport-fishing', 'Fishing Bridgestone Cup BP 2026', 'ranking', 'published', 'Asia/Jakarta'),
+  ('running-bp-2026', 'sport-running', 'Running Bridgestone Cup BP 2026', 'ranking', 'published', 'Asia/Jakarta')
 on conflict (id) do update set
   sport_id = excluded.sport_id,
   name = excluded.name,

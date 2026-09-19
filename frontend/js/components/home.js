@@ -73,6 +73,7 @@ const sportLinks = {
   'TABLE TENNIS': 'pages/table-tennis.html',
   FOOTBALL: 'pages/football.html',
   FISHING: 'pages/fishing.html',
+  RUNNING: 'pages/running.html',
 };
 const scheduleLinks = Object.fromEntries(Object.entries(sportLinks).map(([name, url]) => [name, `${url}#schedule`]));
 
