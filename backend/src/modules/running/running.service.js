@@ -107,5 +107,12 @@ export async function getRunningDashboard(query = {}, client = getSupabaseAdminC
   const byPace = [...rows].sort((a, b) => a.fastestPaceSeconds - b.fastestPaceSeconds || a.name.localeCompare(b.name));
   const byActivities = [...rows].sort((a, b) => b.activities - a.activities || a.name.localeCompare(b.name));
   const dailyActivity = [...daily.values()].sort((a, b) => a.date.localeCompare(b.date)).map(day => ({ ...day, totalKm: Number(day.totalKm.toFixed(2)), averagePaceSeconds: Math.round(day.totalDurationSeconds / day.totalKm) }));
-  return { summary: { totalKm: Number(rows.reduce((sum, row) => sum + row.totalKm, 0).toFixed(2)), runners: rows.length, activities: data.length }, leaders: { distance: byKm.slice(0, 3), pace: byPace.slice(0, 3), consistency: byActivities.slice(0, 3) }, daily: dailyActivity, runners: byKm };
+  const activities = data.map(activity => ({
+    name: activity.runner_name,
+    date: activity.activity_date,
+    distanceKm: Number(Number(activity.distance_km).toFixed(2)),
+    durationSeconds: Number(activity.duration_seconds),
+    paceSeconds: Number(activity.pace_seconds_per_km)
+  }));
+  return { summary: { totalKm: Number(rows.reduce((sum, row) => sum + row.totalKm, 0).toFixed(2)), runners: rows.length, activities: data.length }, leaders: { distance: byKm.slice(0, 3), pace: byPace.slice(0, 3), consistency: byActivities.slice(0, 3) }, daily: dailyActivity, runners: byKm, activities };
 }

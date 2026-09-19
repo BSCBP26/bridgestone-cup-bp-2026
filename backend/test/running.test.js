@@ -18,4 +18,5 @@ test("running dashboard ranks total distance, fastest pace, and activity count",
   const dashboard = await getRunningDashboard({}, client);
   assert.equal(dashboard.summary.totalKm, 27); assert.equal(dashboard.summary.runners, 2); assert.equal(dashboard.leaders.distance[0].name, "Ari"); assert.equal(dashboard.leaders.pace[0].name, "Ari"); assert.equal(dashboard.leaders.consistency[0].name, "Ari");
   assert.deepEqual(dashboard.daily.map(day => [day.date, day.totalKm, day.averagePaceSeconds]), [["2026-09-01", 10, 360], ["2026-09-02", 5, 300], ["2026-09-03", 12, 330]]);
+  assert.deepEqual(dashboard.activities[0], { name:"Ari", date:"2026-09-01", distanceKm:10, durationSeconds:3600, paceSeconds:360 });
 });
