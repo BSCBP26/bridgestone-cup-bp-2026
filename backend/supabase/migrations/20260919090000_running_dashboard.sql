@@ -1,5 +1,5 @@
 insert into public.sports (id, slug, name, participant_type, participant_limit, views)
-values ('sport-running', 'running', 'Running', 'player', 500, array['leaderboard'])
+values ('sport-running', 'running', 'Running', 'player', 128, array['leaderboard'])
 on conflict (id) do update set
   slug = excluded.slug,
   name = excluded.name,

@@ -6,7 +6,7 @@ values
   ('sport-table-tennis', 'table-tennis', 'Table Tennis', 'player', 16, array['bracket', 'standings', 'winner']),
   ('sport-football', 'football', 'Football', 'team', 12, array['bracket', 'schedule']),
   ('sport-fishing', 'fishing', 'Fishing', 'angler', 24, array['bracket', 'winner']),
-  ('sport-running', 'running', 'Running', 'player', 500, array['leaderboard'])
+  ('sport-running', 'running', 'Running', 'player', 128, array['leaderboard'])
 on conflict (id) do update set
   slug = excluded.slug,
   name = excluded.name,
