@@ -1,7 +1,7 @@
 import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260812-gallery-nav-v2';
 import { API_BASE as apiBase } from './api-config.js';
-import { gallerySports } from './data/gallery-data.js?v=20260809-live-only';
+import { gallerySports } from './data/gallery-data.js?v=20260919-running-gallery-v1';
 
 const filters = document.querySelector('#gallery-filters');
 const selectedId = new URLSearchParams(location.search).get('sport');

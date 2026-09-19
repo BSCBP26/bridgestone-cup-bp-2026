@@ -4,7 +4,8 @@ export const gallerySports = [
   { id: 'chess', name: 'CHESS', code: 'C', accent: '#e0bd69' },
   { id: 'table-tennis', name: 'TABLE TENNIS', code: 'TT', accent: '#d99b25' },
   { id: 'football', name: 'FOOTBALL', code: 'FB', accent: '#b77b16' },
-  { id: 'fishing', name: 'FISHING', code: 'FI', accent: '#e1b646' }
+  { id: 'fishing', name: 'FISHING', code: 'FI', accent: '#e1b646' },
+  { id: 'running', name: 'RUNNING', code: 'R', accent: '#d9aa3a' }
 ];
 
 export const galleryMoments = Object.fromEntries(gallerySports.map(sport => [
