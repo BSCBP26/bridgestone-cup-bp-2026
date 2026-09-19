@@ -77,9 +77,14 @@ const sportLinks = {
 };
 const scheduleLinks = Object.fromEntries(Object.entries(sportLinks).map(([name, url]) => [name, `${url}#schedule`]));
 
-const emptyScheduleCard = sport => sport.name === 'FISHING'
-  ? `<a class="schedule-card fishing" data-source="event" href="${sportLinks.FISHING}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="fishing-panel"><time><b>30</b><small>AGUSTUS</small></time><label>LOKASI</label><p>PMC JAMBLANG</p><label>WAKTU</label><strong>09:00 WIB</strong></div><div class="final-event">FINAL EVENT<br>Timbang hasil tangkapan</div></a>`
-  : `<a class="schedule-card schedule-card-empty" data-source="empty" href="${scheduleLinks[sport.name] || '#sports'}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="schedule-empty"><strong>JADWAL BELUM TERSEDIA</strong></div></a>`;
+const runningScheduleCard = sport => `<a class="schedule-card running-event" data-source="event" href="${sportLinks.RUNNING}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="running-event-panel"><small>PERIODE EVENT</small><div class="running-date-range"><time datetime="2026-09-10"><b>10</b><span>SEP</span></time><i aria-hidden="true"></i><time datetime="2026-09-30"><b>30</b><span>SEP</span></time></div><strong class="running-event-status"><i aria-hidden="true"></i> ONGOING</strong><p>RUNNING CLUB</p></div><div class="final-event">10–30 SEPTEMBER 2026<br>Akumulasi aktivitas lari</div></a>`;
+
+const emptyScheduleCard = sport => {
+  if (sport.name === 'RUNNING') return runningScheduleCard(sport);
+  return sport.name === 'FISHING'
+    ? `<a class="schedule-card fishing" data-source="event" href="${sportLinks.FISHING}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="fishing-panel"><time><b>30</b><small>AGUSTUS</small></time><label>LOKASI</label><p>PMC JAMBLANG</p><label>WAKTU</label><strong>09:00 WIB</strong></div><div class="final-event">FINAL EVENT<br>Timbang hasil tangkapan</div></a>`
+    : `<a class="schedule-card schedule-card-empty" data-source="empty" href="${scheduleLinks[sport.name] || '#sports'}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="schedule-empty"><strong>JADWAL BELUM TERSEDIA</strong></div></a>`;
+};
 
 const liveScheduleCard = (sport, matches) => {
   const activeRound = matches[0]?.roundName || '';

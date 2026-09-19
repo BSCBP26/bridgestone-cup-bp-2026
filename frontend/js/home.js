@@ -2,7 +2,7 @@ import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260821-live-bracket-counts';
 import { API_BASE as apiBase } from './api-config.js';
 import { exhibitionDemo } from './data/home-data.js?v=20260825-exhibition-demo-v2';
-import { renderGalleryPreview, renderHome, renderGreetings, renderSchedules, renderSports, renderSupporters } from './components/home.js?v=20260826-gallery-collage-v3';
+import { renderGalleryPreview, renderHome, renderGreetings, renderSchedules, renderSports, renderSupporters } from './components/home.js?v=20260919-running-layout-v1';
 import { selectLatestScheduledRound } from './utils/schedule-round.js?v=20260828-active-round-v1';
 
 const exhibitionDemoMode = new URLSearchParams(location.search).has('exhibitionDemo');
