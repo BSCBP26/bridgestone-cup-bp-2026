@@ -93,15 +93,19 @@ export async function getRunningDashboard(query = {}, client = getSupabaseAdminC
   const { data, error } = await request;
   if (error) throw new AppError(502, "Running dashboard could not be loaded");
   const runners = new Map();
+  const daily = new Map();
   for (const activity of data) {
     const key = activity.runner_name.toLocaleLowerCase("id-ID");
     const runner = runners.get(key) || { name: activity.runner_name, totalKm: 0, activities: 0, fastestPaceSeconds: Infinity, totalDurationSeconds: 0 };
     runner.totalKm += Number(activity.distance_km); runner.totalDurationSeconds += Number(activity.duration_seconds); runner.activities += 1;
     runner.fastestPaceSeconds = Math.min(runner.fastestPaceSeconds, Number(activity.pace_seconds_per_km)); runners.set(key, runner);
+    const day = daily.get(activity.activity_date) || { date: activity.activity_date, totalKm: 0, totalDurationSeconds: 0, activities: 0 };
+    day.totalKm += Number(activity.distance_km); day.totalDurationSeconds += Number(activity.duration_seconds); day.activities += 1; daily.set(activity.activity_date, day);
   }
   const rows = [...runners.values()].map(row => ({ ...row, totalKm: Number(row.totalKm.toFixed(2)), averagePaceSeconds: Math.round(row.totalDurationSeconds / row.totalKm) }));
   const byKm = [...rows].sort((a, b) => b.totalKm - a.totalKm || a.name.localeCompare(b.name));
   const byPace = [...rows].sort((a, b) => a.fastestPaceSeconds - b.fastestPaceSeconds || a.name.localeCompare(b.name));
   const byActivities = [...rows].sort((a, b) => b.activities - a.activities || a.name.localeCompare(b.name));
-  return { summary: { totalKm: Number(rows.reduce((sum, row) => sum + row.totalKm, 0).toFixed(2)), runners: rows.length, activities: data.length }, leaders: { distance: byKm.slice(0, 3), pace: byPace.slice(0, 3), consistency: byActivities.slice(0, 3) }, runners: byKm };
+  const dailyActivity = [...daily.values()].sort((a, b) => a.date.localeCompare(b.date)).map(day => ({ ...day, totalKm: Number(day.totalKm.toFixed(2)), averagePaceSeconds: Math.round(day.totalDurationSeconds / day.totalKm) }));
+  return { summary: { totalKm: Number(rows.reduce((sum, row) => sum + row.totalKm, 0).toFixed(2)), runners: rows.length, activities: data.length }, leaders: { distance: byKm.slice(0, 3), pace: byPace.slice(0, 3), consistency: byActivities.slice(0, 3) }, daily: dailyActivity, runners: byKm };
 }
