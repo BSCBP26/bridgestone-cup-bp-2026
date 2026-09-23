@@ -78,5 +78,7 @@ app.use(errorHandler);
 
 export const app = createApp();
 
+export default app;
+
 // Vercel detects src/app.js and serves the exported Express application.
 export default app;
