@@ -1,6 +1,6 @@
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1']);
 
-export const PRODUCTION_API_BASE = 'https://bridgestone-cup-api.vercel.app/api';
+export const PRODUCTION_API_BASE = 'https://bridgestone-cup-api-bscbp26.vercel.app/api';
 
 export function getApiBase() {
   const configuredApi = window.BRIDGESTONE_API_URL?.trim();
