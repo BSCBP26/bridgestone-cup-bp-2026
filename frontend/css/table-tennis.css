@@ -1,0 +1,11 @@
+.tt-group-winners { padding-top: 28px; }
+body:has(.tt-group-winners) .competition-category-tabs { display: none; }
+.tt-group-winners-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 28px; }
+.tt-group-winner { display: grid; grid-template-columns: 88px minmax(0, 1fr); min-width: 0; border: 1px solid #594112; border-radius: 14px; background: linear-gradient(145deg, #12100b, #070707); overflow: hidden; }
+.tt-group-winner-rank { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 18px 10px; border-right: 1px solid #594112; color: #f5b821; }
+.tt-group-winner-rank small { font-size: 11px; font-weight: 700; letter-spacing: .1em; }
+.tt-group-winner-rank strong { font: 700 36px 'Barlow Condensed', sans-serif; }
+.tt-group-winner ul { display: flex; flex-wrap: wrap; align-content: center; gap: 9px; margin: 0; padding: 20px; list-style: none; }
+.tt-group-winner li { padding: 7px 10px; border: 1px solid #413316; border-radius: 6px; color: #f8f4e8; font-size: 13px; overflow-wrap: anywhere; }
+@media (max-width: 760px) { .tt-group-winners-list { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .tt-group-winner { grid-template-columns: 70px minmax(0, 1fr); } .tt-group-winner-rank strong { font-size: 30px; } .tt-group-winner ul { padding: 13px; gap: 7px; } .tt-group-winner li { font-size: 12px; } }

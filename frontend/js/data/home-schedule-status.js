@@ -4,7 +4,7 @@ export const scheduleChampions = {
   FUTSAL: 'TBS BUILDING',
   CHESS: 'CURING',
   BADMINTON: 'OFFICE T',
-  'TABLE TENNIS': 'DIAN (D)',
+  'TABLE TENNIS': 'TEAM BDSP',
   FOOTBALL: 'TUBE',
   FISHING: 'FINISHING',
 };

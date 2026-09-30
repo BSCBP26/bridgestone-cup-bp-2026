@@ -2,7 +2,7 @@ import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260930-completed-schedule';
 import { API_BASE as apiBase } from './api-config.js';
 import { exhibitionDemo } from './data/home-data.js?v=20260930-mini-soccer';
-import { renderGalleryPreview, renderHome, renderGreetings, renderSchedules, renderSports, renderSupporters } from './components/home.js?v=20260930-mini-soccer';
+import { renderGalleryPreview, renderHome, renderGreetings, renderSchedules, renderSports, renderSupporters } from './components/home.js?v=20260930-tt-group';
 import { selectLatestScheduledRound } from './utils/schedule-round.js?v=20260828-active-round-v1';
 
 const exhibitionDemoMode = new URLSearchParams(location.search).has('exhibitionDemo');

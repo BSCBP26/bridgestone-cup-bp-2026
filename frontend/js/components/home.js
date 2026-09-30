@@ -1,5 +1,5 @@
 import { sports } from '../data/home-data.js?v=20260930-mini-soccer';
-import { completedScheduleSports, scheduleChampions } from '../data/home-schedule-status.js?v=20260930-football';
+import { completedScheduleSports, scheduleChampions } from '../data/home-schedule-status.js?v=20260930-tt-group';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[character]));
 const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
@@ -79,7 +79,7 @@ const sportLinks = {
 const scheduleLinks = Object.fromEntries(Object.entries(sportLinks).map(([name, url]) => [name, `${url}#schedule`]));
 const sportLabel = sport => escapeHtml(sport.label || sport.name);
 
-const completedScheduleCard = sport => `<a class="schedule-card schedule-card-completed" data-source="event" data-status="completed" href="${sportLinks[sport.name]}#winner" aria-labelledby="schedule-${sport.code}-title schedule-${sport.code}-rank schedule-${sport.code}-status schedule-${sport.code}-link"><header><span>${sport.code}</span><h3 id="schedule-${sport.code}-title">${sportLabel(sport)}</h3></header><div class="schedule-completed-panel"><small id="schedule-${sport.code}-rank">JUARA 1</small><div class="schedule-champion"><img src="assets/images/trophy-gold.svg" alt="" width="30" height="30"><strong id="schedule-${sport.code}-status">${escapeHtml(scheduleChampions[sport.name])}</strong></div><span id="schedule-${sport.code}-link">LIHAT HASIL</span></div></a>`;
+const completedScheduleCard = sport => `<a class="schedule-card schedule-card-completed" data-source="event" data-status="completed" href="${sportLinks[sport.name]}#${sport.name === 'TABLE TENNIS' ? 'winner-group' : 'winner'}" aria-labelledby="schedule-${sport.code}-title schedule-${sport.code}-rank schedule-${sport.code}-status schedule-${sport.code}-link"><header><span>${sport.code}</span><h3 id="schedule-${sport.code}-title">${sportLabel(sport)}</h3></header><div class="schedule-completed-panel"><small id="schedule-${sport.code}-rank">JUARA 1</small><div class="schedule-champion"><img src="assets/images/trophy-gold.svg" alt="" width="30" height="30"><strong id="schedule-${sport.code}-status">${escapeHtml(scheduleChampions[sport.name])}</strong></div><span id="schedule-${sport.code}-link">LIHAT HASIL</span></div></a>`;
 
 const runningScheduleCard = sport => `<a class="schedule-card running-event" data-source="event" href="${sportLinks.RUNNING}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="running-event-panel"><small>PERIODE EVENT</small><div class="running-date-range"><time datetime="2026-09-10"><b>10</b><span>SEP</span></time><i aria-hidden="true"></i><time datetime="2026-09-30"><b>30</b><span>SEP</span></time></div><strong class="running-event-status"><i aria-hidden="true"></i> ONGOING</strong><p>RUNNING CLUB</p></div><div class="final-event">10–30 SEPTEMBER 2026<br>Akumulasi aktivitas lari</div></a>`;
 

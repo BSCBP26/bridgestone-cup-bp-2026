@@ -3,6 +3,7 @@ import './public-i18n.js?v=20260809-clean-empty-copy';
 import { API_BASE as apiBase } from './api-config.js';
 import { loadTournamentCompetitionFormat, withOptionalStanding } from './competition-format.js';
 import { loadCategories, renderCategorySelector, selectedCategory, tournamentByCategory } from './competition-categories.js';
+import { tableTennisGroupWinners } from './data/table-tennis-group-winners.js';
 import {
   apiBracketView,
   bracketWinnerView,
@@ -15,6 +16,8 @@ let groups = [];
 let liveBracket = null;
 let standingSource = 'empty';
 let bracketSource = 'empty';
+const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const groupWinnersView = () => `<section class="tt-group-winners" aria-labelledby="tt-group-winners-title"><header class="view-heading"><span>BRIDGESTONE CUP BP 2026</span><h1 id="tt-group-winners-title">TABLE TENNIS WINNER GROUP</h1></header><div class="tt-group-winners-list">${tableTennisGroupWinners.map(({rank,members}) => `<article class="tt-group-winner"><div class="tt-group-winner-rank"><small>JUARA</small><strong>${escapeHtml(rank)}</strong></div><ul>${members.map(name => `<li>${escapeHtml(name)}</li>`).join('')}</ul></article>`).join('')}</div></section>`;
 
 const emptyState = title => `
   <div class="public-empty-state">
@@ -22,6 +25,11 @@ const emptyState = title => `
   </div>`;
 
 function render(id) {
+  if (id === 'winner-group') {
+    host.dataset.source = 'owner';
+    host.innerHTML = groupWinnersView();
+    return;
+  }
   if (id === 'group-standing') {
     host.dataset.source = standingSource;
     host.innerHTML = standingView(groups);
@@ -46,6 +54,7 @@ const competitionFormat=await loadTournamentCompetitionFormat(tournamentId);
 shell('Table Tennis', withOptionalStanding(competitionFormat,[
   { id: 'bracket', label: 'Bracket' },
   { id: 'winner', label: 'Winner Table Tennis' },
+  { id: 'winner-group', label: 'Winner Group' },
 ]), render);
 renderCategorySelector(categories,category);
 
