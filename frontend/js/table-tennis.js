@@ -17,7 +17,7 @@ let liveBracket = null;
 let standingSource = 'empty';
 let bracketSource = 'empty';
 const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-const groupWinnersView = () => `<section class="tt-group-winners" aria-labelledby="tt-group-winners-title"><header class="view-heading"><span>BRIDGESTONE CUP BP 2026</span><h1 id="tt-group-winners-title">TABLE TENNIS WINNER GROUP</h1></header><div class="tt-group-winners-list">${tableTennisGroupWinners.map(({rank,members}) => `<article class="tt-group-winner"><div class="tt-group-winner-rank"><small>JUARA</small><strong>${escapeHtml(rank)}</strong></div><ul>${members.map(name => `<li>${escapeHtml(name)}</li>`).join('')}</ul></article>`).join('')}</div></section>`;
+const groupWinnersView = () => `<section class="tt-group-winners score-layout"><article class="winner-panel"><header class="tt-winner-heading"><span>GROUP</span><h2>TABLE TENNIS WINNERS</h2></header>${tableTennisGroupWinners.map(({rank,members}) => `<div class="ranking-row tt-group-ranking"><small>JUARA ${escapeHtml(rank)}</small><ul>${members.map(name => `<li>${escapeHtml(name)}</li>`).join('')}</ul><b>${escapeHtml(rank.length === 1 ? rank.padStart(2, '0') : rank)}</b></div>`).join('')}</article></section>`;
 
 const emptyState = title => `
   <div class="public-empty-state">
@@ -57,6 +57,11 @@ shell('Table Tennis', withOptionalStanding(competitionFormat,[
   { id: 'winner-group', label: 'Winner Group' },
 ]), render);
 renderCategorySelector(categories,category);
+const groupCategory = document.createElement('nav');
+groupCategory.className = 'competition-category-tabs tt-group-category';
+groupCategory.setAttribute('aria-label', 'Kategori pertandingan');
+groupCategory.innerHTML = '<a class="active" href="#winner-group" aria-current="page">GROUP</a>';
+document.querySelector('.view-tabs').before(groupCategory);
 
 if (apiBase) {
   Promise.allSettled([

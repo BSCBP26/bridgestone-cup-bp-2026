@@ -337,3 +337,14 @@
 
 @media (prefers-reduced-motion:reduce) { .running-event-status i { animation:none; } }
 
+
+.schedule-category-winners { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 12px; }
+.schedule-category-winner { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 13px; padding: 26px 2px; text-align: center; color: #f8f4e8; text-decoration: none; border-radius: 6px; }
+.schedule-category-winner + .schedule-category-winner { border-top: 1px solid rgba(212,163,46,.3); }
+.schedule-winner-category { color: #f8f4e8; font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+.schedule-category-winner > small { color: #d7ad53; font-size: 9px; font-weight: 700; letter-spacing: .12em; }
+.schedule-category-winner strong { color: #ffd365; font: 700 19px/1.1 'Barlow Condensed',sans-serif; }
+.schedule-winner-link { color: #d8c99e; font-size: 9px; border-bottom: 1px solid #816325; padding-bottom: 4px; }
+.schedule-category-winner:hover { background: rgba(212,163,46,.06); }
+.schedule-category-winner:focus-visible { outline: 2px solid #f4bd25; outline-offset: 2px; }
+@media (max-width:700px) { .schedule-category-winners { padding: 8px; } .schedule-category-winner { padding: 18px 0; gap: 10px; } .schedule-category-winner strong { font-size: 17px; } }
