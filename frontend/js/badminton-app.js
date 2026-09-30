@@ -1,9 +1,9 @@
 import './analytics.js?v=20260828-ga1';
-import './public-i18n.js?v=20260809-clean-empty-copy';
+import './public-i18n.js?v=20260930-fourth-place';
 import { API_BASE as apiBase } from './api-config.js';
 import { loadTournamentCompetitionFormat, withOptionalStanding } from './competition-format.js';
 import { loadCategories, renderCategorySelector, selectedCategory, tournamentByCategory } from './competition-categories.js';
-import { apiBracketView, scheduleView, shell, standingView } from './sports.js?v=20260821-empty-bracket';
+import { apiBracketView, bracketWinnerView, scheduleView, shell, standingView } from './sports.js?v=20260930-badminton-winner';
 
 const host = document.querySelector('#sport-view');
 
@@ -51,17 +51,34 @@ const category=selectedCategory(categories);
 const tournamentId=tournamentByCategory.badminton[category];
 const apiData = await loadApiData(tournamentId);
 const competitionFormat=await loadTournamentCompetitionFormat(tournamentId);
+const placing = match => {
+  if (match?.status !== 'completed') return ['MENUNGGU HASIL', 'MENUNGGU HASIL'];
+  const homeWon = match.winnerParticipantId === match.homeParticipant?.id;
+  return homeWon
+    ? [match.homeParticipant?.name, match.awayParticipant?.name]
+    : [match.awayParticipant?.name, match.homeParticipant?.name];
+};
+const finalRanking = [
+  ...placing(apiData.bracket?.rounds?.at(-1)?.matches?.[0]),
+  ...placing(apiData.bracket?.thirdPlaceMatch),
+];
 shell('Badminton', withOptionalStanding(competitionFormat,[
   { id: 'bracket', label: 'Bracket' },
   { id: 'schedule', label: 'Schedule' },
+  ...(category === 'singles' ? [{ id: 'winner', label: 'Winner Badminton' }] : []),
 ]), id => {
   if(id==='group-standing'){host.dataset.source=apiData.groups.length?'api':'empty';host.innerHTML=standingView(apiData.groups);return}
+  if(id==='winner'){
+    host.dataset.source=apiData.bracket?'api':'empty';
+    host.innerHTML=apiData.bracket?bracketWinnerView('BADMINTON WINNERS',apiData.bracket,finalRanking):'<div class="public-empty-state"><strong>HASIL BELUM TERSEDIA</strong></div>';
+    return;
+  }
   host.dataset.source = id === 'schedule'
     ? (apiData.matches.length ? 'api' : 'empty')
     : (apiData.bracket ? 'api' : 'empty');
   host.innerHTML = id === 'schedule'
     ? scheduleView(apiData.matches.length ? apiScheduleRows(apiData.matches) : [])
-    : (apiBracketView('CHAMPIONSHIP BRACKET', apiData.bracket) || emptyBracket);
+    : (apiBracketView('CHAMPIONSHIP BRACKET', apiData.bracket,category==='singles'?finalRanking:undefined) || emptyBracket);
 });
 renderCategorySelector(categories,category);
 import './analytics.js';

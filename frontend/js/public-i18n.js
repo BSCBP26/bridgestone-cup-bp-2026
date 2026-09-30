@@ -20,7 +20,7 @@ const pairs = [
   ['Buka','Open'],['Foto','Photo'],['LOKASI','LOCATION'],['WAKTU','TIME'],['Timbang hasil tangkapan','Weighing the catch'],['DESEMBER','DECEMBER'],['Venue menunggu','Venue pending'],
   ['Pilih cabang olahraga','Choose a sport'],['Tampilan Futsal','Futsal views'],['Klasemen grup Futsal','Futsal group standings'],['Jadwal pertandingan Futsal','Futsal match schedule'],
   ['KLASEMEN BELUM TERSEDIA','STANDINGS NOT AVAILABLE'],
-  ['JADWAL MENUNGGU','SCHEDULE PENDING'],['MENUNGGU HASIL','AWAITING RESULT'],['PENGUMUMAN','ANNOUNCEMENT'],['JUARA 1','1ST PLACE'],['JUARA 2','2ND PLACE'],['JUARA 3','3RD PLACE'],
+  ['JADWAL MENUNGGU','SCHEDULE PENDING'],['MENUNGGU HASIL','AWAITING RESULT'],['PENGUMUMAN','ANNOUNCEMENT'],['JUARA 1','1ST PLACE'],['JUARA 2','2ND PLACE'],['JUARA 3','3RD PLACE'],['JUARA 4','4TH PLACE'],
   ['JADWAL PERTANDINGAN','MATCH SCHEDULE'],['PERTANDINGAN','MATCH'],['KLASEMEN GRUP','GROUP STANDINGS'],['POIN','POINTS'],['PEMENANG','WINNER'],
   ['SEMUA FOTO','ALL PHOTOS'],['← KEMBALI KE BERANDA','← BACK HOME'],['JELAJAHI BERDASARKAN CABOR','EXPLORE BY SPORT'],['Pilih cabang olahraga untuk menjelajahi galeri turnamen yang telah dipublikasikan.','Choose a sport to explore its published tournament gallery.'],
   ['SEMUA MOMEN','ALL MOMENTS'],['SETIAP MOMEN, SATU CERITA TURNAMEN.','EVERY MOMENT, ONE TOURNAMENT STORY.'],['KOLEKSI LENGKAP CABANG OLAHRAGA','COMPLETE SPORT COLLECTION'],['MOMEN OLAHRAGA','SPORT MOMENTS'],['Memuat foto turnamen yang telah dipublikasikan.','Loading published tournament photos.'],
