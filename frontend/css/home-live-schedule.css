@@ -3,6 +3,31 @@
   min-height: 540px;
 }
 
+.schedule-card-completed { display:flex; flex-direction:column; }
+.schedule-card-completed header { flex-shrink:0; }
+.schedule-completed-panel {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:24px;
+  margin:16px 12px;
+  padding:24px 8px;
+  border:1px solid #665018;
+  border-radius:12px;
+  background:radial-gradient(ellipse at center,rgba(212,163,46,.12),transparent 75%);
+  text-align:center;
+}
+.schedule-completed-panel strong { color:#f4bd25; font:700 clamp(20px,2vw,30px) 'Barlow Condensed',sans-serif; letter-spacing:.06em; }
+.schedule-completed-panel > span { color:#f8f4e8; font-size:10px; font-weight:700; letter-spacing:.08em; border-bottom:1px solid #a78024; padding-bottom:6px; }
+.schedule-card-completed:focus-visible { outline:2px solid #f4bd25; outline-offset:4px; }
+@media(max-width:700px) {
+  .schedule-completed-panel { margin:8px 6px; padding:18px 4px; gap:18px; }
+  .schedule-completed-panel strong { font-size:20px; letter-spacing:0; }
+  .schedule-completed-panel > span { font-size:9px; letter-spacing:0; }
+}
+
 .schedule-card header,
 .schedule-row {
   min-width: 0;

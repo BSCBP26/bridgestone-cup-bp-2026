@@ -2,13 +2,14 @@ import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260809-clean-empty-copy';
 import { API_BASE as apiBase } from './api-config.js';
 import { loadCompetitionFormat, withOptionalStanding } from './competition-format.js';
+import { getFutsalFinalRanking } from './data/futsal-results.js?v=20260930-results';
 import {
   apiBracketView,
   bracketWinnerView,
   scheduleView,
   shell,
   standingView,
-} from './sports.js?v=20260821-empty-bracket';
+} from './sports.js?v=20260930-futsal-results';
 
 const host = document.querySelector('#sport-view');
 document.head.insertAdjacentHTML('beforeend','<style>.match-row small{padding:0!important;border:0!important;border-radius:0!important;color:var(--gold);font-weight:600}</style>');
@@ -56,13 +57,13 @@ function render(id) {
   if (id === 'winner') {
     host.dataset.source = bracketSource;
     host.innerHTML = liveBracket
-      ? bracketWinnerView('FUTSAL WINNERS', liveBracket)
+      ? bracketWinnerView('FUTSAL WINNERS', liveBracket, getFutsalFinalRanking(liveBracket))
       : emptyState('HASIL BELUM TERSEDIA');
     return;
   }
   host.dataset.source = bracketSource;
   const bracket = liveBracket
-    ? apiBracketView('TOURNAMENT BRACKET', liveBracket)
+    ? apiBracketView('TOURNAMENT BRACKET', liveBracket, getFutsalFinalRanking(liveBracket))
     : emptyState('BRACKET BELUM TERSEDIA');
   host.innerHTML = `${bracket}${scorers()}`;
 }

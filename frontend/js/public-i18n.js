@@ -1,5 +1,6 @@
 const STORAGE_KEY = 'bridgestone_public_language';
 const pairs = [
+  ['SELESAI','COMPLETED'],['LIHAT HASIL','VIEW RESULTS'],
   ['Lewati ke konten utama','Skip to main content'],['Menu','Menu'],['Navigasi utama','Main navigation'],['Ganti bahasa','Change language'],
   ['Greeting','Greetings'],['Schedule','Schedule'],['Sport Event','Sports'],['Gallery','Gallery'],['Support Board','Support Board'],
   ['PENGUMUMAN','ANNOUNCEMENT'],['Tutup pengumuman','Close announcement'],

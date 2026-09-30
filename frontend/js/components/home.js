@@ -1,4 +1,5 @@
 import { sports } from '../data/home-data.js?v=20260809-live-only';
+import { completedScheduleSports } from '../data/home-schedule-status.js';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[character]));
 const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
@@ -77,6 +78,8 @@ const sportLinks = {
 };
 const scheduleLinks = Object.fromEntries(Object.entries(sportLinks).map(([name, url]) => [name, `${url}#schedule`]));
 
+const completedScheduleCard = sport => `<a class="schedule-card schedule-card-completed" data-source="event" data-status="completed" href="${sportLinks[sport.name]}#winner" aria-labelledby="schedule-${sport.code}-title schedule-${sport.code}-status schedule-${sport.code}-link"><header><span>${sport.code}</span><h3 id="schedule-${sport.code}-title">${sport.name}</h3></header><div class="schedule-completed-panel"><strong id="schedule-${sport.code}-status">SELESAI</strong><span id="schedule-${sport.code}-link">LIHAT HASIL</span></div></a>`;
+
 const runningScheduleCard = sport => `<a class="schedule-card running-event" data-source="event" href="${sportLinks.RUNNING}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="running-event-panel"><small>PERIODE EVENT</small><div class="running-date-range"><time datetime="2026-09-10"><b>10</b><span>SEP</span></time><i aria-hidden="true"></i><time datetime="2026-09-30"><b>30</b><span>SEP</span></time></div><strong class="running-event-status"><i aria-hidden="true"></i> ONGOING</strong><p>RUNNING CLUB</p></div><div class="final-event">10–30 SEPTEMBER 2026<br>Akumulasi aktivitas lari</div></a>`;
 
 const emptyScheduleCard = sport => {
@@ -116,6 +119,7 @@ const liveScheduleCard = (sport, matches) => {
 export function renderSchedules(scheduleBySport = {}) {
   const list = document.querySelector('#schedule-list');
   list.innerHTML = sports.map(sport => {
+    if (completedScheduleSports.has(sport.name)) return completedScheduleCard(sport);
     const matches = scheduleBySport[sport.name] || [];
     return matches.length ? liveScheduleCard(sport, matches) : emptyScheduleCard(sport);
   }).join('');

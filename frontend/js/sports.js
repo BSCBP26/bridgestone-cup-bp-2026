@@ -17,13 +17,15 @@ const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({
 }[char]));
 
 function matchSchedule(match){
- if(!match.scheduledAt)return '<span>JADWAL MENUNGGU</span>';
+ if(!match.scheduledAt)return /^([01]\d|2[0-3]):[0-5]\d$/.test(match.scheduledTime||'')
+  ? `<b>${escapeHtml(match.scheduledTime)} WIB${match.venue?` &bull; ${escapeHtml(match.venue)}`:''}</b>`
+  : '<span>JADWAL MENUNGGU</span>';
  const date=new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'short',timeZone:'Asia/Jakarta'}).format(new Date(match.scheduledAt)).toUpperCase();
  const time=new Intl.DateTimeFormat('id-ID',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Jakarta'}).format(new Date(match.scheduledAt)).replace('.',':');
  return `<time datetime="${escapeHtml(match.scheduledAt)}">${date}</time><b>${time} WIB${match.venue?` &bull; ${escapeHtml(match.venue)}`:''}</b>`;
 }
 
-export function apiBracketView(title,bracket){
+export function apiBracketView(title,bracket,finalRanking){
  if(!bracket?.participants?.length||!bracket?.rounds?.length)return '';
  const participantName=id=>bracket.participants?.find(participant=>participant.id===id)?.name||'MENUNGGU HASIL';
  const matchCard=match=>{
@@ -37,24 +39,27 @@ export function apiBracketView(title,bracket){
  const finalRound=rounds.at(-1);
  const openingStages=rounds.slice(0,-1).map((round,index)=>`<section class="stage" style="--stage:${index}"><h3><em>${String(index+1).padStart(2,'0')}</em>${escapeHtml(round.name.toUpperCase())}</h3><div class="stage-matches">${round.matches.map(matchCard).join('')}</div></section>`).join('');
  const final=bracket.rounds.at(-1)?.matches?.[0];
- const champion=participantName(bracket.championParticipantId);
- const runnerUp=final?.status==='completed'?(final.winnerParticipantId===final.homeParticipant?.id?final.awayParticipant?.name:final.homeParticipant?.name):'MENUNGGU HASIL';
+ const champion=finalRanking?.[0]||participantName(bracket.championParticipantId);
+ const runnerUp=finalRanking?.[1]||(final?.status==='completed'?(final.winnerParticipantId===final.homeParticipant?.id?final.awayParticipant?.name:final.homeParticipant?.name):'MENUNGGU HASIL');
  const thirdMatchNames=title.toUpperCase().includes('TABLE TENNIS')&&bracket.thirdPlaceMatch?[bracket.thirdPlaceMatch.homeParticipant?.name,bracket.thirdPlaceMatch.awayParticipant?.name].filter(Boolean):[];
- const thirdPlace=thirdMatchNames.length?thirdMatchNames.join(' & '):participantName(bracket.thirdPlaceParticipantId);
+ const thirdPlace=finalRanking?.[2]||(thirdMatchNames.length?thirdMatchNames.join(' & '):participantName(bracket.thirdPlaceParticipantId));
+ const fourthPlace=finalRanking?.[3]?`<span>JUARA 4 &bull; ${escapeHtml(finalRanking[3])}</span>`:'';
  const thirdNumber=rounds.length;
  const thirdPlaceStage=bracket.thirdPlaceMatch?`<section class="stage third-place-stage" style="--stage:${thirdNumber-1}"><h3><em>${String(thirdNumber).padStart(2,'0')}</em>THIRD PLACE</h3><div class="stage-matches">${matchCard(bracket.thirdPlaceMatch)}</div></section>`:'';
  const finalNumber=thirdNumber+(bracket.thirdPlaceMatch?1:0);
  const finalStage=finalRound?`<section class="stage final-stage" style="--stage:${finalNumber-1}"><h3><em>${String(finalNumber).padStart(2,'0')}</em>${escapeHtml(finalRound.name.toUpperCase())}</h3><div class="stage-matches">${finalRound.matches.map(matchCard).join('')}</div></section>`:'';
  const podiumNumber=finalNumber+1;
- return `<section class="bracket-shell"><header class="view-heading bracket-heading"><span>SINGLE ELIMINATION</span><h1>${escapeHtml(title)}</h1><p>ROAD TO CHAMPION &bull; BRIDGESTONE CUP BP 2026</p></header><div class="bracket api-bracket">${openingStages}${thirdPlaceStage}${finalStage}<section class="stage champion-stage"><h3><em>${String(podiumNumber).padStart(2,'0')}</em>PODIUM</h3><div class="stage-matches"><div class="champion"><small>JUARA 1</small><strong>${escapeHtml(champion)}</strong><span>JUARA 2 &bull; ${escapeHtml(runnerUp)}</span><span>JUARA 3 &bull; ${escapeHtml(thirdPlace)}</span></div></div></section></div></section>`;
+ return `<section class="bracket-shell"><header class="view-heading bracket-heading"><span>SINGLE ELIMINATION</span><h1>${escapeHtml(title)}</h1><p>ROAD TO CHAMPION &bull; BRIDGESTONE CUP BP 2026</p></header><div class="bracket api-bracket">${openingStages}${thirdPlaceStage}${finalStage}<section class="stage champion-stage"><h3><em>${String(podiumNumber).padStart(2,'0')}</em>PODIUM</h3><div class="stage-matches"><div class="champion"><small>JUARA 1</small><strong>${escapeHtml(champion)}</strong><span>JUARA 2 &bull; ${escapeHtml(runnerUp)}</span><span>JUARA 3 &bull; ${escapeHtml(thirdPlace)}</span>${fourthPlace}</div></div></section></div></section>`;
 }
 
-export function bracketWinnerView(title,bracket){
+export function bracketWinnerView(title,bracket,finalRanking){
  const final=bracket?.rounds?.at(-1)?.matches?.[0];
- const champion=bracket?.participants?.find(item=>item.id===bracket.championParticipantId)?.name||'MENUNGGU HASIL';
+ const champion=finalRanking?.[0]||bracket?.participants?.find(item=>item.id===bracket.championParticipantId)?.name||'MENUNGGU HASIL';
  let runnerUp='MENUNGGU HASIL';
- if(final?.status==='completed')runnerUp=final.winnerParticipantId===final.homeParticipant?.id?final.awayParticipant?.name:final.homeParticipant?.name;
+ if(finalRanking?.[1])runnerUp=finalRanking[1];
+ else if(final?.status==='completed')runnerUp=final.winnerParticipantId===final.homeParticipant?.id?final.awayParticipant?.name:final.homeParticipant?.name;
  const thirdMatchNames=title.toUpperCase().includes('TABLE TENNIS')&&bracket?.thirdPlaceMatch?[bracket.thirdPlaceMatch.homeParticipant?.name,bracket.thirdPlaceMatch.awayParticipant?.name].filter(Boolean):[];
- const thirdPlace=thirdMatchNames.length?thirdMatchNames.join(' & '):(bracket?.participants?.find(item=>item.id===bracket.thirdPlaceParticipantId)?.name||'MENUNGGU HASIL');
- return `<section class="score-layout"><article class="winner-panel"><h2>${escapeHtml(title)}</h2><div class="ranking-row"><small>JUARA 1</small><strong>${escapeHtml(champion)}</strong><b>01</b></div><div class="ranking-row"><small>JUARA 2</small><strong>${escapeHtml(runnerUp)}</strong><b>02</b></div><div class="ranking-row"><small>JUARA 3</small><strong>${escapeHtml(thirdPlace)}</strong><b>03</b></div></article></section>`;
+ const thirdPlace=finalRanking?.[2]||(thirdMatchNames.length?thirdMatchNames.join(' & '):(bracket?.participants?.find(item=>item.id===bracket.thirdPlaceParticipantId)?.name||'MENUNGGU HASIL'));
+ const fourthPlace=finalRanking?.[3]?`<div class="ranking-row"><small>JUARA 4</small><strong>${escapeHtml(finalRanking[3])}</strong><b>04</b></div>`:'';
+ return `<section class="score-layout"><article class="winner-panel"><h2>${escapeHtml(title)}</h2><div class="ranking-row"><small>JUARA 1</small><strong>${escapeHtml(champion)}</strong><b>01</b></div><div class="ranking-row"><small>JUARA 2</small><strong>${escapeHtml(runnerUp)}</strong><b>02</b></div><div class="ranking-row"><small>JUARA 3</small><strong>${escapeHtml(thirdPlace)}</strong><b>03</b></div>${fourthPlace}</article></section>`;
 }
