@@ -17,6 +17,10 @@ const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({
 }[char]));
 
 function matchSchedule(match){
+ if(!match.scheduledAt && /^\d{4}-\d{2}-\d{2}$/.test(match.scheduledDate||'')){
+  const date=new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'short',year:'numeric',timeZone:'Asia/Jakarta'}).format(new Date(`${match.scheduledDate}T12:00:00+07:00`)).toUpperCase();
+  return `<time datetime="${escapeHtml(match.scheduledDate)}">${date}</time>`;
+ }
  if(!match.scheduledAt)return /^([01]\d|2[0-3]):[0-5]\d$/.test(match.scheduledTime||'')
   ? `<b>${escapeHtml(match.scheduledTime)} WIB${match.venue?` &bull; ${escapeHtml(match.venue)}`:''}</b>`
   : '<span>JADWAL MENUNGGU</span>';
@@ -33,7 +37,9 @@ export function apiBracketView(title,bracket,finalRanking){
   const away=match.awayParticipant?.name||(match.status==='bye'?'BYE':'MENUNGGU HASIL');
   const homeScore=match.homeScore??'&mdash;';
   const awayScore=match.awayScore??'&mdash;';
-  return `<article class="match" data-match-id="${escapeHtml(match.id)}"><div><strong>${escapeHtml(home)}</strong><b>${homeScore}</b></div><span>VS</span><div><strong>${escapeHtml(away)}</strong><b>${awayScore}</b></div><footer>${matchSchedule(match)}</footer></article>`;
+  const penalties=Number.isInteger(match.penaltyHomeScore)&&Number.isInteger(match.penaltyAwayScore)
+   ? `<b><span>PENALTI</span> ${match.penaltyHomeScore}–${match.penaltyAwayScore}</b>` : '';
+  return `<article class="match" data-match-id="${escapeHtml(match.id)}"><div><strong>${escapeHtml(home)}</strong><b>${homeScore}</b></div><span>VS</span><div><strong>${escapeHtml(away)}</strong><b>${awayScore}</b></div><footer>${matchSchedule(match)}${penalties}</footer></article>`;
  };
  const rounds=bracket.rounds||[];
  const finalRound=rounds.at(-1);

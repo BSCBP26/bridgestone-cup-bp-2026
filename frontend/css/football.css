@@ -1,0 +1,6 @@
+.football-awards { margin-top:20px; }
+.football-awards .ranking-row b { text-align:right; }
+@media(max-width:600px) {
+  .football-awards .ranking-row { grid-template-columns:minmax(0,1fr) auto; }
+  .football-awards .ranking-row strong { min-width:0; overflow-wrap:anywhere; }
+}

@@ -1,5 +1,5 @@
 import { sports } from '../data/home-data.js?v=20260809-live-only';
-import { completedScheduleSports, scheduleChampions } from '../data/home-schedule-status.js?v=20260930-champions';
+import { completedScheduleSports, scheduleChampions } from '../data/home-schedule-status.js?v=20260930-football';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[character]));
 const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
