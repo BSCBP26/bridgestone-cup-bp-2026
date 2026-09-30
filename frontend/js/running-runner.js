@@ -1,7 +1,7 @@
 import './analytics.js';
 import './public-i18n.js';
 import { API_BASE } from './api-config.js';
-import { shell } from './sports.js';
+import { shell } from './sports.js?v=20260930-mini-soccer';
 
 const host=document.querySelector('#runner-dashboard');
 const name=new URLSearchParams(location.search).get('name')?.trim()||'';

@@ -9,7 +9,7 @@ import {
   scheduleView,
   shell,
   standingView,
-} from './sports.js?v=20260930-futsal-results';
+} from './sports.js?v=20260930-mini-soccer';
 
 const host = document.querySelector('#sport-view');
 document.head.insertAdjacentHTML('beforeend','<style>.match-row small{padding:0!important;border:0!important;border-radius:0!important;color:var(--gold);font-weight:600}</style>');

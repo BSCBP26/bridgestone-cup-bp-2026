@@ -2,7 +2,7 @@ import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260930-football-awards';
 import { API_BASE } from './api-config.js';
 import { loadCompetitionFormat, withOptionalStanding } from './competition-format.js';
-import { apiBracketView, bracketWinnerView, scheduleView, shell, standingView } from './sports.js?v=20260930-football-results';
+import { apiBracketView, bracketWinnerView, scheduleView, shell, standingView } from './sports.js?v=20260930-mini-soccer';
 
 const host = document.querySelector('#sport-view');
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,character=>({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[character]));
@@ -66,14 +66,14 @@ const datedMatches=[...bracketMatches,...(apiData.bracket?.thirdPlaceMatch?[apiD
 const awards=apiData.bracket?.awards;
 const awardsView=awards?`<article class="winner-panel football-awards"><h2>PENGHARGAAN INDIVIDU</h2><div class="ranking-row"><small>TOP SKOR</small><strong>${escapeHtml(awards.topScorer.name)}</strong><b>${escapeHtml(awards.topScorer.team)}</b></div><div class="ranking-row"><small>KIPER TERBAIK</small><strong>${escapeHtml(awards.bestGoalkeeper.name)}</strong><b>${escapeHtml(awards.bestGoalkeeper.team)}</b></div></article>`:'';
 
-shell('Football', withOptionalStanding(competitionFormat,[
+shell('Mini Soccer', withOptionalStanding(competitionFormat,[
   { id: 'bracket', label: 'Bracket' },
   { id: 'schedule', label: 'Schedule' },
-  { id: 'winner', label: 'Winner Football' },
+  { id: 'winner', label: 'Winner Mini Soccer' },
 ]), id => {
   if(id==='group-standing'){host.innerHTML=standingView(apiData.groups);host.dataset.source=apiData.groups.length?'api':'empty';return}
   if(id==='winner'){
-    host.innerHTML=apiData.bracket?bracketWinnerView('FOOTBALL WINNERS',apiData.bracket,finalRanking)+awardsView:'<div class="public-empty-state"><strong>HASIL BELUM TERSEDIA</strong></div>';
+    host.innerHTML=apiData.bracket?bracketWinnerView('MINI SOCCER WINNERS',apiData.bracket,finalRanking)+awardsView:'<div class="public-empty-state"><strong>HASIL BELUM TERSEDIA</strong></div>';
     host.dataset.source=apiData.bracket?'api':'empty';
     return;
   }

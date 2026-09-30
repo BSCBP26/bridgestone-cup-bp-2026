@@ -1,7 +1,7 @@
 import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260809-clean-empty-copy';
 import { API_BASE } from './api-config.js';
-import { shell } from './sports.js?v=20260809-clean-empty-copy';
+import { shell } from './sports.js?v=20260930-mini-soccer';
 
 const host = document.querySelector('#sport-view');
 let teams = [];

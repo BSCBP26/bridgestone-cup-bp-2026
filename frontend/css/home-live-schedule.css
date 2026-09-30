@@ -3,7 +3,7 @@
   min-height: 540px;
 }
 
-.schedule-card-completed { display:flex; flex-direction:column; }
+.schedule-card-completed { display:flex; flex-direction:column; background:radial-gradient(ellipse at 50% 54%,rgba(212,163,46,.13),transparent 60%),#0b0c0b; }
 .schedule-card-completed header { flex-shrink:0; }
 .schedule-completed-panel {
   flex:1;
@@ -11,21 +11,31 @@
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:24px;
+  gap:18px;
   margin:16px 12px;
   padding:24px 8px;
   text-align:center;
 }
-.schedule-completed-panel strong { color:#f4bd25; font:700 17px/1.1 'Barlow Condensed',sans-serif; letter-spacing:0; }
-.schedule-completed-panel > small { color:#cba249; font-size:10px; font-weight:800; letter-spacing:.14em; }
-.schedule-champion { display:flex; align-items:center; justify-content:center; gap:5px; width:100%; min-width:0; }
-.schedule-champion img { flex:none; width:21px; height:21px; }
+.schedule-completed-panel strong { color:#ffd365; font:700 19px/1.1 'Barlow Condensed',sans-serif; letter-spacing:.01em; }
+.schedule-completed-panel > small { color:#d7ad53; font-size:10px; font-weight:800; letter-spacing:.14em; }
+.schedule-completed-panel > small::after { content:''; display:block; width:24px; height:1px; margin:10px auto 0; background:#b98d32; }
+.schedule-champion { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; min-width:0; }
+.schedule-champion img { flex:none; width:25px; height:25px; filter:drop-shadow(0 0 4px rgba(244,189,37,.35)); animation:schedule-trophy-glow 3.6s ease-in-out infinite; transition:transform .25s ease; }
+@keyframes schedule-trophy-glow { 50% { filter:drop-shadow(0 0 9px rgba(255,205,81,.7)); } }
+.schedule-card-completed:hover .schedule-champion img,
+.schedule-card-completed:focus-visible .schedule-champion img { transform:scale(1.1); }
 .schedule-champion strong { min-width:0; overflow-wrap:anywhere; line-height:1; }
 .schedule-completed-panel > span { color:#f8f4e8; font-size:10px; font-weight:700; letter-spacing:.08em; border-bottom:1px solid #a78024; padding-bottom:6px; }
 .schedule-card-completed:focus-visible { outline:2px solid #f4bd25; outline-offset:4px; }
+@media(prefers-reduced-motion:reduce) {
+  .schedule-champion img { animation:none; transition:none; }
+  .schedule-card-completed:hover .schedule-champion img,
+  .schedule-card-completed:focus-visible .schedule-champion img { transform:none; }
+}
 @media(max-width:700px) {
-  .schedule-completed-panel { margin:8px 6px; padding:18px 4px; gap:18px; }
-  .schedule-completed-panel strong { font-size:18px; }
+  .schedule-completed-panel { margin:8px 6px; padding:18px 4px; gap:13px; }
+  .schedule-completed-panel strong { font-size:17px; }
+  .schedule-champion img { width:21px; height:21px; }
   .schedule-completed-panel > span { font-size:9px; letter-spacing:0; }
 }
 
@@ -210,6 +220,9 @@
 @keyframes running-status-pulse { 50% { opacity:.45; transform:scale(.8); } }
 
 @media (min-width:1101px) {
+  #schedule-list .schedule-card header { gap:7px; padding:10px 8px; }
+  #schedule-list .schedule-card header span { width:40px; height:40px; flex-basis:40px; }
+  #schedule-list .schedule-card h3 { font-size:clamp(11px,.9vw,13px); overflow-wrap:normal; }
   #schedule-list { grid-template-columns:repeat(7,minmax(0,1fr)); gap:13px; }
   #schedule-list .schedule-card { width:100%; min-width:0; }
   #sports-list { grid-template-columns:repeat(7,minmax(0,1fr)); gap:16px; }

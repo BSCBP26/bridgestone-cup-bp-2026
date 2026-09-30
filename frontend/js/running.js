@@ -1,7 +1,7 @@
 import './analytics.js';
 import './public-i18n.js';
 import { API_BASE } from './api-config.js';
-import { shell } from './sports.js';
+import { shell } from './sports.js?v=20260930-mini-soccer';
 
 const host = document.querySelector('#running-dashboard');
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[char]));
@@ -47,11 +47,11 @@ function render(data) {
   const { summary, leaders, runners, daily=[], activities=[] } = data;
   const sortedActivities=[...activities].sort((a,b)=>b.date.localeCompare(a.date));
   const recentActivities=sortedActivities.slice(0,12);
-  host.innerHTML = `<header class="running-hero"><div><p class="running-kicker">BRIDGESTONE CUP BP 2026</p><h1>RUNNING DASHBOARD</h1></div><p>Pantau perjalanan setiap pelari, dari total jarak hingga pace terbaik dan konsistensi latihan.</p></header>
+  host.innerHTML = `<header class="running-hero"><div><p class="running-kicker">BRIDGESTONE CUP BP 2026</p><h1>RUNNING DASHBOARD</h1></div><p>Pantau perjalanan setiap pelari melalui total jarak dan konsistensi latihan.</p></header>
   <section class="running-summary"><article class="running-stat"><small>TOTAL JARAK</small><strong>${formatKm(summary.totalKm)}</strong><span>akumulasi seluruh aktivitas</span></article><article class="running-stat"><small>PELARI TERDAFTAR</small><strong>${summary.runners}</strong><span>pelari terdaftar</span></article><article class="running-stat"><small>AKTIVITAS</small><strong>${summary.activities}</strong><span>catatan lari tervalidasi</span></article></section>
   <nav class="running-section-tabs" aria-label="Tampilan dashboard Running"><button type="button" class="running-section-tab is-active" data-running-view="standings" aria-pressed="true">KLASEMEN</button><button type="button" class="running-section-tab" data-running-view="recent" aria-pressed="false">AKTIVITAS TERBARU</button></nav>
   <div id="running-standings-view">${lineChartMarkup(runners)}
-  <section class="running-leaders">${leader('KM TERBANYAK',leaders.distance,row=>formatKm(row.totalKm))}${leader('PACE TERCEPAT',leaders.pace,row=>formatPace(row.fastestPaceSeconds))}${leader('PELARI TERAJIN',leaders.consistency,row=>`${row.activities} AKTIVITAS`)}</section>
+  <section class="running-leaders">${leader('KM TERBANYAK',leaders.distance,row=>formatKm(row.totalKm))}${leader('PELARI TERAJIN',leaders.consistency,row=>`${row.activities} AKTIVITAS`)}</section>
   <section class="running-table-panel"><header class="running-table-head"><div><small>SEMUA PESERTA</small><h2>KLASEMEN PELARI</h2></div><input id="runner-search" class="running-search" type="search" placeholder="Cari nama pelari" aria-label="Cari nama pelari"></header><div class="running-table-scroll"><table class="running-table"><thead><tr><th>RANK</th><th>NAMA PELARI</th><th>TOTAL KM</th><th>PACE TERCEPAT</th><th>AKTIVITAS</th></tr></thead><tbody id="runner-rows">${tableRows(runners)}</tbody></table></div></section>
   <section id="activity-results" class="running-table-panel activity-results" hidden><header class="running-table-head"><div><small>HASIL PENCARIAN</small><h2>AKTIVITAS PESERTA</h2><p id="activity-result-copy"></p></div></header><div class="running-table-scroll"><table class="running-table activity-table"><thead><tr><th>PELARI</th><th>TANGGAL</th><th>JARAK</th><th>DURASI</th><th>PACE</th><th>STATUS</th></tr></thead><tbody id="activity-rows"></tbody></table></div></section></div>
   <div id="running-recent-view" hidden>${dailyChartMarkup(daily)}<section class="running-table-panel"><header class="running-table-head"><div><small>CATATAN TERBARU</small><h2 id="recent-activity-title">AKTIVITAS TERBARU</h2><p id="recent-activity-copy" aria-live="polite">${recentActivities.length} aktivitas terbaru berdasarkan tanggal.</p></div><button id="clear-activity-date" class="clear-activity-date" type="button" hidden>SEMUA TANGGAL</button></header><div class="running-table-scroll"><table class="running-table activity-table"><thead><tr><th>PELARI</th><th>TANGGAL</th><th>JARAK</th><th>DURASI</th><th>PACE</th><th>STATUS</th></tr></thead><tbody id="recent-activity-rows">${activityRows(recentActivities)}</tbody></table></div></section></div>`;

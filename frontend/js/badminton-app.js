@@ -3,7 +3,7 @@ import './public-i18n.js?v=20260930-fourth-place';
 import { API_BASE as apiBase } from './api-config.js';
 import { loadTournamentCompetitionFormat, withOptionalStanding } from './competition-format.js';
 import { loadCategories, renderCategorySelector, selectedCategory, tournamentByCategory } from './competition-categories.js';
-import { apiBracketView, bracketWinnerView, scheduleView, shell, standingView } from './sports.js?v=20260930-badminton-winner';
+import { apiBracketView, bracketWinnerView, scheduleView, shell, standingView } from './sports.js?v=20260930-mini-soccer';
 
 const host = document.querySelector('#sport-view');
 

@@ -50,7 +50,7 @@ export const tournaments = Object.freeze([
   {
     id: "football-bp-2026",
     sportId: "sport-football",
-    name: "Football Bridgestone Cup BP 2026",
+    name: "Mini Soccer Bridgestone Cup BP 2026",
     format: "single_elimination",
     status: "published",
     timezone: "Asia/Jakarta",

@@ -7,7 +7,7 @@ import {
   bracketWinnerView,
   shell,
   standingView,
-} from './sports.js?v=20260821-empty-bracket';
+} from './sports.js?v=20260930-mini-soccer';
 
 const host = document.querySelector('#sport-view');
 let groups = [];

@@ -1,4 +1,4 @@
-import { sports } from '../data/home-data.js?v=20260809-live-only';
+import { sports } from '../data/home-data.js?v=20260930-mini-soccer';
 import { completedScheduleSports, scheduleChampions } from '../data/home-schedule-status.js?v=20260930-football';
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;' }[character]));
@@ -77,8 +77,9 @@ const sportLinks = {
   RUNNING: 'pages/running.html',
 };
 const scheduleLinks = Object.fromEntries(Object.entries(sportLinks).map(([name, url]) => [name, `${url}#schedule`]));
+const sportLabel = sport => escapeHtml(sport.label || sport.name);
 
-const completedScheduleCard = sport => `<a class="schedule-card schedule-card-completed" data-source="event" data-status="completed" href="${sportLinks[sport.name]}#winner" aria-labelledby="schedule-${sport.code}-title schedule-${sport.code}-rank schedule-${sport.code}-status schedule-${sport.code}-link"><header><span>${sport.code}</span><h3 id="schedule-${sport.code}-title">${sport.name}</h3></header><div class="schedule-completed-panel"><small id="schedule-${sport.code}-rank">JUARA 1</small><div class="schedule-champion"><img src="assets/images/trophy-gold.svg" alt="" width="30" height="30"><strong id="schedule-${sport.code}-status">${escapeHtml(scheduleChampions[sport.name])}</strong></div><span id="schedule-${sport.code}-link">LIHAT HASIL</span></div></a>`;
+const completedScheduleCard = sport => `<a class="schedule-card schedule-card-completed" data-source="event" data-status="completed" href="${sportLinks[sport.name]}#winner" aria-labelledby="schedule-${sport.code}-title schedule-${sport.code}-rank schedule-${sport.code}-status schedule-${sport.code}-link"><header><span>${sport.code}</span><h3 id="schedule-${sport.code}-title">${sportLabel(sport)}</h3></header><div class="schedule-completed-panel"><small id="schedule-${sport.code}-rank">JUARA 1</small><div class="schedule-champion"><img src="assets/images/trophy-gold.svg" alt="" width="30" height="30"><strong id="schedule-${sport.code}-status">${escapeHtml(scheduleChampions[sport.name])}</strong></div><span id="schedule-${sport.code}-link">LIHAT HASIL</span></div></a>`;
 
 const runningScheduleCard = sport => `<a class="schedule-card running-event" data-source="event" href="${sportLinks.RUNNING}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="running-event-panel"><small>PERIODE EVENT</small><div class="running-date-range"><time datetime="2026-09-10"><b>10</b><span>SEP</span></time><i aria-hidden="true"></i><time datetime="2026-09-30"><b>30</b><span>SEP</span></time></div><strong class="running-event-status"><i aria-hidden="true"></i> ONGOING</strong><p>RUNNING CLUB</p></div><div class="final-event">10–30 SEPTEMBER 2026<br>Akumulasi aktivitas lari</div></a>`;
 
@@ -86,12 +87,12 @@ const emptyScheduleCard = sport => {
   if (sport.name === 'RUNNING') return runningScheduleCard(sport);
   return sport.name === 'FISHING'
     ? `<a class="schedule-card fishing" data-source="event" href="${sportLinks.FISHING}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="fishing-panel"><time><b>30</b><small>AGUSTUS</small></time><label>LOKASI</label><p>PMC JAMBLANG</p><label>WAKTU</label><strong>09:00 WIB</strong></div><div class="final-event">FINAL EVENT<br>Timbang hasil tangkapan</div></a>`
-    : `<a class="schedule-card schedule-card-empty" data-source="empty" href="${scheduleLinks[sport.name] || '#sports'}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="schedule-empty"><strong>JADWAL BELUM TERSEDIA</strong></div></a>`;
+    : `<a class="schedule-card schedule-card-empty" data-source="empty" href="${scheduleLinks[sport.name] || '#sports'}"><header><span>${sport.code}</span><h3>${sportLabel(sport)}</h3></header><div class="schedule-empty"><strong>JADWAL BELUM TERSEDIA</strong></div></a>`;
 };
 
 const liveScheduleCard = (sport, matches) => {
   const activeRound = matches[0]?.roundName || '';
-  return `<a class="schedule-card" data-source="api" href="${scheduleLinks[sport.name] || '#sports'}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header>${activeRound ? `<div class="schedule-round">${escapeHtml(activeRound)}</div>` : ''}<div class="schedule-rows">${matches.map((match, index) => {
+  return `<a class="schedule-card" data-source="api" href="${scheduleLinks[sport.name] || '#sports'}"><header><span>${sport.code}</span><h3>${sportLabel(sport)}</h3></header>${activeRound ? `<div class="schedule-round">${escapeHtml(activeRound)}</div>` : ''}<div class="schedule-rows">${matches.map((match, index) => {
   const scheduledAt = new Date(match.scheduledAt);
   const day = new Intl.DateTimeFormat('id-ID', { day:'2-digit', timeZone:'Asia/Jakarta' }).format(scheduledAt);
   const month = new Intl.DateTimeFormat('id-ID', { month:'short', timeZone:'Asia/Jakarta' }).format(scheduledAt).replace('.', '').toUpperCase();
@@ -125,7 +126,7 @@ export function renderSchedules(scheduleBySport = {}) {
   }).join('');
 }
 
-const sportCard = (sport, index, counts = {}) => `<a class="sport-card" data-source="${counts[sport.name] ? 'api' : 'empty'}" href="${sportLinks[sport.name] || '#sports'}" aria-label="Buka ${sport.name}"><img src="assets/images/card-ornament.svg" alt=""><small>0${index + 1}</small><i></i><h3>${sport.name}</h3><b>${escapeHtml(counts[sport.name] || 'DATA MENUNGGU')}</b></a>`;
+const sportCard = (sport, index, counts = {}) => `<a class="sport-card" data-source="${counts[sport.name] ? 'api' : 'empty'}" href="${sportLinks[sport.name] || '#sports'}" aria-label="Buka ${sportLabel(sport)}"><img src="assets/images/card-ornament.svg" alt=""><small>0${index + 1}</small><i></i><h3>${sportLabel(sport)}</h3><b>${escapeHtml(counts[sport.name] || 'DATA MENUNGGU')}</b></a>`;
 
 export function renderSports(counts = {}) {
   document.querySelector('#sports-list').innerHTML = sports.map((sport, index) => sportCard(sport, index, counts)).join('');
