@@ -3,7 +3,7 @@ import './public-i18n.js?v=20260809-clean-empty-copy';
 import { API_BASE as apiBase } from './api-config.js';
 import { loadTournamentCompetitionFormat, withOptionalStanding } from './competition-format.js';
 import { loadCategories, renderCategorySelector, selectedCategory, tournamentByCategory } from './competition-categories.js';
-import { tableTennisGroupWinners } from './data/table-tennis-group-winners.js';
+import { tableTennisGroupWinners } from './data/table-tennis-group-winners.js?v=20260930-podium';
 import {
   apiBracketView,
   bracketWinnerView,
@@ -17,7 +17,7 @@ let liveBracket = null;
 let standingSource = 'empty';
 let bracketSource = 'empty';
 const escapeHtml = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-const groupWinnersView = () => `<section class="tt-group-winners score-layout"><article class="winner-panel"><header class="tt-winner-heading"><span>GROUP</span><h2>TABLE TENNIS WINNERS</h2></header>${tableTennisGroupWinners.map(({rank,members}) => `<div class="ranking-row tt-group-ranking"><small>JUARA ${escapeHtml(rank)}</small><ul>${members.map(name => `<li>${escapeHtml(name)}</li>`).join('')}</ul><b>${escapeHtml(rank.length === 1 ? rank.padStart(2, '0') : rank)}</b></div>`).join('')}</article></section>`;
+const groupWinnersView = () => `<section class="tt-group-winners score-layout"><article class="winner-panel"><header class="tt-winner-heading"><img src="../assets/images/trophy-gold.svg" alt="" width="72" height="72"><div><span>GROUP</span><h2>TABLE TENNIS WINNERS</h2></div></header><div class="tt-podium-list">${tableTennisGroupWinners.map(({rank,members}, index) => `<section class="tt-group-ranking tt-place-${index + 1}" aria-label="Juara ${escapeHtml(rank)}"><div class="tt-rank-emblem"><img src="../assets/images/trophy-gold.svg" alt="" width="42" height="42"><b>${escapeHtml(rank)}</b></div><div class="tt-roster"><h3>JUARA ${escapeHtml(rank)}</h3><ul>${members.map(name => `<li>${escapeHtml(name)}</li>`).join('')}</ul></div></section>`).join('')}</div></article></section>`;
 
 const emptyState = title => `
   <div class="public-empty-state">

@@ -1,20 +1,33 @@
 .tt-group-category { display: none; }
 body:has(.tt-group-winners) .competition-category-tabs:not(.tt-group-category) { display: none; }
 body:has(.tt-group-winners) .tt-group-category { display: flex; }
-.tt-group-winners { grid-template-columns: minmax(0, 820px); justify-content: center; padding-top: 24px; }
-.tt-winner-heading { text-align: center; }
-.tt-winner-heading > span { display: inline-block; margin-bottom: 12px; color: #d7ad53; font-size: 11px; font-weight: 700; letter-spacing: .18em; }
-.tt-group-ranking { grid-template-columns: minmax(0, 1fr) 44px; padding: 22px 14px; align-items: center; }
-.tt-group-ranking:first-of-type { background: linear-gradient(100deg, rgba(212,163,46,.09), transparent); }
-.tt-group-ranking:last-child { border-bottom: 0; }
-.tt-group-ranking small { font-weight: 700; letter-spacing: .08em; }
-.tt-group-ranking ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 18px; list-style: none; margin: 4px 0 0; padding: 0; }
-.tt-group-ranking li { color: #f8f4e8; font-size: 15px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
-.tt-group-ranking > b { text-align: right; font: 700 32px 'Barlow Condensed', sans-serif; opacity: .8; }
+.tt-group-winners { grid-template-columns: minmax(0, 900px); justify-content: center; padding-top: 24px; }
+.tt-group-winners .winner-panel { padding: 28px; background: radial-gradient(ellipse at 50% 0, #34270e 0, #100f0b 36%, #080908 72%); }
+.tt-winner-heading { display: flex; justify-content: center; align-items: center; gap: 22px; padding: 12px 0 30px; text-align: left; }
+.tt-winner-heading > img { filter: drop-shadow(0 6px 18px #d4a32e40); }
+.tt-winner-heading span { display: block; margin-bottom: 8px; color: #d7ad53; font-size: 11px; font-weight: 700; letter-spacing: .22em; }
+.tt-winner-heading h2 { margin: 0; padding: 0; border: 0; text-align: left; }
+.tt-podium-list { display: grid; gap: 14px; }
+.tt-group-ranking { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 24px; padding: 22px; border: 1px solid #44361d; border-radius: 12px; background: #0b0c0b; }
+.tt-place-1 { border-color: #aa8030; background: linear-gradient(110deg, #392b10, #15120b 60%, #0c0d0b); box-shadow: inset 3px 0 #e1b54b; }
+.tt-rank-emblem { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; border-right: 1px solid #5a4525; padding-right: 20px; }
+.tt-rank-emblem img { filter: drop-shadow(0 3px 7px #d4a32e30); }
+.tt-rank-emblem b { color: #f4ce72; font: 700 30px/1 'Barlow Condensed', sans-serif; }
+.tt-place-2 .tt-rank-emblem img { filter: grayscale(1) brightness(1.25); }
+.tt-place-3 .tt-rank-emblem img, .tt-place-4 .tt-rank-emblem img { filter: sepia(.55) saturate(.65); }
+.tt-roster { min-width: 0; }
+.tt-roster h3 { color: #edc36a; margin: 0 0 14px; font-size: 12px; letter-spacing: .12em; }
+.tt-roster ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px 18px; list-style: none; margin: 0; padding: 0; }
+.tt-roster li { color: #f8f4e8; font-size: 14px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
 @media (max-width: 600px) {
-  .tt-group-winners .winner-panel { padding: 18px 12px; }
-  .tt-group-ranking { padding: 18px 8px; grid-template-columns: minmax(0, 1fr) 32px; }
-  .tt-group-ranking ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; }
-  .tt-group-ranking li { font-size: 13px; }
-  .tt-group-ranking > b { font-size: 26px; }
+ .tt-group-winners .winner-panel { padding: 18px 12px; }
+ .tt-winner-heading { gap: 14px; padding: 8px 4px 24px; }
+ .tt-winner-heading > img { width: 50px; height: 50px; }
+ .tt-winner-heading h2 { font-size: 19px; line-height: 1.3; }
+ .tt-group-ranking { padding: 18px 12px; grid-template-columns: 48px minmax(0, 1fr); gap: 14px; }
+ .tt-rank-emblem { padding-right: 12px; }
+ .tt-rank-emblem img { width: 32px; height: 32px; }
+ .tt-rank-emblem b { font-size: 25px; }
+ .tt-roster ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
+ .tt-roster li { font-size: 12px; }
 }
