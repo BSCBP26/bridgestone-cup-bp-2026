@@ -348,3 +348,6 @@
 .schedule-category-winner:hover { background: rgba(212,163,46,.06); }
 .schedule-category-winner:focus-visible { outline: 2px solid #f4bd25; outline-offset: 2px; }
 @media (max-width:700px) { .schedule-category-winners { padding: 8px; } .schedule-category-winner { padding: 18px 0; gap: 10px; } .schedule-category-winner strong { font-size: 17px; } }
+
+.schedule-completed-panel > .running-champion-category { border: 0; padding: 0; color: #c4b184; font-size: 9px; }
+.running-champion-distance { color: #ffd365; font: 700 25px 'Barlow Condensed',sans-serif; }

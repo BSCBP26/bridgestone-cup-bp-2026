@@ -10,3 +10,22 @@
 @media(max-width:520px){.runner-profile{flex-direction:column}.runner-avatar{width:70px;height:70px;flex-basis:70px}.running-chart-head{padding:18px}.running-chart-scroll{padding-inline:8px}.running-chart-panel footer{padding-inline:18px}.running-table-head{padding:16px}.running-search{width:100%}}
 @media(max-width:520px){.running-section-tabs{width:100%}.running-section-tab{flex:1;padding-inline:9px;font-size:10px}}
 @media(prefers-reduced-motion:reduce){.running-section-tab,.daily-point circle{transition:none}}
+
+.running-winners { padding: 26px 0; }
+.running-winners-heading { display: flex; align-items: center; justify-content: center; gap: 22px; margin: 12px 0 32px; }
+.running-winners-heading h1 { margin: 6px 0 0; color: #f5c357; font: 700 36px 'Barlow Condensed',sans-serif; }
+.running-winners-heading img { filter: drop-shadow(0 4px 16px #d4a32e40); }
+.running-winners-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
+.running-winner-panel { min-width: 0; border: 1px solid #735623; border-radius: 16px; padding: 24px; background: radial-gradient(ellipse at top left,#30240f,#0b0c0b 65%); }
+.running-winner-panel h2 { color: #edc56c; font: 700 22px 'Barlow Condensed',sans-serif; letter-spacing: .04em; margin: 0 0 20px; }
+.running-winner-panel ol { list-style: none; margin: 0; padding: 0; }
+.running-winner-row { display: grid; grid-template-columns: 52px minmax(0,1fr); gap: 20px; padding: 22px 0; border-top: 1px solid #49391b; }
+.running-winner-rank { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.running-winner-rank b { color: #e9bd5e; font: 700 24px 'Barlow Condensed',sans-serif; }
+.running-winner-row:nth-child(2) img { filter: grayscale(1); }
+.running-winner-row:nth-child(3) img { filter: sepia(.5) saturate(.65); }
+.running-winner-row small { display: block; color: #c3a76f; font-size: 10px; letter-spacing: .1em; }
+.running-winner-row a { display: block; margin: 8px 0; color: #fff7e7; font-size: 20px; font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
+.running-winner-row a:hover { color: #f5c357; }
+.running-winner-row strong { display: block; color: #f5c357; font: 700 26px 'Barlow Condensed',sans-serif; }
+@media(max-width:700px) { .running-winners-grid { grid-template-columns: 1fr; gap: 18px; } .running-winner-panel { padding: 20px; } .running-winners-heading { gap: 15px; } .running-winners-heading h1 { font-size: 30px; } .running-winners-heading img { width: 50px; height: 50px; } .running-winner-row a { font-size: 18px; } }

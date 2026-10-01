@@ -83,7 +83,13 @@ const completedScheduleCard = sport => `<a class="schedule-card schedule-card-co
 
 const tableTennisScheduleCard = sport => `<article class="schedule-card schedule-card-completed schedule-card-categories"><header><span>${sport.code}</span><h3>${sportLabel(sport)}</h3></header><div class="schedule-category-winners">${[{category:'SINGLES',name:'DIAN (D)',view:'winner'},{category:'GROUP',name:scheduleChampions[sport.name],view:'winner-group'}].map(item => `<a class="schedule-category-winner" href="${sportLinks[sport.name]}#${item.view}"><span class="schedule-winner-category">${item.category}</span><small>JUARA 1</small><div class="schedule-champion"><img src="assets/images/trophy-gold.svg" alt="" width="25" height="25"><strong>${escapeHtml(item.name)}</strong></div><span class="schedule-winner-link">LIHAT HASIL</span></a>`).join('')}</div></article>`;
 
-const runningScheduleCard = sport => `<a class="schedule-card running-event" data-source="event" href="${sportLinks.RUNNING}"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="running-event-panel"><small>PERIODE EVENT</small><div class="running-date-range"><time datetime="2026-09-10"><b>10</b><span>SEP</span></time><i aria-hidden="true"></i><time datetime="2026-09-30"><b>30</b><span>SEP</span></time></div><strong class="running-event-status"><i aria-hidden="true"></i> ONGOING</strong><p>RUNNING CLUB</p></div><div class="final-event">10–30 SEPTEMBER 2026<br>Akumulasi aktivitas lari</div></a>`;
+let runningChampion = null;
+export function setRunningChampion(runner) {
+  runningChampion = runner;
+  const card = document.querySelector('[data-running-champion]');
+  if (card) card.outerHTML = runningScheduleCard(sports.find(sport => sport.name === 'RUNNING'));
+}
+const runningScheduleCard = sport => `<a class="schedule-card schedule-card-completed" data-running-champion data-status="completed" href="${sportLinks.RUNNING}#winner"><header><span>${sport.code}</span><h3>${sport.name}</h3></header><div class="schedule-completed-panel"><small>JUARA 1</small><span class="running-champion-category">KM TERBANYAK</span>${runningChampion ? `<div class="schedule-champion"><img src="assets/images/trophy-gold.svg" alt="" width="30" height="30"><strong>${escapeHtml(runningChampion.name)}</strong></div><b class="running-champion-distance">${new Intl.NumberFormat('id-ID',{maximumFractionDigits:2}).format(runningChampion.totalKm)} KM</b>` : '<strong>HASIL BELUM TERSEDIA</strong>'}<span>LIHAT HASIL</span></div></a>`;
 
 const emptyScheduleCard = sport => {
   if (sport.name === 'RUNNING') return runningScheduleCard(sport);

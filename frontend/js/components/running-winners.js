@@ -1,0 +1,8 @@
+const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const formatKm = value => `${new Intl.NumberFormat('id-ID', {maximumFractionDigits:2}).format(value)} KM`;
+const winnerRow = (runner, index, metric) => `<li class="running-winner-row"><div class="running-winner-rank"><img src="../assets/images/trophy-gold.svg" alt="" width="36" height="36"><b>${String(index+1).padStart(2,'0')}</b></div><div><small>JUARA ${index+1}</small><a href="running-runner.html?name=${encodeURIComponent(runner.name)}">${escapeHtml(runner.name)}</a><strong>${escapeHtml(metric(runner))}</strong></div></li>`;
+export function runningWinnersView(leaders = {}) {
+  const distance = (leaders.distance || []).slice(0,3);
+  const consistency = (leaders.consistency || []).slice(0,1);
+  return `<section class="running-winners"><header class="running-winners-heading"><img src="../assets/images/trophy-gold.svg" alt="" width="64" height="64"><div><p class="running-kicker">BRIDGESTONE CUP BP 2026</p><h1>WINNER RUNNING</h1></div></header><div class="running-winners-grid"><article class="running-winner-panel"><h2>KM TERBANYAK</h2><ol>${distance.length ? distance.map((row,index)=>winnerRow(row,index,row=>formatKm(row.totalKm))).join('') : '<li>HASIL BELUM TERSEDIA</li>'}</ol></article><article class="running-winner-panel"><h2>PELARI TERAJIN</h2><ol>${consistency.length ? consistency.map((row,index)=>winnerRow(row,index,row=>`${row.activities} AKTIVITAS`)).join('') : '<li>HASIL BELUM TERSEDIA</li>'}</ol></article></div></section>`;
+}

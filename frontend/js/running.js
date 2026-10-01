@@ -1,6 +1,7 @@
 import './analytics.js';
 import './public-i18n.js';
 import { API_BASE } from './api-config.js';
+import { runningWinnersView } from './components/running-winners.js';
 import { shell } from './sports.js?v=20260930-mini-soccer';
 
 const host = document.querySelector('#running-dashboard');
@@ -86,5 +87,13 @@ function render(data) {
   });
 }
 
-shell('Running', [{id:'leaderboard',label:'Leaderboard'}],()=>{});
-fetch(`${API_BASE}/running/dashboard`).then(response=>response.ok?response.json():Promise.reject()).then(payload=>render(payload.data)).catch(()=>{host.innerHTML='<div class="running-empty">DASHBOARD RUNNING BELUM DAPAT DIMUAT</div>';});
+let dashboardData = null;
+let selectedView = 'leaderboard';
+function renderView(id) {
+  selectedView = id;
+  if (!dashboardData) { host.innerHTML = '<div class="running-empty">MEMUAT HASIL RUNNING…</div>'; return; }
+  if (id === 'winner') host.innerHTML = runningWinnersView(dashboardData.leaders);
+  else render(dashboardData);
+}
+shell('Running', [{id:'leaderboard',label:'Leaderboard'}, {id:'winner',label:'Winner Running'}], renderView);
+fetch(`${API_BASE}/running/dashboard`).then(response=>response.ok?response.json():Promise.reject()).then(payload=>{dashboardData=payload.data;renderView(selectedView);}).catch(()=>{host.innerHTML='<div class="running-empty">DASHBOARD RUNNING BELUM DAPAT DIMUAT</div>';});
