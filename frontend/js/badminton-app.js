@@ -2,7 +2,7 @@ import './analytics.js?v=20260828-ga1';
 import './public-i18n.js?v=20260930-fourth-place';
 import { API_BASE as apiBase } from './api-config.js';
 import { loadTournamentCompetitionFormat, withOptionalStanding } from './competition-format.js';
-import { loadCategories, renderCategorySelector, selectedCategory, tournamentByCategory } from './competition-categories.js';
+import { loadCategories, selectedCategory, tournamentByCategory } from './competition-categories.js';
 import { apiBracketView, bracketWinnerView, scheduleView, shell, standingView } from './sports.js?v=20260930-mini-soccer';
 
 const host = document.querySelector('#sport-view');
@@ -80,5 +80,5 @@ shell('Badminton', withOptionalStanding(competitionFormat,[
     ? scheduleView(apiData.matches.length ? apiScheduleRows(apiData.matches) : [])
     : (apiBracketView('CHAMPIONSHIP BRACKET', apiData.bracket,category==='singles'?finalRanking:undefined) || emptyBracket);
 });
-renderCategorySelector(categories,category);
+
 import './analytics.js';
